@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -46,6 +48,28 @@ class User
      * @ORM\Column(type="datetime_immutable")
      */
     private $createdAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Game::class, mappedBy="dm", orphanRemoval=true)
+     */
+    private $gamesDM;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Character::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $characters;
+
+    /**
+     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
+     */
+    private $gameUsers;
+
+    public function __construct()
+    {
+        $this->gamesDM = new ArrayCollection();
+        $this->characters = new ArrayCollection();
+        $this->gameUsers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -120,6 +144,96 @@ class User
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Game>
+     */
+    public function getGamesDM(): Collection
+    {
+        return $this->gamesDM;
+    }
+
+    public function addGamesDM(Game $gamesDM): self
+    {
+        if (!$this->gamesDM->contains($gamesDM)) {
+            $this->gamesDM[] = $gamesDM;
+            $gamesDM->setDm($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGamesDM(Game $gamesDM): self
+    {
+        if ($this->gamesDM->removeElement($gamesDM)) {
+            // set the owning side to null (unless already changed)
+            if ($gamesDM->getDm() === $this) {
+                $gamesDM->setDm(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Character>
+     */
+    public function getCharacters(): Collection
+    {
+        return $this->characters;
+    }
+
+    public function addCharacter(Character $character): self
+    {
+        if (!$this->characters->contains($character)) {
+            $this->characters[] = $character;
+            $character->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCharacter(Character $character): self
+    {
+        if ($this->characters->removeElement($character)) {
+            // set the owning side to null (unless already changed)
+            if ($character->getUser() === $this) {
+                $character->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameUsers>
+     */
+    public function getGameUsers(): Collection
+    {
+        return $this->gameUsers;
+    }
+
+    public function addGameUser(GameUsers $gameUser): self
+    {
+        if (!$this->gameUsers->contains($gameUser)) {
+            $this->gameUsers[] = $gameUser;
+            $gameUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameUser(GameUsers $gameUser): self
+    {
+        if ($this->gameUsers->removeElement($gameUser)) {
+            // set the owning side to null (unless already changed)
+            if ($gameUser->getUser() === $this) {
+                $gameUser->setUser(null);
+            }
+        }
 
         return $this;
     }
