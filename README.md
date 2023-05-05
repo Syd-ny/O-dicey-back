@@ -5,3 +5,6 @@
 ```
 composer install
 ```
+
+- Configurer le .env pour créer la database / y avoir accès
+- 
