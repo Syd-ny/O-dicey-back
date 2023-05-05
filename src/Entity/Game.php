@@ -61,10 +61,16 @@ class Game
      */
     private $galleries;
 
+    /**
+     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="game")
+     */
+    private $gameUsers;
+
     public function __construct()
     {
         $this->characters = new ArrayCollection();
         $this->galleries = new ArrayCollection();
+        $this->gameUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -198,6 +204,36 @@ class Game
             // set the owning side to null (unless already changed)
             if ($gallery->getGame() === $this) {
                 $gallery->setGame(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameUsers>
+     */
+    public function getGameUsers(): Collection
+    {
+        return $this->gameUsers;
+    }
+
+    public function addGameUser(GameUsers $gameUser): self
+    {
+        if (!$this->gameUsers->contains($gameUser)) {
+            $this->gameUsers[] = $gameUser;
+            $gameUser->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameUser(GameUsers $gameUser): self
+    {
+        if ($this->gameUsers->removeElement($gameUser)) {
+            // set the owning side to null (unless already changed)
+            if ($gameUser->getGame() === $this) {
+                $gameUser->setGame(null);
             }
         }
 

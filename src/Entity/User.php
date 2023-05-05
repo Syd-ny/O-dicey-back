@@ -59,10 +59,16 @@ class User
      */
     private $characters;
 
+    /**
+     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
+     */
+    private $gameUsers;
+
     public function __construct()
     {
         $this->gamesDM = new ArrayCollection();
         $this->characters = new ArrayCollection();
+        $this->gameUsers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,6 +202,36 @@ class User
             // set the owning side to null (unless already changed)
             if ($character->getUser() === $this) {
                 $character->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameUsers>
+     */
+    public function getGameUsers(): Collection
+    {
+        return $this->gameUsers;
+    }
+
+    public function addGameUser(GameUsers $gameUser): self
+    {
+        if (!$this->gameUsers->contains($gameUser)) {
+            $this->gameUsers[] = $gameUser;
+            $gameUser->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameUser(GameUsers $gameUser): self
+    {
+        if ($this->gameUsers->removeElement($gameUser)) {
+            // set the owning side to null (unless already changed)
+            if ($gameUser->getUser() === $this) {
+                $gameUser->setUser(null);
             }
         }
 
