@@ -9,9 +9,20 @@ class OdiceyProvider
         
     ];
 
-    // array of users
-    private $users = [
-        
+    // array of dwarves names
+    private $dwarves = [
+        "Ilgni",
+        "Gimkhur",
+        "Ilfann",
+        "Vihjo",
+        "Innbann",
+        "Nisenn",
+        "Fannag",
+        "Tanolkum",
+        "Gorrenn",
+        "Nosbof",
+        "Diondfal",
+        "Tulbann",
     ];
 
     // array of galleries
@@ -35,9 +46,9 @@ class OdiceyProvider
     /**
      * Get a random user
      */
-    public function user()
+    public function dwarves()
     {
-        return $this->users[array_rand($this->users)];
+        return $this->dwarves[array_rand($this->dwarves)];
     }
 
      /**
