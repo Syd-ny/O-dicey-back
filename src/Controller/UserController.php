@@ -61,6 +61,9 @@ class UserController extends AbstractController
         try{
             // deserializing json into entity
             $user = $serializer->deserialize($data, User::class, "json");
+            // hashing the password
+            $passwordHashed = password_hash($user->getPassword(), PASSWORD_DEFAULT);
+            $user->setPassword($passwordHashed);
 
         }
         catch(NotEncodableValueException $e){
@@ -81,7 +84,7 @@ class UserController extends AbstractController
             
             return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
- 
+
         // add the user in the DB
         $entityManager->persist($user);
         $entityManager->flush();
