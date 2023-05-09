@@ -198,14 +198,29 @@ class AppFixtures extends Fixture
             // persist
             $manager->persist($game);
         }
-        
+
         // Character Fixtures
         for ($i = 0; $i < 10; $i++) {
             // 1. create entity
             $newCharacter = new Character;
-
+            $race = mt_rand(1,4);
             // 2. properties to update
-            $newCharacter->setName($faker->unique()->dwarves());
+            if($race === 1) {
+                $newCharacter->setName($faker->unique()->dwarves()); 
+            }
+
+            elseif($race === 2) {
+                $newCharacter->setName($faker->unique()->humains());
+            }
+
+            elseif($race === 3) {
+                $newCharacter->setName($faker->unique()->elves());
+            }
+            
+            else{
+                $newCharacter->setName($faker->unique()->orcs());
+            };
+            
             $newCharacter->setPicture($faker->imageUrl(450, 300, true));
             $newCharacter->setUser($users[mt_rand(1, count($users) - 1)]);
             $newCharacter->setGame($games[mt_rand(1, count($games) - 1)]);
