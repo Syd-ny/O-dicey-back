@@ -151,6 +151,7 @@ class AppFixtures extends Fixture
             $user->setPassword(password_hash($user->getLogin(),PASSWORD_DEFAULT));
             $user->setPicture("https://picsum.photos/id/".mt_rand(1,180)."/300/500");
             $user->setCreatedAt(new DateTimeImmutable($faker->date()));
+            $user->setRoles(['ROLE_USER']);
             
             // add the user to the array
             $users[] = $user;
@@ -158,7 +159,11 @@ class AppFixtures extends Fixture
             // persist
             $manager->persist($user);
         }
-        
+
+        // Admin Fixture
+        $admin = $users[0];
+        $admin->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
+        $manager->persist($admin);
         
         // Game Fixtures
         $games = [];
