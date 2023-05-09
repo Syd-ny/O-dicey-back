@@ -12,23 +12,20 @@ use App\Entity\Character;
 use Bluemmb\Faker\PicsumPhotosProvider;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use App\DataFixtures\Provider\OflixProvider;
-use App\Service\MySlugger;
+use App\DataFixtures\Provider\OdiceyProvider;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AppFixtures extends Fixture
 {
 
-    private $slugger;
     private $connection;
 
     /**
     * Constructor
     */
-    public function __construct(MySlugger $slugger, Connection $connection)
+    public function __construct( Connection $connection)
     {
-        $this->slugger = $slugger;
         $this->connection = $connection;
     }
 
