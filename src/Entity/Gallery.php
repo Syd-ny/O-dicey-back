@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\GalleryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GalleryRepository::class)
@@ -19,17 +20,20 @@ class Gallery
 
     /**
      * @ORM\Column(type="string", length=128)
+     * 
      */
     private $picture;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * 
      */
     private $mainPicture;
 
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gallery")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $game;
 

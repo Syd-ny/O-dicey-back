@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,53 +17,63 @@ class Game
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"users", "charactersByUser", "invitesByUser"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"users"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * 
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * 
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $mode;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gamesDM")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $dm;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="game", orphanRemoval=true)
+     * 
      */
     private $characters;
 
     /**
      * @ORM\OneToMany(targetEntity=Gallery::class, mappedBy="game", orphanRemoval=true)
+     * 
      */
     private $galleries;
 
     /**
      * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="game")
+     * 
      */
     private $gameUsers;
 

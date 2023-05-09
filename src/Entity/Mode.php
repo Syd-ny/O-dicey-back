@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ModeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,21 +17,25 @@ class Mode
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128)
+     * 
      */
     private $name;
 
     /**
      * @ORM\Column(type="json")
+     * 
      */
     private $json_stats = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="mode", orphanRemoval=true)
+     * 
      */
     private $games;
 

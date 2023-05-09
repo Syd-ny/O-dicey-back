@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CharacterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CharacterRepository::class)
@@ -15,53 +16,63 @@ class Character
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"users", "charactersByUser"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Groups({"charactersByUser"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="json", nullable=true)
+     * @Groups({"users", "charactersByUser"})
      */
     private $stats = [];
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"users", "charactersByUser"})
      */
     private $inventory;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"users", "charactersByUser"})
      */
     private $notes;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"charactersByUser"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"charactersByUser"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="characters")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="characters")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"charactersByUser"})
      */
     private $game;
 

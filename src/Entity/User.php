@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -16,56 +17,67 @@ class User
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"users", "charactersByUser", "invitesByUser"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128, unique=true)
+     * @Groups({"users", "charactersByUser"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64, unique=true)
+     * @Groups({"users", "charactersByUser", "invitesByUser"})
      */
     private $login;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"users"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Groups({"users"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"users", "charactersByUser"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"users", "charactersByUser"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="dm", orphanRemoval=true)
+     * @Groups({"users"})
      */
     private $gamesDM;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="user", orphanRemoval=true)
+     * @Groups({"users", "charactersByUser"})
      */
     private $characters;
 
     /**
      * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
+     * @Groups({"users", "invitesByUser"})
      */
     private $gameUsers;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups({"users"})
      */
     private $roles = [];
 
