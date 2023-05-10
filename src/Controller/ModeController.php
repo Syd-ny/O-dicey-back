@@ -2,20 +2,37 @@
 
 namespace App\Controller;
 
+use App\Entity\Mode;
+use App\Repository\ModeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ModeController extends AbstractController
 {
     /**
-     * @Route("/mode", name="app_mode")
-     */
-    public function index(): JsonResponse
+    * endpoint for all modes
+    * 
+    * @Route("/api/modes", name="app_api_mode_getModes", methods={"GET"})
+    */
+    public function getModes(ModeRepository $modeRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ModeController.php',
-        ]);
+
+        // get entities table of modes
+        $modes = $modeRepository->findAll();
+        
+        
+        return $this->json($modes,Response::HTTP_OK,[], ["groups" => "modes"]);
+    }
+
+    /**
+    * endpoint for a specific mode
+    * 
+    * @Route("/api/modes/{id}", name="app_api_mode_getModesById", methods={"GET"}, requirements={"id"="\d+"})
+    */
+    public function getModesById(Mode $mode): JsonResponse
+    {
+        return $this->json($mode,Response::HTTP_OK,[], ["groups" => "modes"]);
     }
 }
