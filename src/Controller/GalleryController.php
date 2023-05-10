@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Gallery;
+use App\Entity\Game;
 use App\Repository\GameRepository;
 use App\Repository\GalleryRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,6 +55,27 @@ class GalleryController extends AbstractController
 
         return $this->json($gallery,200,[], ["groups"=> ["gallery_read"]]);
     }
+
+    /**
+     * @Route("/game/{gameId}", name="get_galleries_by_game", requirements={"gameId"="\d+"},  methods={"GET"})
+     */
+    public function getGalleriesByGame(int $gameId, GalleryRepository $galleryRepository, GameRepository $gameRepository): JsonResponse
+    {
+        $game = $gameRepository->find($gameId);
+
+        if (!$game) {
+            return $this->json('Jeu introuvable', Response::HTTP_NOT_FOUND);
+        }
+
+        $galleries = $galleryRepository->findByGame($game);
+
+        if (count($galleries) === 0) {
+            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($galleries, 200, [], ["groups"=> ["gallery_read"]]);
+    }
+
 
     /**
     * @Route("", name="add", methods={"POST"})
