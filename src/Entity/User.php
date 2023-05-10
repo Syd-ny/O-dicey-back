@@ -96,7 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $characters;
 
     /**
-     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user", orphanRemoval=true)
      * @Groups({"users", "invitesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
