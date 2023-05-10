@@ -174,10 +174,7 @@ class GalleryController extends AbstractController
         $id,
         Gallery $gallery,
         GalleryRepository $galleryRepository,
-        EntityManagerInterface $entityManager,
-        Request $request, 
-        SerializerInterface $serializer, 
-        ValidatorInterface $validator): JsonResponse
+        EntityManagerInterface $entityManager): JsonResponse
     {
 
         $gallery = $galleryRepository->find($id);

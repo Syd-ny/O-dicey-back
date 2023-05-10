@@ -24,6 +24,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $id;
 
@@ -32,6 +33,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users", "charactersByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $email;
 
@@ -42,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $login;
 
@@ -50,6 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $password;
 
@@ -60,6 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $picture;
 
@@ -68,6 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users", "charactersByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $updatedAt;
 
@@ -76,6 +82,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users", "charactersByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $createdAt;
 
@@ -92,20 +99,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users", "charactersByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $characters;
 
     /**
-     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user", orphanRemoval=true)
      * @Groups({"users", "invitesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $gameUsers;
 
     /**
      * @ORM\Column(type="json")
      * @Groups({"users"})
+     * @Groups({"games"})
      */
     private $roles = [];
 
