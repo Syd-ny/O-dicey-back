@@ -211,4 +211,19 @@ class GameController extends AbstractController
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
+
+    /**
+     * endpoint for all characters of a specific game
+     * 
+     * @Route("/api/games/{id}/characters", name="app_api_game_getCharactersByGame", methods={"GET"})
+     */
+    public function getCharactersByGame(Game $game): JsonResponse
+    {
+        // get the characters of the current game
+        $charactersByGame = $game->getCharacters();
+        
+        return $this->json($charactersByGame, Response::HTTP_OK, [], [
+            'groups' => 'charactersByGame'
+        ]);
+    }
 }
