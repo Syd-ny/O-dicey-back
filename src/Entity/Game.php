@@ -24,6 +24,7 @@ class Game
      * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"$charactersByGame"})
      */
     private $id;
 
@@ -35,6 +36,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Groups({"$charactersByGame"})
      * @Assert\NotBlank
      */
     private $name;
@@ -47,6 +49,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Groups({"$charactersByGame"})
      */
     private $status;
 
@@ -57,6 +60,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Groups({"$charactersByGame"})
      */
     private $updatedAt;
 
@@ -67,6 +71,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Groups({"$charactersByGame"})
      */
     private $createdAt;
 
