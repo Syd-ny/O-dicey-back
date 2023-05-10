@@ -18,6 +18,8 @@ class Character
      * @ORM\Column(type="integer")
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $id;
 
@@ -26,6 +28,8 @@ class Character
      * @Groups({"users", "charactersByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $name;
 
@@ -34,6 +38,8 @@ class Character
      * @Groups({"charactersByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $picture;
 
@@ -42,6 +48,8 @@ class Character
      * @Groups({"users", "charactersByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $stats = [];
 
@@ -50,6 +58,8 @@ class Character
      * @Groups({"users", "charactersByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $inventory;
 
@@ -58,22 +68,28 @@ class Character
      * @Groups({"users", "charactersByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $notes;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Groups({"charactersByUser"})
+     * @Groups({"users","charactersByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"charactersByUser"})
+     * @Groups({"users","charactersByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"games"})
+     * @Groups({"users"})
      */
     private $createdAt;
 
@@ -88,7 +104,7 @@ class Character
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="characters", cascade={"persist"}))
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"charactersByUser"}) 
+     * @Groups({"users","charactersByUser"}) 
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      */

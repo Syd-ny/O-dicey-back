@@ -19,6 +19,7 @@ class Mode
      * @ORM\Column(type="integer")
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $id;
 
@@ -26,6 +27,7 @@ class Mode
      * @ORM\Column(type="string", length=128)
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $name;
 
@@ -33,6 +35,7 @@ class Mode
      * @ORM\Column(type="json")
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $json_stats = [];
 
