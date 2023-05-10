@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+
 /**
  * @ORM\Entity(repositoryClass=GameRepository::class)
  */
@@ -19,6 +20,10 @@ class Game
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"games"})
+     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+
      */
     private $id;
 
