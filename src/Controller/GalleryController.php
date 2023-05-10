@@ -99,4 +99,74 @@ class GalleryController extends AbstractController
 
         return $this->json($gallery,201,[], ["groups"=> ["gallery_read"]]);
     }
+
+    /**
+    * @Route("/{id}", name="edit", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
+    */
+    public function edit(
+        //important to import GameRepository to show the FK Game.
+        Gallery $gallery,
+        GameRepository $gameRepository,
+        EntityManagerInterface $entityManager,
+        Request $request, 
+        SerializerInterface $serializer, 
+        ValidatorInterface $validator): JsonResponse
+    {
+
+        // we get the object
+        $jsonContent = $request->getContent();
+        if ($jsonContent === ""){
+            return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
+        }
+
+        // Convert JSON into php object.
+        $updatedGallery = $serializer->deserialize( $jsonContent, Gallery::class,'json', ['object_to_populate' => $gallery], ['datetime_format' => 'Y-m-d\TH:i:sP']);
+
+        $errors = $validator->validate($updatedGallery);
+        if (count($errors) > 0) {
+            return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        //dd($gallery);
+
+        // decode the content on JSON
+        $data = json_decode($jsonContent, true);
+
+        //take the decoded data of game
+        $gameId = $data["game"]["id"] ?? null;
+        $game = $gameId ? $gameRepository->find($gameId) : null;
+    
+        if (!$game) {
+            return $this->json("le jeu n'existe pas", Response::HTTP_BAD_REQUEST);
+        }
+        $updatedGallery->setGame($game);
+
+        $entityManager->flush();
+
+        return $this->json($updatedGallery,201,[], ["groups"=> ["gallery_read"]]);
+    }
+
+    /**
+    * @Route("/{id}", name="delete", requirements={"id"="\d+"}, methods={"DELETE"})
+    */
+    public function delete(
+        $id,
+        Gallery $gallery,
+        GalleryRepository $galleryRepository,
+        EntityManagerInterface $entityManager,
+        Request $request, 
+        SerializerInterface $serializer, 
+        ValidatorInterface $validator): JsonResponse
+    {
+
+        $gallery = $galleryRepository->find($id);
+
+        if ($gallery === null){
+            return $this->json("personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
+        }
+
+        $galleryRepository->remove($gallery);
+        $entityManager->flush();
+
+        return $this->json("personnage supprimé avec succès", Response::HTTP_OK);
+    }
 }
