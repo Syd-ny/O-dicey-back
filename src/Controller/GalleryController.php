@@ -47,11 +47,56 @@ class GalleryController extends AbstractController
     /**
     * @Route("/{id}", name="read", methods={"GET"})
     */
-    public function read(GalleryRepository $gallery): JsonResponse
+    public function read(Gallery $gallery): JsonResponse
     {
 
         if ($gallery === null){return $this->json("ce joueur n'existe pas", Response::HTTP_NOT_FOUND);}
 
         return $this->json($gallery,200,[], ["groups"=> ["gallery_read"]]);
+    }
+
+    /**
+    * @Route("", name="add", methods={"POST"})
+    */
+    public function add(
+        //important to import GameRepository to show the FK Game.
+        GameRepository $gameRepository,
+        EntityManagerInterface $entityManager,
+        Request $request, 
+        SerializerInterface $serializer, 
+        ValidatorInterface $validator): JsonResponse
+    {
+
+        // we get the object
+        $jsonContent = $request->getContent();
+        if ($jsonContent === ""){
+            return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
+        }
+
+        // Convert JSON into php object.
+        $gallery = $serializer->deserialize( $jsonContent, Gallery::class,'json', ['datetime_format' => 'Y-m-d\TH:i:sP']);
+
+        $errors = $validator->validate($gallery);
+        if (count($errors) > 0) {
+            return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        //dd($gallery);
+
+        // decode the content on JSON
+        $data = json_decode($jsonContent, true);
+
+        //take the decoded data of game
+        $gameId = $data["game"]["id"] ?? null;
+        $game = $gameId ? $gameRepository->find($gameId) : null;
+    
+        if (!$game) {
+            return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
+        }
+        $gallery->setGame($game);
+
+        $entityManager->persist($gallery);
+        $entityManager->flush();
+
+        return $this->json($gallery,201,[], ["groups"=> ["gallery_read"]]);
     }
 }
