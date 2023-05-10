@@ -20,60 +20,86 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"users", "charactersByUser", "invitesByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128, unique=true)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64, unique=true)
      * @Groups({"users", "charactersByUser", "invitesByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $login;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"users"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"users"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="dm", orphanRemoval=true)
      * @Groups({"users"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $gamesDM;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="user", orphanRemoval=true)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $characters;
 
     /**
      * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
      * @Groups({"users", "invitesByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $gameUsers;
 

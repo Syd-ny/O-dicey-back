@@ -16,63 +16,81 @@ class Character
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"charactersByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="json", nullable=true)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $stats = [];
 
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $inventory;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $notes;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"charactersByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"charactersByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="characters")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="characters", cascade={"persist"}))
      * @ORM\JoinColumn(nullable=false)
-     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="characters")
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="characters", cascade={"persist"}))
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"charactersByUser"})
+     * @Groups({"charactersByUser"}) 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      */
     private $game;
 
