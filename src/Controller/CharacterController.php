@@ -9,6 +9,7 @@ use App\Repository\User;
 use App\Repository\Game;
 use App\Repository\GameRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -121,6 +122,7 @@ class CharacterController extends AbstractController
         UserRepository $userRepository,
         GameRepository $gameRepository,
         CharacterRepository $characterRepository,
+        EntityManagerInterface $entityManager,
         Request $request, 
         SerializerInterface $serializer, 
         ValidatorInterface $validator): JsonResponse
@@ -139,7 +141,7 @@ class CharacterController extends AbstractController
         }
 
         // Convert JSON into php object.
-        $character = $serializer->deserialize( $jsonContent, Character::class,'json', ['datetime_format' => 'Y-m-d\TH:i:sP']);
+        $character = $serializer->deserialize( $jsonContent, Character::class,'json',['object_to_populate' => $character] , ['datetime_format' => 'Y-m-d\TH:i:sP']);
 
         $errors = $validator->validate($character);
         if (count($errors) > 0) {
@@ -164,8 +166,7 @@ class CharacterController extends AbstractController
         $character->setUser($user);
         $character->setGame($game);
 
-        $characterRepository->persist($character);
-        $characterRepository->flush();
+        $entityManager->flush();
 
         return $this->json($character,200,[], ["groups"=> ["character_read"]]);
     }
@@ -175,7 +176,8 @@ class CharacterController extends AbstractController
     */
     public function delete(
         $id,
-        CharacterRepository $characterRepository): JsonResponse
+        CharacterRepository $characterRepository,
+        EntityManagerInterface $entityManager): JsonResponse
     {
 
         $character = $characterRepository->find($id);
@@ -184,8 +186,9 @@ class CharacterController extends AbstractController
             return $this->json("personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
         }
 
-        $characterRepository->remove($character,true);
+        $characterRepository->remove($character);
+        $entityManager->flush();
 
-        return $this->json(null,Response::HTTP_NO_CONTENT);
+        return $this->json("personnage supprimé avec succès", Response::HTTP_OK);
     }
 }
