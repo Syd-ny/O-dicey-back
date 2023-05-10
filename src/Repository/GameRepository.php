@@ -39,6 +39,18 @@ class GameRepository extends ServiceEntityRepository
         }
     }
 
+    public function findModesAndDMs(int $id)
+    {
+        $queryBuilder = $this->createQueryBuilder('g')
+            ->select('m.id AS mode_id', 'd.id AS dm_id')
+            ->innerJoin('g.modes', 'm')
+            ->innerJoin('g.dungeonMaster', 'd')
+            ->where('g.id = :id')
+            ->setParameter('id', $id);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
 //    /**
 //     * @return Game[] Returns an array of Game objects
 //     */

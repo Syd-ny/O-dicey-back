@@ -6,6 +6,7 @@ use App\Repository\GameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GameRepository::class)
@@ -16,53 +17,92 @@ class Game
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $status;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $mode;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gamesDM")
      * @ORM\JoinColumn(nullable=false)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $dm;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="game", orphanRemoval=true)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $characters;
 
     /**
      * @ORM\OneToMany(targetEntity=Gallery::class, mappedBy="game", orphanRemoval=true)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $galleries;
 
     /**
      * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="game")
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $gameUsers;
 
