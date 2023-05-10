@@ -42,8 +42,6 @@ class Mode
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="mode", orphanRemoval=true)
      * 
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      */
     private $games;
 

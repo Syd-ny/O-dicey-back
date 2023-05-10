@@ -51,6 +51,9 @@ class Game
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      */
@@ -58,6 +61,9 @@ class Game
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
      * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
@@ -68,8 +74,6 @@ class Game
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      */
     private $mode;
 
@@ -77,32 +81,24 @@ class Game
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gamesDM")
      * @ORM\JoinColumn(nullable=false)
      * 
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      */
     private $dm;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="game", orphanRemoval=true)
      * 
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      */
     private $characters;
 
     /**
      * @ORM\OneToMany(targetEntity=Gallery::class, mappedBy="game", orphanRemoval=true)
      * 
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      */
     private $galleries;
 
     /**
      * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="game")
      * 
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      */
     private $gameUsers;
 
