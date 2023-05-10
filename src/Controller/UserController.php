@@ -88,7 +88,7 @@ class UserController extends AbstractController
         // add the user in the DB
         $entityManager->persist($user);
         $entityManager->flush();
-        // dd($user);
+        
         return $this->json(["creation successful"], Response::HTTP_CREATED, [
             "Location" => $this->generateUrl("app_api_user_getUsersById", ["id" => $user->getId()])
         ]);

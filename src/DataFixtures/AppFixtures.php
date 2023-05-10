@@ -18,37 +18,8 @@ use Doctrine\DBAL\Connection;
 class AppFixtures extends Fixture
 {
 
-    private $connection;
-
-    /**
-    * Constructor
-    */
-    public function __construct( Connection $connection)
-    {
-        $this->connection = $connection;
-    }
-
-    // /**
-    //  * Truncate tables and reset autoincrementation 
-    //  */
-    // private function truncate()
-    // {
-    //     // Deactivate foreign key checks
-    //     $this->connection->executeQuery('SET foreign_key_checks = 0');
-    //     // Truncate
-    //     $this->connection->executeQuery('TRUNCATE TABLE user');
-    //     $this->connection->executeQuery('TRUNCATE TABLE mode');
-    //     $this->connection->executeQuery('TRUNCATE TABLE game');
-    //     $this->connection->executeQuery('TRUNCATE TABLE game_users');
-    //     $this->connection->executeQuery('TRUNCATE TABLE gallery');
-    //     $this->connection->executeQuery('TRUNCATE TABLE character');
-    //     // etc.
-    // }
-
     public function load(ObjectManager $manager): void
     {
-        // // Truncate
-        // $this->truncate();
 
         // Faker instanciation
         $faker = Factory::create();
