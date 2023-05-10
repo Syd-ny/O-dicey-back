@@ -6,6 +6,7 @@ use App\Entity\Game;
 use App\Repository\GameRepository;
 use App\Repository\ModeRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -116,7 +118,7 @@ class GameController extends AbstractController
      * 
      * @Route("/games/{id}", name="app_game_editGames", methods={"PUT", "PATCH"})
      */
-    public function editGames(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserRepository $userRepository, ModeRepository $modeRepository): JsonResponse
+    public function editGames(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Game $game, ValidatorInterface $validator, UserRepository $userRepository, ModeRepository $modeRepository): JsonResponse
     {
         // Get request content (json)
         $data = $request->getContent();
@@ -124,7 +126,7 @@ class GameController extends AbstractController
         // If JSON invalid, return a json to specify that it is invalid
         try{
             // Deserialize JSON into an entity
-            $updatedGame = $serializer->deserialize($data,Game::class, "json");
+            $updatedGame = $serializer->deserialize($data,Game::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $game]);
 
         }
         catch(NotEncodableValueException $e){
@@ -147,33 +149,35 @@ class GameController extends AbstractController
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
-        // $dataDecoded = json_decode($data, true);
-        // if ($dataDecoded["mode"]) {
-        //     $modeId = $dataDecoded["mode"] ?? null;
-        //     $mode = $modeId ? $modeRepository->find($modeId) : null;
+        $dataDecoded = json_decode($data, true);
+        if (isset($dataDecoded["mode"])) {
+            $modeId = $dataDecoded["mode"] ?? null;
+            $mode = $modeId ? $modeRepository->find($modeId) : null;
     
-        //     if (!$mode) {
-        //         return $this->json("Ce mode n'existe pas", Response::HTTP_BAD_REQUEST);
-        //     }
+            if (!$mode) {
+                return $this->json("Ce mode n'existe pas", Response::HTTP_BAD_REQUEST);
+            }
 
-        //     $game->setMode($mode);
-        // }
+            $game->setMode($mode);
+        }
 
-        // if ($dataDecoded["dm"]) {
-        //     $dmId = $dataDecoded["dm"] ?? null;
-        //     $dm = $dmId ? $userRepository->find($dmId) : null;
+        if (isset($dataDecoded["dm"])) {
+            $dmId = $dataDecoded["dm"] ?? null;
+            $dm = $dmId ? $userRepository->find($dmId) : null;
 
-        //     if (!$dm) {
-        //         return $this->json("Ce n'existe pas", Response::HTTP_BAD_REQUEST);
-        //     }
+            if (!$dm) {
+                return $this->json("Ce n'existe pas", Response::HTTP_BAD_REQUEST);
+            }
 
-        //     $game->setDm($dm);
-        // }
+            $game->setDm($dm);
+        }
+
+        $game->setUpdatedAt(new DateTimeImmutable(date("Y-m-d H:i:s")));
+
 
         // Edit the game in the BDD
         $entityManager->flush();
         
-        dd($updatedGame);
 
         //  Provide the link of the resource created
         return $this->json(["update successful"], Response::HTTP_OK,[
@@ -189,6 +193,6 @@ class GameController extends AbstractController
         $entityManager->remove($game);
         $entityManager->flush();
 
-        return $this->json(["successful removal"], Response::HTTP_NO_CONTENT);
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }
