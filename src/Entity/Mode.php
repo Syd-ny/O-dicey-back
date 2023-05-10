@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ModeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -17,7 +18,6 @@ class Mode
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      */
@@ -25,7 +25,6 @@ class Mode
 
     /**
      * @ORM\Column(type="string", length=128)
-     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      */
@@ -33,7 +32,6 @@ class Mode
 
     /**
      * @ORM\Column(type="json")
-     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      */

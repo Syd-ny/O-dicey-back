@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\GameUsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GameUsersRepository::class)
@@ -19,18 +20,21 @@ class GameUsers
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"users", "invitesByUser"})
      */
     private $status;
 
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gameUsers")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"invitesByUser"})
      */
     private $game;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gameUsers")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $user;
 

@@ -23,7 +23,6 @@ class Gallery
 
     /**
      * @ORM\Column(type="string", length=128)
-     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      */
@@ -31,7 +30,6 @@ class Gallery
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      */
@@ -40,7 +38,6 @@ class Gallery
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gallery")
      * @ORM\JoinColumn(nullable=false)
-     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      */
