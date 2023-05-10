@@ -192,3 +192,4 @@ class CharacterController extends AbstractController
         return $this->json("personnage supprimé avec succès", Response::HTTP_OK);
     }
 }
+

@@ -79,7 +79,7 @@ class Character
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="characters")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="characters", cascade={"persist"}))
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Groups({"character_list"})
@@ -88,11 +88,12 @@ class Character
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="characters")
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="characters", cascade={"persist"}))
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+
      */
     private $game;
 

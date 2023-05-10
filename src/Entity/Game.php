@@ -23,6 +23,7 @@ class Game
      * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+
      */
     private $id;
 

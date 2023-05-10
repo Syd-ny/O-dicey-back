@@ -23,6 +23,7 @@ class User
      * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+
      */
     private $id;
 
@@ -103,6 +104,11 @@ class User
      * @Groups({"gallery_read"})
      */
     private $gameUsers;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
 
     public function __construct()
     {
@@ -274,6 +280,22 @@ class User
                 $gameUser->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+        
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
