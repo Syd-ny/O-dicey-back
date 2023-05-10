@@ -202,7 +202,7 @@ class GameController extends AbstractController
     * 
     * @Route("/api/games/{id}", name="app_api_game_deleteGames", methods={"DELETE"})
     */
-    public function deleteGames(Game $game, EntityManagerInterface $entityManager): JsonResponse
+    public function deleteGames($id, Game $game, EntityManagerInterface $entityManager): JsonResponse
     {
         // Delete the game
         $entityManager->remove($game);

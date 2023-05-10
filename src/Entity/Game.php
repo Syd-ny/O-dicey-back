@@ -102,7 +102,7 @@ class Game
     private $galleries;
 
     /**
-     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="game")
+     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="game", orphanRemoval=true)
      * @Groups({"games"})
      */
     private $gameUsers;

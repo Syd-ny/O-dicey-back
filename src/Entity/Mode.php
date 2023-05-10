@@ -20,6 +20,7 @@ class Mode
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
+     * @Groups({"games"})
      */
     private $id;
 
@@ -28,6 +29,7 @@ class Mode
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
+     * @Groups({"games"})
      */
     private $name;
 
@@ -36,6 +38,7 @@ class Mode
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
+     * @Groups({"games"})
      */
     private $json_stats = [];
 
