@@ -21,10 +21,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class GameController extends AbstractController
 {
     /**
-     * endpoint for all games with infos of all relations
-     * 
-     * @Route("/games", name="app_game_getGames", methods={"GET"})
-     */
+    * endpoint for all games with infos of all relations
+    * 
+    * @Route("/api/games", name="app_api_game_getGames", methods={"GET"})
+    */
     public function getGames(GameRepository $gameRepository): JsonResponse
     {
 
@@ -35,24 +35,28 @@ class GameController extends AbstractController
         return $this->json($games,Response::HTTP_OK,[], ["groups" => "games"]);
     }
 
-     /**
-     * endpoint for a specific game
-     * 
-     * @Route("/games/{id}", name="app_game_getGamesById", methods={"GET"}, requirements={"id"="\d+"})
-     */
+    /**
+    * endpoint for a specific game
+    * 
+    * @Route("/api/games/{id}", name="app_api_game_getGamesById", methods={"GET"}, requirements={"id"="\d+"})
+    */
     public function getGamesById(Game $game): JsonResponse
     {
 
         // TODO gérer si le film n'existe pas
+        if (!$game) {
+            return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
+        }
+        
 
         return $this->json($game,Response::HTTP_OK,[], ["groups" => "games"]);
     }
 
-      /**
-     * endpoint for adding a game
-     * 
-     * @Route("/games", name="app_game_postGames", methods={"POST"})
-     */
+    /**
+    * endpoint to create a game
+    * 
+    * @Route("/api/games", name="app_api_game_postGames", methods={"POST"})
+    */
     public function postGames(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserRepository $userRepository, ModeRepository $modeRepository): JsonResponse
     {
         // Get request content (json)
@@ -68,7 +72,7 @@ class GameController extends AbstractController
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
         }
 
-        // check if entity is valid
+        // manually check if entity is valid
         $errors = $validator->validate($game);
         // If error array is upper 0, the form is invalid.
         if(count($errors) > 0){
@@ -84,21 +88,26 @@ class GameController extends AbstractController
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
+        // Converts request content to an array
         $dataDecoded = json_decode($data, true);
+
+        // We check if the mode of the request matches to an existing mode 
         $modeId = $dataDecoded["mode"] ?? null;
         $mode = $modeId ? $modeRepository->find($modeId) : null;
-
+        // If not, returns an error response
         if (!$mode) {
             return $this->json("Ce mode n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
+        // We check if the $dmId of the request matches the ID of an existing user 
         $dmId = $dataDecoded["dm"] ?? null;
         $dm = $dmId ? $userRepository->find($dmId) : null;
-
+        // If not, returns an error response
         if (!$dm) {
-            return $this->json("Cette utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
+            return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
+        // Add $mode and $dm in $game
         $game->setMode($mode);
         $game->setDm($dm);
 
@@ -109,15 +118,15 @@ class GameController extends AbstractController
 
         //  Provide the link of the resource created
         return $this->json(["creation successful"], Response::HTTP_CREATED,[
-            "Location" => $this->generateUrl("app_game_getGamesById", ["id" => $game->getId()])
+            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
         ]);
     }
 
-      /**
-     * endpoint for editing a game
-     * 
-     * @Route("/games/{id}", name="app_game_editGames", methods={"PUT", "PATCH"})
-     */
+    /**
+    * endpoint to edit a game
+    * 
+    * @Route("/api/games/{id}", name="app_api_game_editGames", methods={"PUT", "PATCH"})
+    */
     public function editGames(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Game $game, ValidatorInterface $validator, UserRepository $userRepository, ModeRepository $modeRepository): JsonResponse
     {
         // Get request content (json)
@@ -133,7 +142,7 @@ class GameController extends AbstractController
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
         }
 
-        // check if entity is valid
+        // Manually check if entity is valid
         $errors = $validator->validate($updatedGame);
         // If error array is upper 0, the form is invalid.
         if(count($errors) > 0){
@@ -149,48 +158,55 @@ class GameController extends AbstractController
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
+        // Converts request content to an array
         $dataDecoded = json_decode($data, true);
+        // If request content a new mode.
         if (isset($dataDecoded["mode"])) {
+            // We check if the mode of the request matches to an existing mode 
             $modeId = $dataDecoded["mode"] ?? null;
             $mode = $modeId ? $modeRepository->find($modeId) : null;
-    
+            // If not, returns an error response
             if (!$mode) {
                 return $this->json("Ce mode n'existe pas", Response::HTTP_BAD_REQUEST);
             }
-
+            // Add $mode in $game
             $game->setMode($mode);
         }
-
+        // If request content a new dm.
         if (isset($dataDecoded["dm"])) {
+            // We check if the $dmId of the request matches the ID of an existing user 
             $dmId = $dataDecoded["dm"] ?? null;
             $dm = $dmId ? $userRepository->find($dmId) : null;
-
+            // If not, returns an error response
             if (!$dm) {
-                return $this->json("Ce n'existe pas", Response::HTTP_BAD_REQUEST);
+                return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
             }
-
+            // Add $dm in $game
             $game->setDm($dm);
         }
 
+        // Update the updatedAt field with the current date and time
         $game->setUpdatedAt(new DateTimeImmutable(date("Y-m-d H:i:s")));
 
-
-        // Edit the game in the BDD
+        // Edit the game in the DB
         $entityManager->flush();
         
-
-        //  Provide the link of the resource created
+        //  Provide the link of the resource updated
         return $this->json(["update successful"], Response::HTTP_OK,[
-            "Location" => $this->generateUrl("app_game_getGamesById", ["id" => $updatedGame->getId()])
+            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGame->getId()])
         ]);
     }
 
     /**
-     * @Route("/games/{id}", name="app_game_deleteGames", methods={"DELETE"})
-     */
+    * endpoint to delete a game
+    * 
+    * @Route("/api/games/{id}", name="app_api_game_deleteGames", methods={"DELETE"})
+    */
     public function deleteGames(Game $game, EntityManagerInterface $entityManager): JsonResponse
     {
+        // Delete the game
         $entityManager->remove($game);
+        // Update in the DB
         $entityManager->flush();
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
