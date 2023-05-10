@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Gallery;
+use App\Entity\Game;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,15 @@ class GalleryRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByGame(Game $game): array
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.game = :game')
+            ->setParameter('game', $game)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

@@ -6,6 +6,7 @@ use App\Repository\ModeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ModeRepository::class)
@@ -16,21 +17,31 @@ class Mode
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="json")
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $json_stats = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="mode", orphanRemoval=true)
+     * 
      */
     private $games;
 

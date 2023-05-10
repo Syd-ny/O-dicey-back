@@ -20,51 +20,88 @@ class User
      * 
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128, unique=true)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64, unique=true)
+     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $login;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * 
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="dm", orphanRemoval=true)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $gamesDM;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="user", orphanRemoval=true)
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $characters;
 
     /**
      * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
+     * 
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $gameUsers;
 

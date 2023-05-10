@@ -83,7 +83,7 @@ class Character
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Groups({"character_list"})
-     * 
+     * @Groups({"character_read"})
      */
     private $user;
 
@@ -92,7 +92,8 @@ class Character
      * @ORM\JoinColumn(nullable=false)
      * 
      * @Groups({"character_list"})
-     * 
+     * @Groups({"character_read"})
+
      */
     private $game;
 

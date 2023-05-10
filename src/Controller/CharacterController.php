@@ -99,7 +99,7 @@ class CharacterController extends AbstractController
 
         //take the decoded data of game
         $gameId = $data["game"] ?? null;
-        $game = $userId ? $gameRepository->find($gameId) : null;
+        $game = $gameId ? $gameRepository->find($gameId) : null;
     
         if (!$game) {
             return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -192,3 +192,4 @@ class CharacterController extends AbstractController
         return $this->json("personnage supprimé avec succès", Response::HTTP_OK);
     }
 }
+
