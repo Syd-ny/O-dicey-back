@@ -1,3 +1,13 @@
 # route for login_check and getting the JWT
 api_login_check:
     path: /api/login_check
+
+mercure_hub:
+    path: /mercure/hub
+    methods: [GET]
+    defaults: { _controller: mercure.hub }
+
+mercure_subscribe:
+    path: /mercure/subscribe
+    methods: [GET]
+    defaults: { _controller: mercure.subscribe }
