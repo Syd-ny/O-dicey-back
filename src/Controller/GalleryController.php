@@ -16,20 +16,10 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/api/gallery", name="app_api_gallery_")
+ * @Route("/api/galleries", name="app_api_gallery_")
  */
 class GalleryController extends AbstractController
 {
-    ///**
-    // * @Route("/", name="")
-    // */
-    //public function index(): JsonResponse
-    //{
-    //    return $this->json([
-    //        'message' => 'Welcome to your new controller!',
-    //        'path' => 'src/Controller/GalleryController.php',
-    //    ]);
-    //}
 
     /**
     * @Route("", name="browse", methods={"GET"})
@@ -57,7 +47,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/game/{gameId}", name="get_galleries_by_game", requirements={"gameId"="\d+"},  methods={"GET"})
+     * @Route("/games/{gameId}", name="get_galleries_by_game", requirements={"gameId"="\d+"},  methods={"GET"})
      */
     public function getGalleriesByGame(int $gameId, GalleryRepository $galleryRepository, GameRepository $gameRepository): JsonResponse
     {
