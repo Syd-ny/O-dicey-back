@@ -102,6 +102,8 @@ class UserController extends AbstractController
     public function editUsers(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, User $user, ValidatorInterface $validator): JsonResponse
     {
 
+        $this->denyAccessUnlessGranted('EDIT', $user);
+
         // get the request content
         $data = $request->getContent();
 
@@ -145,6 +147,8 @@ class UserController extends AbstractController
      */
     public function deleteUsers(User $user, EntityManagerInterface $entityManager): JsonResponse
     {
+
+        $this->denyAccessUnlessGranted('EDIT', $user);
 
         $entityManager->remove($user);
         $entityManager->flush();

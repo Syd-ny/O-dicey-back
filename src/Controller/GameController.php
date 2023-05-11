@@ -129,6 +129,9 @@ class GameController extends AbstractController
     */
     public function editGames(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Game $game, ValidatorInterface $validator, UserRepository $userRepository, ModeRepository $modeRepository): JsonResponse
     {
+
+        $this->denyAccessUnlessGranted('EDIT', $game);
+
         // Get request content (json)
         $data = $request->getContent();
 
@@ -204,6 +207,9 @@ class GameController extends AbstractController
     */
     public function deleteGames($id, Game $game, EntityManagerInterface $entityManager): JsonResponse
     {
+
+        $this->denyAccessUnlessGranted('DELETE', $game);
+
         // Delete the game
         $entityManager->remove($game);
         // Update in the DB

@@ -25,16 +25,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class CharacterController extends AbstractController
 {
-    // /**
-    //  * @Route("", name="browse", methods={get})
-    //  */
-    // public function index(): JsonResponse
-    // {
-    //     return $this->json([
-    //         'message' => 'Welcome to your new controller!',
-    //         'path' => 'src/Controller/CharacterController.php',
-    //     ]);
-    // }
 
     /**
     * @Route("", name="browse", methods={"GET"})
