@@ -5,64 +5,119 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"users", "charactersByUser", "invitesByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128, unique=true)
+     * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=64, unique=true)
+     * @Groups({"users", "charactersByUser", "invitesByUser"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $login;
 
     /**
      * @ORM\Column(type="string", length=64)
+     * @Groups({"users"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
+     * @Groups({"users"})
+     * @Groups({"character_list"})
+     * @Groups({"character_read"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $picture;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $createdAt;
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="dm", orphanRemoval=true)
+     * @Groups({"users"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
      */
     private $gamesDM;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="user", orphanRemoval=true)
+     * @Groups({"users", "charactersByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $characters;
 
     /**
-     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user", orphanRemoval=true)
+     * @Groups({"users", "invitesByUser"})
+     * @Groups({"gallery_list"})
+     * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $gameUsers;
+
+    /**
+     * @ORM\Column(type="json")
+     * @Groups({"users"})
+     * @Groups({"games"})
+     */
+    private $roles = [];
 
     public function __construct()
     {
@@ -236,5 +291,59 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+        
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): ?string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): ?string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
