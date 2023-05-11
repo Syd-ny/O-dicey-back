@@ -5,4 +5,3 @@ mercure:
             public_url: '%env(MERCURE_PUBLIC_URL)%'
             jwt:
                 secret: '%kernel.project_dir%/config/jwt/private.pem'
-                public_key: '%kernel.project_dir%/config/jwt/public.pem'

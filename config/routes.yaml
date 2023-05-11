@@ -11,3 +11,8 @@ mercure_subscribe:
     path: /mercure/subscribe
     methods: [GET]
     defaults: { _controller: mercure.subscribe }
+
+test_mercure:
+    path: /test/mercure
+    methods: [GET]
+    defaults: { _controller: App\Controller\TestController::mercureTestAction }
