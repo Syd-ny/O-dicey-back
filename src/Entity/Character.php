@@ -19,7 +19,7 @@ class Character
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
-     * @Groups({"users"})
+     * @Groups({"users", "charactersByUser"})
      */
     private $id;
 
