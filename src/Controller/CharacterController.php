@@ -101,7 +101,7 @@ class CharacterController extends AbstractController
         $entityManager->persist($character);
         $entityManager->flush();
 
-        return $this->json($character,200,[], ["groups"=> ["character_read"]]);
+        return $this->json($character,200,[], ["groups"=> ["character_add"]]);
     }
 
     /**
@@ -158,7 +158,7 @@ class CharacterController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->json($character,200,[], ["groups"=> ["character_read"]]);
+        return $this->json($character,200,[], ["groups"=> ["character_edit"]]);
     }
 
     /**

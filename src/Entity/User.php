@@ -23,6 +23,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users", "charactersByUser", "invitesByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -41,8 +43,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=64, unique=true)
      * @Groups({"users", "charactersByUser", "invitesByUser"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -61,8 +61,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"users"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -72,8 +70,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      * @Groups({"games"})
      */
     private $updatedAt;
