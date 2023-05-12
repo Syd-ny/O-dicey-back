@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CharacterRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -26,7 +27,7 @@ class Character
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
@@ -37,7 +38,7 @@ class Character
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"charactersByUser"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
@@ -48,7 +49,7 @@ class Character
     /**
      * @ORM\Column(type="json", nullable=true)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
@@ -59,7 +60,7 @@ class Character
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
@@ -70,7 +71,7 @@ class Character
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
@@ -81,7 +82,7 @@ class Character
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
      * @Groups({"users","charactersByUser"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
@@ -92,7 +93,7 @@ class Character
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"users","charactersByUser"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"games"})
@@ -116,6 +117,11 @@ class Character
      * @Groups({"character_read"})
      */
     private $game;
+
+    public function __construct()
+    {
+        $this->createdAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {

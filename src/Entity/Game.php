@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -24,7 +25,7 @@ class Game
      * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      */
     private $id;
 
@@ -36,7 +37,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      * @Assert\NotBlank
      */
     private $name;
@@ -49,7 +50,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      */
     private $status;
 
@@ -60,7 +61,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      */
     private $updatedAt;
 
@@ -71,7 +72,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
      */
     private $createdAt;
 
@@ -112,6 +113,7 @@ class Game
         $this->characters = new ArrayCollection();
         $this->galleries = new ArrayCollection();
         $this->gameUsers = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
