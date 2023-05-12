@@ -153,6 +153,7 @@ class CharacterController extends AbstractController
             return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
+        $character->setupdatedAt(new \DateTimeImmutable());
         $character->setUser($user);
         $character->setGame($game);
 
