@@ -9,12 +9,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/backoffice/main", name="app_backoffice_main")
+     * @Route("/backoffice/home", name="app_backoffice_home")
      */
-    public function index(): Response
+    public function home(): Response
     {
-        return $this->render('backoffice/main/index.html.twig', [
-            'controller_name' => 'MainController',
-        ]);
+        return $this->render('backoffice/main/home.html.twig');
     }
+
 }
