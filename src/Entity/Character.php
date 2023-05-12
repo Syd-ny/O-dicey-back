@@ -18,6 +18,8 @@ class Character
      * @ORM\Column(type="integer")
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -29,6 +31,8 @@ class Character
      * @Groups({"$charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -40,6 +44,8 @@ class Character
      * @Groups({"$charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -51,6 +57,8 @@ class Character
      * @Groups({"$charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -62,6 +70,8 @@ class Character
      * @Groups({"$charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -73,6 +83,8 @@ class Character
      * @Groups({"$charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -84,6 +96,8 @@ class Character
      * @Groups({"$charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -95,6 +109,8 @@ class Character
      * @Groups({"$charactersByGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
      */
@@ -105,6 +121,8 @@ class Character
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      */
     private $user;
 
@@ -114,6 +132,8 @@ class Character
      * @Groups({"users","charactersByUser"}) 
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      */
     private $game;
 
