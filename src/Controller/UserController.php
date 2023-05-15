@@ -106,17 +106,22 @@ class UserController extends AbstractController
 
         // get the request content
         $data = $request->getContent();
+        // Converts request content to an array
+        $dataDecoded = json_decode($data, true);
+        // If the request content has a new password. 
+        if(isset($dataDecoded['password'])) {
+            // Hash the new password
+            $hashedPassword = password_hash($dataDecoded['password'],PASSWORD_DEFAULT);
+            // Replace the old password with the new one in $dataDecoded
+            $dataDecoded['password'] = $hashedPassword;
+        }
+        // Converts new data to a Json
+        $newData = json_encode($dataDecoded);
 
         // if invalid JSON, return JSON to inform of the invalidity
         try{
             // deserializing json into entity
-            $updatedUser = $serializer->deserialize($data, User::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-            // TODO
-            // if (password_verify($updatedUser->getPassword(), PASSWORD_DEFAULT) === false) {
-            //     $passwordHashed = password_hash($updatedUser->getPassword(), PASSWORD_DEFAULT);
-            //     $updatedUser->setPassword($passwordHashed);
-            // }
-            // dd($updatedUser);
+            $updatedUser = $serializer->deserialize($newData, User::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"], Response::HTTP_BAD_REQUEST);
