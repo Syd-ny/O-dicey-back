@@ -76,11 +76,6 @@ class OdiceyProvider
         
     ];
 
-    // array of characters
-    private $characters = [
-        
-    ];
-
     /**
      * Get a random game
      */
@@ -127,13 +122,5 @@ class OdiceyProvider
     public function gallery()
     {
         return $this->galleries[array_rand($this->galleries)];
-    }
-
-    /**
-     * Get a random character
-     */
-    public function character()
-    {
-        return $this->characters[array_rand($this->characters)];
     }
 }

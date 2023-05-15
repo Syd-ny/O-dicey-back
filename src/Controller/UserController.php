@@ -6,6 +6,7 @@ use App\Entity\GameUsers;
 use App\Entity\User;
 use App\Repository\GameUsersRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -106,12 +107,22 @@ class UserController extends AbstractController
 
         // get the request content
         $data = $request->getContent();
+        // Converts request content to an array
+        $dataDecoded = json_decode($data, true);
+        // If the request content has a new password. 
+        if(isset($dataDecoded['password'])) {
+            // Hash the new password
+            $hashedPassword = password_hash($dataDecoded['password'],PASSWORD_DEFAULT);
+            // Replace the old password with the new one in $dataDecoded
+            $dataDecoded['password'] = $hashedPassword;
+        }
+        // Converts new data to a Json
+        $newData = json_encode($dataDecoded);
 
         // if invalid JSON, return JSON to inform of the invalidity
         try{
             // deserializing json into entity
-            $updatedUser = $serializer->deserialize($data, User::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-            
+            $updatedUser = $serializer->deserialize($newData, User::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"], Response::HTTP_BAD_REQUEST);
@@ -132,6 +143,9 @@ class UserController extends AbstractController
             return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        // Update the updatedAt field with the current date and time
+        $updatedUser->setUpdatedAt(new DateTimeImmutable());
+        
         // edit the user in the DB
         $entityManager->flush();
  

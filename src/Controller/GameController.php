@@ -189,7 +189,7 @@ class GameController extends AbstractController
         }
 
         // Update the updatedAt field with the current date and time
-        $game->setUpdatedAt(new DateTimeImmutable(date("Y-m-d H:i:s")));
+        $game->setUpdatedAt(new DateTimeImmutable());
 
         // Edit the game in the DB
         $entityManager->flush();

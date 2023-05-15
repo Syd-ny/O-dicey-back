@@ -9,6 +9,7 @@ use App\Repository\User;
 use App\Repository\Game;
 use App\Repository\GameRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -153,8 +154,12 @@ class CharacterController extends AbstractController
             return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
+        $character->setupdatedAt(new \DateTimeImmutable());
         $character->setUser($user);
         $character->setGame($game);
+
+        // Update the updatedAt field with the current date and time
+        $character->setUpdatedAt(new DateTimeImmutable());
 
         $entityManager->flush();
 
