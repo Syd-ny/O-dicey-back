@@ -26,7 +26,7 @@
 		<!-- Nav -->
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<div class="container-fluid">
-				<a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
+				<a href="{{path("app_backoffice_home")}}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
 					<span class="header-logo__title">O'Dicey</span>
 				</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
@@ -36,7 +36,7 @@
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						{% block nav %}
 							<li class="nav-item">
-								<a class="nav-link" href="#">Accueil</a>
+								<a class="nav-link" href="{{path("app_backoffice_home")}}">Accueil</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="{{path("app_backoffice_user_list")}}">
