@@ -27,7 +27,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/users/{id}", name="app_backoffice_user_show", methods={"GET"})
+     * @Route("/backoffice/users/{id}", name="app_backoffice_user_show", methods={"GET"}, requirements={"id"="\d+"})
      */
     public function show(User $user): Response
     {
@@ -88,7 +88,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/users/{id}", name="app_backoffice_user_delete", methods={"POST"})
+     * @Route("/backoffice/users/{id}", name="app_backoffice_user_delete", methods={"POST"}, requirements={"id"="\d+"})
      */
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
