@@ -32,17 +32,34 @@
 
             {% endif %}
 
-            {% if (user.characters != null) %}
+            {% if (user.gamesDm != null) %}
                 <tr class="table-active">
-                <th scope="col">Personnages</th>
-                    {% for character in user.characters %}
+                    <th scope="col">Maître du jeu</th>
+                    <td>
+                    {% for gameDm in user.gamesDm %}
+                        
+                        Partie : {{gameDm.name}}
+                        <a href="#"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                        <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                        <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a>
+                        <br>
+
+                    {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+
+            {% if (user.characters != null) %}
+                {% for character in user.characters %}
+                <tr class="table-active">
+                    <th scope="col">Partie : {{character.game.name}}</th>
                         
                         <td>{{ character.name }}
                         <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
-                        <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a></td>
+                        <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a> </td>
 
-                    {% endfor %}
                 </tr>
+                {% endfor %}
             {% endif %}
         </tbody>
     </table>
