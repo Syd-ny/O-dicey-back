@@ -21,7 +21,7 @@ class Character
      * @Groups({"character_add"})
      * @Groups({"character_edit"})
      * @Groups({"games"})
-     * @Groups({"users"})
+     * @Groups({"users", "charactersByUser"})
      */
     private $id;
 

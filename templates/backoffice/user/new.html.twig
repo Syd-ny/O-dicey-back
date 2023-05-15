@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un utilisateur{% endblock %}
+
+{% block body %}
+    <h1 class="mt-3 mx-3">Nouvel utilisateur</h1>
+
+    {{ include('backoffice/user/_form.html.twig') }}
+
+{% endblock %}

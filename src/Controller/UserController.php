@@ -111,7 +111,7 @@ class UserController extends AbstractController
         try{
             // deserializing json into entity
             $updatedUser = $serializer->deserialize($data, User::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-
+            
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"], Response::HTTP_BAD_REQUEST);
