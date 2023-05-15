@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class GameController extends AbstractController
 {
     /**
-     * @Route("/backoffice/game", name="app_backoffice_game_list")
+     * @Route("/backoffice/games", name="app_backoffice_game_list")
      */
     public function list(GameRepository $gameRepository): Response
     {
@@ -28,7 +28,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * @Route("/backoffice/game/{id}", name="app_backoffice_game_show", methods={"GET"}, requirements={"id"="\d+"})
+    * @Route("/backoffice/games/{id}", name="app_backoffice_game_show", methods={"GET"}, requirements={"id"="\d+"})
     */
     public function show(Game $game): Response
     {
@@ -38,7 +38,7 @@ class GameController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/game/new", name="app_backoffice_game_new", methods={"GET", "POST"})
+     * @Route("/backoffice/games/new", name="app_backoffice_game_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -64,7 +64,7 @@ class GameController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/game/{id}/edit", name="app_backoffice_game_edit", methods={"GET", "POST"})
+     * @Route("/backoffice/games/{id}/edit", name="app_backoffice_game_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, EntityManagerInterface $entityManager, Game $game): Response
     {
@@ -88,7 +88,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * @Route("/backoffice/game/{id}", name="app_backoffice_game_delete", methods={"POST"}, requirements={"id"="\d+"})
+    * @Route("/backoffice/games/{id}", name="app_backoffice_game_delete", methods={"POST"}, requirements={"id"="\d+"})
     */
     public function delete(Request $request, Game $game, GameRepository $gameRepository): Response
     {
