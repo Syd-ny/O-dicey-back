@@ -39,6 +39,7 @@
                     {% for gameDm in user.gamesDm %}
                         
                         Partie : {{gameDm.name}}
+                        {# ! Link the partie's show/edit/delete with the proper routes #}
                         <a href="#"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
                         <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                         <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a>
@@ -55,8 +56,7 @@
                     <th scope="col">Partie : {{character.game.name}}</th>
                         
                         <td>{{ character.name }}
-                        <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
-                        <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a> </td>
+                        <a href="{{ path('app_backoffice_character_edit', {'id': character.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a></td>
 
                 </tr>
                 {% endfor %}

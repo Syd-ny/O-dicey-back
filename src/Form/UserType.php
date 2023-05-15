@@ -30,6 +30,13 @@ class UserType extends AbstractType
                 "attr" => [
                     "placeholder" => "Pseudo de l'utilisateur"
                 ]
+            ])
+
+            ->add('picture',TextType::class,[
+                "label" => "Image de profil",
+                "attr" => [
+                    "placeholder" => "Url de l'image"
+                ]
             ]);
 
             // Custom form options to display conditionnally, if I'm updating a user I can't change their password

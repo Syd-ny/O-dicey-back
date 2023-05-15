@@ -66,7 +66,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/users/{id}/edit", name="app_backoffice_user_edit", methods={"GET", "POST"})
+     * @Route("/backoffice/users/{id}/edit", name="app_backoffice_user_edit", methods={"GET", "POST"}, requirements={"id"="\d+"})
      */
     public function edit(Request $request, User $user, UserRepository $userRepository): Response
     {
@@ -76,6 +76,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setUpdatedAt(new \DateTimeImmutable());
             $userRepository->add($user, true);
 
             return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
