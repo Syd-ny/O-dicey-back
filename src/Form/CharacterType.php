@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Character;
-use App\Form\DataTransformer\JsonTransformer;
-use App\Form\Type\JsonType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,14 +11,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CharacterType extends AbstractType
 {
-
-    private $JsonTransformer;
-
-    public function __construct(JsonTransformer $JsonTransformer)
-    {
-        $this->JsonTransformer = $JsonTransformer;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 
@@ -32,7 +22,8 @@ class CharacterType extends AbstractType
                 ]
             ])
 
-            ->get('character-stats')->addModelTransformer($this->JsonTransformer)
+            // ! find a way to display the stats (prefilled and each in its own input?)
+            // ->add('stats',StatsDndType::class)
 
             ->add('inventory',TextareaType::class,[
                 "label" => "Inventaire",
