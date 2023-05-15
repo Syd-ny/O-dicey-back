@@ -9,6 +9,7 @@ use App\Repository\User;
 use App\Repository\Game;
 use App\Repository\GameRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -155,6 +156,9 @@ class CharacterController extends AbstractController
 
         $character->setUser($user);
         $character->setGame($game);
+
+        // Update the updatedAt field with the current date and time
+        $character->setUpdatedAt(new DateTimeImmutable());
 
         $entityManager->flush();
 

@@ -6,6 +6,7 @@ use App\Entity\GameUsers;
 use App\Entity\User;
 use App\Repository\GameUsersRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -142,6 +143,9 @@ class UserController extends AbstractController
             return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        // Update the updatedAt field with the current date and time
+        $updatedUser->setUpdatedAt(new DateTimeImmutable());
+        
         // edit the user in the DB
         $entityManager->flush();
  
