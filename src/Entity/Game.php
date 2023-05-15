@@ -23,6 +23,8 @@ class Game
      * @Groups({"games"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
+     * @Groups({"character_add"})
+     * @Groups({"character_edit"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"charactersByGame"})
@@ -32,8 +34,6 @@ class Game
     /**
      * @ORM\Column(type="string", length=64)
      * @Groups({"users", "charactersByUser", "invitesByUser"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -45,8 +45,6 @@ class Game
     /**
      * @ORM\Column(type="integer")
      * @Groups({"users"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -56,8 +54,6 @@ class Game
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -67,8 +63,6 @@ class Game
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})

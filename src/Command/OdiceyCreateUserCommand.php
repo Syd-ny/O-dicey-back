@@ -58,7 +58,6 @@ class OdiceyCreateUserCommand extends Command
 
         if ($password) {
             $user->setPassword(password_hash($password, PASSWORD_DEFAULT));
-
             $io->note(sprintf('You passed a password: %s', $password));
         }
 
@@ -75,6 +74,5 @@ class OdiceyCreateUserCommand extends Command
 
         return Command::SUCCESS;
     }
-
 }
 
