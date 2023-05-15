@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification de {{ user.login }}{% endblock %}
+
+{% block body %}
+    <h1 class="mt-3 mx-3">Modifier le profil de {{ user.login }}</h1>
+
+    {{ include('backoffice/user/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+    {{ include('backoffice/user/_delete_form.html.twig') }}
+{% endblock %}
