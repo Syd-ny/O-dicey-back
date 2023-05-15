@@ -111,6 +111,16 @@ class GameController extends AbstractController
         $game->setMode($mode);
         $game->setDm($dm);
 
+        // Adds the DM role to the user who created the game and does not yet have this role
+        $dm = $game->getDm();
+        $dmRoles = $dm->getRoles();
+        if(!in_array("ROLE_DM", $dmRoles)) {
+            $dmRoles[] = "ROLE_DM";
+            $game = $game->setDm($dm->setRoles($dmRoles));
+        }
+
+        // dd($game);
+
         // Add the game in the BDD
         $entityManager->persist($game);
         $entityManager->flush();

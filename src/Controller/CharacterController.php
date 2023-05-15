@@ -28,6 +28,8 @@ class CharacterController extends AbstractController
 {
 
     /**
+    * endpoint for all characters
+    * 
     * @Route("", name="browse", methods={"GET"})
     */
     public function browse(CharacterRepository $characterRepository): JsonResponse
@@ -40,6 +42,8 @@ class CharacterController extends AbstractController
     }
 
     /**
+    * endpoint for a specific character
+    * 
     * @Route("/{id}", name="read", methods={"GET"})
     */
     public function read(Character $character): JsonResponse
@@ -51,6 +55,8 @@ class CharacterController extends AbstractController
     }
 
     /**
+    *  endpoint for adding a character
+    * 
     * @Route("", name="add", methods={"POST"})
     */
     public function add(
@@ -106,6 +112,8 @@ class CharacterController extends AbstractController
     }
 
     /**
+    *  endpoint for editing a character
+    * 
     * @Route("/{id}", name="edit", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
     */
     public function edit(
@@ -119,13 +127,17 @@ class CharacterController extends AbstractController
         ValidatorInterface $validator): JsonResponse
     {
 
+        
         $character = $characterRepository->find($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $character);
+
         if (!$character) {
             return $this->json("Le personnage n'existe pas.", Response::HTTP_NOT_FOUND);
         }
-    
+        
 
-        // we get the object
+        // we get the Json
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
@@ -166,6 +178,8 @@ class CharacterController extends AbstractController
     }
 
     /**
+    * endpoint for deleting a character
+    *
     * @Route("/{id}", name="delete", requirements={"id"="\d+"}, methods={"DELETE"})
     */
     public function delete(
@@ -175,6 +189,8 @@ class CharacterController extends AbstractController
     {
 
         $character = $characterRepository->find($id);
+
+        $this->denyAccessUnlessGranted('DELETE', $character);
 
         if ($character === null){
             return $this->json("personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
