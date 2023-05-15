@@ -27,6 +27,16 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/backoffice/users/{id}", name="app_backoffice_user_show", methods={"GET"})
+     */
+    public function show(User $user): Response
+    {
+        return $this->render('backoffice/user/show.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
      * @Route("/backoffice/users/new", name="app_backoffice_user_new", methods={"GET", "POST"})
      */
     public function new(Request $request, UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): Response
@@ -53,5 +63,42 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @Route("/backoffice/users/{id}/edit", name="app_backoffice_user_edit", methods={"GET", "POST"})
+     */
+    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    {
+
+        $form = $this->createForm(UserType::class, $user, ["custom_option" => "edit"]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userRepository->add($user, true);
+
+            return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('backoffice/user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/backoffice/users/{id}", name="app_backoffice_user_delete", methods={"POST"})
+     */
+    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    {
+        // ! implement the CSRF tokens validation (symfony bundle)
+        // if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+        //     $userRepository->remove($user, true);
+        // }
+
+        $userRepository->remove($user, true);
+
+        return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
     }
 }

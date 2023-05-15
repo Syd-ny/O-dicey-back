@@ -19,7 +19,7 @@ class UserType extends AbstractType
 
         $builder
             ->add('email',EmailType::class,[
-                "label" => "L'email",
+                "label" => "Email",
                 "attr" => [
                     "placeholder" => "Email de l'utilisateur"
                 ]
@@ -32,17 +32,18 @@ class UserType extends AbstractType
                 ]
             ]);
 
-            // J'utilise une option custom du formulaire pour faire un affichage conditonnel
+            // Custom form options to display conditionnally, if I'm updating a user I can't change their password
             if($options["custom_option"] !== "edit"){
                 $builder
                     ->add('password',RepeatedType::class,[
                         "type" => PasswordType::class,
-                        'invalid_message' => 'Les deux champs doivent être identique',
+                        'invalid_message' => 'Les deux champs doivent être identiques',
                         'required' => true,
                         'first_options'  => ['label' => 'Le mot de passe',"attr" => ["placeholder" => "*****"]],
                         'second_options' => ['label' => 'Répétez le mot de passe',"attr" => ["placeholder" => "*****"]],
                     ]);
             }
+
             $builder
                 ->add('roles',ChoiceType::class,[
                     "label" => "Privilèges",

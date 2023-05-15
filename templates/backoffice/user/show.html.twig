@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ user.login }}{% endblock %}
+
+{% block body %}
+    <h1 class="mt-3 mx-3">{{ user.login }}</h1>
+
+    <table class="table table-hover">
+        <tbody>
+            <tr class="table-active">
+                <th scope="col">Id</th>
+                <td>{{ user.id }}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="col">Email</th>
+                <td>{{ user.email }}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="col">Rôles</th>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="col">Mot de passe</th>
+                <td>{{ user.password }}</td>
+            </tr>
+            {% if (user.picture != null) %}
+            
+                <tr class="table-active">
+                    <th scope="col">Photo de profil</th>
+                    <td><img src="{{ user.picture }}" height="150" width="150"></td>
+                </tr>
+
+            {% endif %}
+
+            {% if (user.characters != null) %}
+                <tr class="table-active">
+                <th scope="col">Personnages</th>
+                    {% for character in user.characters %}
+                        
+                        <td>{{ character.name }}
+                        <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                        <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a></td>
+
+                    {% endfor %}
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backoffice_user_list') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
+
+    <a href="{{ path('app_backoffice_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
+    {{ include('backoffice/user/_delete_form.html.twig') }}
+{% endblock %}
