@@ -42,7 +42,7 @@
                       {% if game.characters is not empty %}
                         {% for character in game.characters %}
                           Personnage : {{ character.name }}
-                          Propriétaire : {{ character.user.name }}
+                          Propriétaire : {{ character.user.login }}
                           <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                           <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a>
                           <br>
@@ -59,7 +59,7 @@
 
     <a href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
     <form method="post" action="{{ path('app_backoffice_game_delete', {'id': game.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');">
-        {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}"> #}
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">
         <button class="btn btn-sm btn-outline-danger mx-3 mt-2">Supprimer</button>
     </form>
 {% endblock %}
