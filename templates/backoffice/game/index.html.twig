@@ -27,10 +27,6 @@
                 <td>
                     <a href="{{ path('app_backoffice_game_show', {'id': game.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
                     <a href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
-                    <form method="post" action="{{ path('app_backoffice_game_delete', {'id': game.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');">
-                        {# <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}"> #}
-                        <button class="btn btn-sm btn-outline-danger mx-3 mt-2">Supprimer</button>
-                    </form>
                 </td>
             </tr>
         {% else %}

@@ -11,10 +11,15 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+/**
+ * @Route("/backoffice/users")
+ * 
+ */
 class UserController extends AbstractController
 {
     /**
-     * @Route("/backoffice/users", name="app_backoffice_user_list")
+     * @Route("", name="app_backoffice_user_list")
      */
     public function list(UserRepository $userRepository): Response
     {
@@ -27,7 +32,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/users/{id}", name="app_backoffice_user_show", methods={"GET"}, requirements={"id"="\d+"})
+     * @Route("/{id}", name="app_backoffice_user_show", methods={"GET"}, requirements={"id"="\d+"})
      */
     public function show(User $user): Response
     {
@@ -37,7 +42,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/users/new", name="app_backoffice_user_new", methods={"GET", "POST"})
+     * @Route("/new", name="app_backoffice_user_new", methods={"GET", "POST"})
      */
     public function new(Request $request, UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): Response
     {
@@ -66,7 +71,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/users/{id}/edit", name="app_backoffice_user_edit", methods={"GET", "POST"}, requirements={"id"="\d+"})
+     * @Route("/{id}/edit", name="app_backoffice_user_edit", methods={"GET", "POST"}, requirements={"id"="\d+"})
      */
     public function edit(Request $request, User $user, UserRepository $userRepository): Response
     {
@@ -90,16 +95,14 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/users/{id}", name="app_backoffice_user_delete", methods={"POST"}, requirements={"id"="\d+"})
+     * @Route("/{id}", name="app_backoffice_user_delete", methods={"POST"}, requirements={"id"="\d+"})
      */
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
         // ! implement the CSRF tokens validation (symfony bundle)
-        // if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-        //     $userRepository->remove($user, true);
-        // }
-
-        $userRepository->remove($user, true);
+        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+            $userRepository->remove($user, true);
+        }
 
         return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
     }
