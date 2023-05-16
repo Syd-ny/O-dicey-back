@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\GameUsers;
+use App\Repository\GameRepository;
 use App\Entity\User;
-use App\Repository\GameUsersRepository;
+use App\Repository\CharacterRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -203,6 +203,32 @@ class UserController extends AbstractController
 
         return $this->json($invitesByUser, Response::HTTP_OK, [], [
             'groups' => 'invitesByUser'
+        ]);
+    }
+
+    /**
+    * Get the character of an user for a specific game
+
+    * @Route("/api/users/{userId}/games/{gameId}/character", name="app_api_user_getCharacterByUserAndGame", methods={"GET"})
+    */
+    public function getCharacterByUserAndGame(UserRepository $userRepository, CharacterRepository $characterRepository, GameRepository $gameRepository, int $userId, int $gameId): JsonResponse
+    {
+        $user = $userRepository->find($userId);
+        $game = $gameRepository->find($gameId);
+
+        // get the entry of table Character for the user and specific game
+        $gameUser = $characterRepository->findOneBy(['user' => $user, 'game' => $game]);
+
+        // check if entry exist
+        if (!$gameUser) {
+            return $this->json(['error' => 'Aucun personnage trouvé pour cet utilisateur et cette partie'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Get the character associated with GameUsers entry
+        $character = $user->getCharacter($game);
+
+        return $this->json($character, Response::HTTP_OK, [], [
+            'groups' => 'users'
         ]);
     }
 
