@@ -41,11 +41,9 @@ class CharacterController extends AbstractController
     public function delete(Request $request, Character $character, CharacterRepository $characterRepository): Response
     {
         // ! implement the CSRF tokens validation (symfony bundle)
-        // if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-        //     $userRepository->remove($user, true);
-        // }
-
-        $characterRepository->remove($character, true);
+        if ($this->isCsrfTokenValid('delete'.$character->getId(), $request->request->get('_token'))) {
+            $characterRepository->remove($character, true);
+        }
 
         return $this->redirectToRoute('app_backoffice_user_show', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
     }

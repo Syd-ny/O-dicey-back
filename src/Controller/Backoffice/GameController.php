@@ -12,10 +12,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+/**
+ * @Route("/backoffice/games")
+ * 
+ */
 class GameController extends AbstractController
 {
     /**
-     * @Route("/backoffice/games", name="app_backoffice_game_list")
+     * @Route("", name="app_backoffice_game_list")
      */
     public function list(GameRepository $gameRepository): Response
     {
@@ -28,7 +32,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * @Route("/backoffice/games/{id}", name="app_backoffice_game_show", methods={"GET"}, requirements={"id"="\d+"})
+    * @Route("/{id}", name="app_backoffice_game_show", methods={"GET"}, requirements={"id"="\d+"})
     */
     public function show(Game $game): Response
     {
@@ -38,7 +42,7 @@ class GameController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/games/new", name="app_backoffice_game_new", methods={"GET", "POST"})
+     * @Route("/new", name="app_backoffice_game_new", methods={"GET", "POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -64,7 +68,7 @@ class GameController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/games/{id}/edit", name="app_backoffice_game_edit", methods={"GET", "POST"})
+     * @Route("/{id}/edit", name="app_backoffice_game_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, EntityManagerInterface $entityManager, Game $game): Response
     {
@@ -88,16 +92,14 @@ class GameController extends AbstractController
     }
 
     /**
-    * @Route("/backoffice/games/{id}", name="app_backoffice_game_delete", methods={"POST"}, requirements={"id"="\d+"})
+    * @Route("/{id}", name="app_backoffice_game_delete", methods={"POST"}, requirements={"id"="\d+"})
     */
     public function delete(Request $request, Game $game, GameRepository $gameRepository): Response
     {
         // ! implement the CSRF tokens validation (symfony bundle)
-        // if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-        //     $userRepository->remove($user, true);
-        // }
-
-        $gameRepository->remove($game, true);
+        if ($this->isCsrfTokenValid('delete'.$game->getId(), $request->request->get('_token'))) {
+            $gameRepository->remove($game, true);
+        }
 
         return $this->redirectToRoute('app_backoffice_game_list', [], Response::HTTP_SEE_OTHER);
     }
