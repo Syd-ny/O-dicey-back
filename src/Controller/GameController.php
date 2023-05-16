@@ -43,7 +43,7 @@ class GameController extends AbstractController
     public function getGamesById(Game $game): JsonResponse
     {
 
-        // TODO gérer si le film n'existe pas
+        
         if (!$game) {
             return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
         }

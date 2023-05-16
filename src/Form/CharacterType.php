@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+
+use App\Form\ModeStatsType;
 use App\Entity\Character;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -10,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CharacterType extends AbstractType
 {
@@ -25,10 +29,18 @@ class CharacterType extends AbstractType
                 ]
                 ])
 
+
+            ->add('stats', ModeStatsType::class, [
+                'label' => 'Stats',
+                "attr" => [
+                    "placeholder" => "Stats du personnage"
+                ]
+            ])
+
             ->add('stats',StatsType::class,[
                 "label" => "Statistiques"
                 ])
-            
+
             ->add('inventory',TextareaType::class,[
                 "label" => "Inventaire",
                 "attr" => [
