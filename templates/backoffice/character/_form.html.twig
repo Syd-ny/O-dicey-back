@@ -1,5 +1,6 @@
 <div class="container mx-4 mt-2 mb-2">
     {{ form_start(form) }}
+        {# {{ dump(form.stats) }} #}
         {{ form_widget(form) }}
         <button class="btn btn-outline-primary mb-3 mt-3 mx-3">{{ button_label|default('Sauvegarder') }}</button>
         <a href="{{ path('app_backoffice_user_show', {'id': character.user.id}) }}" class="btn btn-sm btn-outline-info mx-3">Retour au profil utilisateur</a>
