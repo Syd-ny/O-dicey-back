@@ -28,7 +28,7 @@ class CharacterController extends AbstractController
 
             return $this->redirectToRoute('app_backoffice_user_show', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
         }
-
+        
         return $this->renderForm('backoffice/character/edit.html.twig', [
             'character' => $character,
             'form' => $form,

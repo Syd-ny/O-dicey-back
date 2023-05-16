@@ -111,6 +111,16 @@ class GameController extends AbstractController
         $game->setMode($mode);
         $game->setDm($dm);
 
+        // Adds the DM role to the user who created the game and does not yet have this role
+        $dm = $game->getDm();
+        $dmRoles = $dm->getRoles();
+        if(!in_array("ROLE_DM", $dmRoles)) {
+            $dmRoles[] = "ROLE_DM";
+            $game = $game->setDm($dm->setRoles($dmRoles));
+        }
+
+        // dd($game);
+
         // Add the game in the BDD
         $entityManager->persist($game);
         $entityManager->flush();
@@ -231,5 +241,26 @@ class GameController extends AbstractController
         return $this->json($charactersByGame, Response::HTTP_OK, [], [
             'groups' => 'charactersByGame'
         ]);
+    }
+
+    /**
+    * endpoints for all galeries of a specific game
+    * 
+    * @Route("/api/games/{id}/galleries", name="app_api_game_getGalleriesByGame", requirements={"gameId"="\d+"},  methods={"GET"})
+    */
+    public function getGalleriesByGame(Game $game): JsonResponse
+    {
+        // get the characters of the current game
+        $galleriesByGame = $game->getGalleries();
+
+        if (!$game) {
+            return $this->json('Partie introuvable', Response::HTTP_NOT_FOUND);
+        }
+
+        if (count($galleriesByGame) === 0) {
+            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
     }
 }

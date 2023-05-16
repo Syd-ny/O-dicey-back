@@ -56,15 +56,15 @@ security:
         - { path: ^/backoffice, roles: ROLE_ADMIN }
 
         # Security/Voter/GameSecurityVoter for specific permissions
-        - { path: ^/api/games/\d+, roles: ROLE_MJ, methods: [PUT, DELETE] }
-        - { path: ^/api/galleries, roles: ROLE_MJ }
+        - { path: ^/api/games/\d+, roles: ROLE_DM, methods: [PUT, DELETE] }
+        - { path: ^/api/galleries, roles: ROLE_DM }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
         # The admin also has a user role
         ROLE_ADMIN: ROLE_USER
         # The DM also has a user role
-        ROLE_MJ: ROLE_USER
+        ROLE_DM: ROLE_USER
 
 when@test:
     security:

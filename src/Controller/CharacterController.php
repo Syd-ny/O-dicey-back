@@ -22,15 +22,17 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/api/characters", name="app_api_characters_")
+ * @Route("/api/characters", name="app_api_character_")
  */
 class CharacterController extends AbstractController
 {
 
     /**
-    * @Route("", name="browse", methods={"GET"})
+    * endpoint for all characters
+    * 
+    * @Route("", name="getCharacters", methods={"GET"})
     */
-    public function browse(CharacterRepository $characterRepository): JsonResponse
+    public function getCharacters(CharacterRepository $characterRepository): JsonResponse
     {
         $characters = $characterRepository->findAll();
 
@@ -40,9 +42,11 @@ class CharacterController extends AbstractController
     }
 
     /**
-    * @Route("/{id}", name="read", methods={"GET"})
+    * endpoint for a specific character
+    * 
+    * @Route("/{id}", name="getCharactersById", methods={"GET"})
     */
-    public function read(Character $character): JsonResponse
+    public function getCharactersById(Character $character): JsonResponse
     {
 
         if ($character === null){return $this->json("ce joueur n'existe pas", Response::HTTP_NOT_FOUND);}
@@ -51,9 +55,11 @@ class CharacterController extends AbstractController
     }
 
     /**
-    * @Route("", name="add", methods={"POST"})
+    *  endpoint for adding a character
+    * 
+    * @Route("", name="postCharacters", methods={"POST"})
     */
-    public function add(
+    public function postCharacters(
         //important to import UserRepository and GameRepository to show the 2 FK User and Game.
         UserRepository $userRepository,
         GameRepository $gameRepository,
@@ -106,9 +112,11 @@ class CharacterController extends AbstractController
     }
 
     /**
-    * @Route("/{id}", name="edit", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
+    *  endpoint for editing a character
+    * 
+    * @Route("/{id}", name="editCharacters", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
     */
-    public function edit(
+    public function editCharacters(
         $id,
         UserRepository $userRepository,
         GameRepository $gameRepository,
@@ -119,13 +127,17 @@ class CharacterController extends AbstractController
         ValidatorInterface $validator): JsonResponse
     {
 
+        
         $character = $characterRepository->find($id);
+
+        $this->denyAccessUnlessGranted('EDIT', $character);
+
         if (!$character) {
             return $this->json("Le personnage n'existe pas.", Response::HTTP_NOT_FOUND);
         }
-    
+        
 
-        // we get the object
+        // we get the Json
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
@@ -139,43 +151,57 @@ class CharacterController extends AbstractController
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        // Converts request content to an array
         $data = json_decode($jsonContent, true);
-        $userId = $data["user"] ?? null;
-        $user = $userId ? $userRepository->find($userId) : null;
-
-        if (!$user) {
-            return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
+        // If request content a new user.
+        if (isset($data["user"])) {
+            // We check if the user of the request matches to an existing user 
+            $userId = $data["user"] ?? null;
+            $user = $userId ? $userRepository->find($userId) : null;
+            // If not, returns an error response
+            if (!$user) {
+                return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
+            }
+            // Add $user in $character
+            $character->setUser($user);
         }
 
-        $gameId = $data["game"] ?? null;
-        $game = $userId ? $gameRepository->find($gameId) : null;
-    
-        if (!$game) {
-            return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
+        // If request content a new game.
+        if (isset($data["game"])) {
+            // We check if the game of the request matches to an existing game 
+            $gameId = $data["game"] ?? null;
+            $game = $userId ? $gameRepository->find($gameId) : null;
+            // If not, returns an error response
+            if (!$game) {
+                return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
+            }
+            // Add $game in $character
+            $character->setGame($game);
         }
-
-        $character->setupdatedAt(new \DateTimeImmutable());
-        $character->setUser($user);
-        $character->setGame($game);
 
         // Update the updatedAt field with the current date and time
         $character->setUpdatedAt(new DateTimeImmutable());
 
+        // Edit the character in the DB
         $entityManager->flush();
 
         return $this->json($character,200,[], ["groups"=> ["character_edit"]]);
     }
 
     /**
-    * @Route("/{id}", name="delete", requirements={"id"="\d+"}, methods={"DELETE"})
+    * endpoint for deleting a character
+    *
+    * @Route("/{id}", name="deleteCharacters", requirements={"id"="\d+"}, methods={"DELETE"})
     */
-    public function delete(
+    public function deleteCharacters(
         $id,
         CharacterRepository $characterRepository,
         EntityManagerInterface $entityManager): JsonResponse
     {
 
         $character = $characterRepository->find($id);
+
+        $this->denyAccessUnlessGranted('DELETE', $character);
 
         if ($character === null){
             return $this->json("personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
