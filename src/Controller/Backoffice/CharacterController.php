@@ -17,7 +17,6 @@ class CharacterController extends AbstractController
      */
     public function edit(Request $request, Character $character, CharacterRepository $characterRepository): Response
     {
-
         $form = $this->createForm(CharacterType::class, $character, ["custom_option" => "edit"]);
 
         $form->handleRequest($request);
