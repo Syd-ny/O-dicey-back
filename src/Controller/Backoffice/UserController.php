@@ -99,7 +99,7 @@ class UserController extends AbstractController
      */
     public function delete(Request $request, User $user, UserRepository $userRepository): Response
     {
-        // ! implement the CSRF tokens validation (symfony bundle)
+        // implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $userRepository->remove($user, true);
         }

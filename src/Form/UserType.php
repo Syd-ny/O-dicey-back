@@ -56,7 +56,7 @@ class UserType extends AbstractType
                     "label" => "Privilèges",
                     "choices" => [
                         "Admin" => "ROLE_ADMIN",
-                        "MJ" => "ROLE_MJ"
+                        "Maître du jeu" => "ROLE_DM"
                     ],
                     "multiple" => true,
                     "expanded" => true

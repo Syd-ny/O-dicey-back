@@ -64,33 +64,36 @@ class GalleryController extends AbstractController
         ValidatorInterface $validator): JsonResponse
     {
 
+        
         // we get the object
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
         }
-
+        
         // Convert JSON into php object.
         $gallery = $serializer->deserialize( $jsonContent, Gallery::class,'json', ['datetime_format' => 'Y-m-d\TH:i:sP']);
-
+        
         $errors = $validator->validate($gallery);
         if (count($errors) > 0) {
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        //dd($gallery);
-
+        
         // decode the content on JSON
         $data = json_decode($jsonContent, true);
-
-        //take the decoded data of game
-        $gameId = $data["game"]["id"] ?? null;
+        
+        // retrieve gameId if $data["game_id"] is set
+        $gameId = $data["game_id"] ?? null;
         $game = $gameId ? $gameRepository->find($gameId) : null;
-    
+        
         if (!$game) {
-            return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
+            return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
         }
         $gallery->setGame($game);
 
+        // can't post a new gallery if you're not the DM of the game associated with the gallery
+        $this->denyAccessUnlessGranted('POST', $gallery);
+        
         $entityManager->persist($gallery);
         $entityManager->flush();
 
@@ -112,6 +115,8 @@ class GalleryController extends AbstractController
         ValidatorInterface $validator): JsonResponse
     {
 
+        $this->denyAccessUnlessGranted('EDIT', $gallery);
+
         // we get the object
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
@@ -131,11 +136,11 @@ class GalleryController extends AbstractController
         $data = json_decode($jsonContent, true);
 
         //take the decoded data of game
-        $gameId = $data["game"]["id"] ?? null;
+        $gameId = $data["game_id"] ?? null;
         $game = $gameId ? $gameRepository->find($gameId) : null;
     
         if (!$game) {
-            return $this->json("le jeu n'existe pas", Response::HTTP_BAD_REQUEST);
+            return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
         }
         $updatedGallery->setGame($game);
 
@@ -156,15 +161,15 @@ class GalleryController extends AbstractController
         EntityManagerInterface $entityManager): JsonResponse
     {
 
-        $gallery = $galleryRepository->find($id);
+        $this->denyAccessUnlessGranted('DELETE', $gallery);
 
         if ($gallery === null){
-            return $this->json("personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
+            return $this->json("Image introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
         }
 
         $galleryRepository->remove($gallery);
         $entityManager->flush();
 
-        return $this->json("personnage supprimé avec succès", Response::HTTP_OK);
+        return $this->json("Image supprimée avec succès", Response::HTTP_OK);
     }
 }
