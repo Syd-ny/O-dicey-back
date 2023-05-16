@@ -36,7 +36,7 @@ class Gallery
     private $mainPicture;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gallery")
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="galleries")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"gallery_list"})
      */

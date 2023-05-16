@@ -1,19 +1,114 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<!doctype html>
+<html lang="fr">
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- Bootstrap CSS -->
+		<link
+		href="https://bootswatch.com/5/lux/bootstrap.min.css" rel="stylesheet">
+		<!-- Bootstrap icons -->
+		<link
+		rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+		<!-- Our custom CSS -->
+
+		<title>
+			{% block title %}O'Dicey - Backoffice
+			{% endblock %}
+		</title>
+	</head>
+
+	<body>
+
+		<!-- Nav -->
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<div class="container-fluid">
+				<a href="{{path("app_backoffice_home")}}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none header-logo">
+					<span class="header-logo__title">O'Dicey</span>
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						{% block nav %}
+							<li class="nav-item">
+								<a class="nav-link" href="{{path("app_backoffice_home")}}">Accueil</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{path("app_backoffice_user_list")}}">
+									<i class="bi bi-people"></i>
+									Utilisateurs</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{path("app_backoffice_game_list")}}">
+									<i class="bi bi-dice-4"></i>
+									Parties</a>
+							</li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="bi bi-controller"></i>
+                                    Modes</a>
+                            </li>
+						{% endblock %}
+					</ul>
+					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
+						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+							<li class="nav-item dropdown">
+								<a
+									class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+									<!-- Bootstrap CSS -->
+									<link
+									href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+									<!-- Bootstrap icons -->
+									<link
+									rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+									<!-- Our custom CSS -->
+									<link
+									rel="stylesheet" href="css/oflix.css">
+
+									<title>O'Dicey</title>
+									<span>{{app.user.email}} | 
+									<i class="bi bi-person-square"></i>
+								</a>
+								<ul class="dropdown-menu">
+									<li>
+										<a class="dropdown-item" href="#">Profil</a>
+									</li>
+										<li>
+											<a class="dropdown-item" href="#">Frontoffice</a>
+										</li>
+									
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="#">Déconnexion</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					{% else %}
+						<a href="#"  class="btn btn-danger me-2 rounded">Connexion</a>
+					{% endif %}
+				</div>
+			</div>
+		</nav>
+
         {% block body %}{% endblock %}
+
+        <!-- footer -->
+        <footer class="container-fluid py-4 border-top text-center">
+            <span class="text-muted">O'Dicey made with &hearts; at O'clock !
+                <br><small>Thème :<a href="" class="link-secondary text-decoration-none">
+                        <i class="bi bi-toggle-on mx-1"></i>Roll20</a>
+                </small>
+            </a>
+        </span>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
     </body>
+</body>
 </html>
