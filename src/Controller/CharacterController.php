@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
- * @Route("/api/characters", name="app_api_characters_")
+ * @Route("/api/characters", name="app_api_character_")
  */
 class CharacterController extends AbstractController
 {
@@ -30,7 +30,7 @@ class CharacterController extends AbstractController
     /**
     * endpoint for all characters
     * 
-    * @Route("", name="app_api_character_getCharacters", methods={"GET"})
+    * @Route("", name="getCharacters", methods={"GET"})
     */
     public function getCharacters(CharacterRepository $characterRepository): JsonResponse
     {
@@ -44,7 +44,7 @@ class CharacterController extends AbstractController
     /**
     * endpoint for a specific character
     * 
-    * @Route("/{id}", name="app_api_character_getCharactersById", methods={"GET"})
+    * @Route("/{id}", name="getCharactersById", methods={"GET"})
     */
     public function getCharactersById(Character $character): JsonResponse
     {
@@ -57,7 +57,7 @@ class CharacterController extends AbstractController
     /**
     *  endpoint for adding a character
     * 
-    * @Route("", name="app_api_character_postCharacters", methods={"POST"})
+    * @Route("", name="postCharacters", methods={"POST"})
     */
     public function postCharacters(
         //important to import UserRepository and GameRepository to show the 2 FK User and Game.
@@ -114,7 +114,7 @@ class CharacterController extends AbstractController
     /**
     *  endpoint for editing a character
     * 
-    * @Route("/{id}", name="app_api_character_editCharacters", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
+    * @Route("/{id}", name="editCharacters", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
     */
     public function editCharacters(
         $id,
@@ -191,7 +191,7 @@ class CharacterController extends AbstractController
     /**
     * endpoint for deleting a character
     *
-    * @Route("/{id}", name="app_api_characters_deleteCharacters", requirements={"id"="\d+"}, methods={"DELETE"})
+    * @Route("/{id}", name="deleteCharacters", requirements={"id"="\d+"}, methods={"DELETE"})
     */
     public function deleteCharacters(
         $id,

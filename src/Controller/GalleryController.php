@@ -24,7 +24,7 @@ class GalleryController extends AbstractController
     /**
     *  endpoint for all galleries 
     * 
-    * @Route("", name="app_api_gallery_getGalleries", methods={"GET"})
+    * @Route("", name="getGalleries", methods={"GET"})
     */
     public function getGalleries(GalleryRepository $galleryRepository): JsonResponse
     {
@@ -40,7 +40,7 @@ class GalleryController extends AbstractController
     /**
     * endpoint for a specific gallery
     * 
-    * @Route("/{id}", name="app_api_gallery_getGalleriesById", methods={"GET"})
+    * @Route("/{id}", name="getGalleriesById", methods={"GET"})
     */
     public function getGalleriesById(Gallery $gallery): JsonResponse
     {
@@ -51,32 +51,9 @@ class GalleryController extends AbstractController
     }
 
     /**
-    * endpoints for all galeries of a specific game
-    * 
-    * @Route("/games/{gameId}", name="app_api_game_getGalleriesByGame", requirements={"gameId"="\d+"},  methods={"GET"})
-    */
-    public function getGalleriesByGame(int $gameId, GalleryRepository $galleryRepository, GameRepository $gameRepository): JsonResponse
-    {
-        $game = $gameRepository->find($gameId);
-
-        if (!$game) {
-            return $this->json('Jeu introuvable', Response::HTTP_NOT_FOUND);
-        }
-
-        $galleries = $galleryRepository->findByGame($game);
-
-        if (count($galleries) === 0) {
-            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($galleries, 200, [], ["groups"=> ["gallery_read"]]);
-    }
-
-
-    /**
     * endpoint to create a gallery
     * 
-    * @Route("", name="app_api_game_postGalleries", methods={"POST"})
+    * @Route("", name="postGalleries", methods={"POST"})
     */
     public function postGalleries(
         //important to import GameRepository to show the FK Game.
@@ -123,7 +100,7 @@ class GalleryController extends AbstractController
     /**
     *  endpoint to edit a gallery
     * 
-    * @Route("/{id}", name="app_api_game_editGalleries", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
+    * @Route("/{id}", name="editGalleries", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
     */
     public function editGalleries(
         //important to import GameRepository to show the FK Game.
@@ -170,7 +147,7 @@ class GalleryController extends AbstractController
     /**
     * endpoint to delete a gallery
     * 
-    * @Route("/{id}", name="app_api_game_deleteGalleries", requirements={"id"="\d+"}, methods={"DELETE"})
+    * @Route("/{id}", name="deleteGalleries", requirements={"id"="\d+"}, methods={"DELETE"})
     */
     public function deleteGalleries(
         $id,

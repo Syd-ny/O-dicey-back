@@ -242,4 +242,25 @@ class GameController extends AbstractController
             'groups' => 'charactersByGame'
         ]);
     }
+
+    /**
+    * endpoints for all galeries of a specific game
+    * 
+    * @Route("/api/games/{id}/galleries", name="app_api_game_getGalleriesByGame", requirements={"gameId"="\d+"},  methods={"GET"})
+    */
+    public function getGalleriesByGame(Game $game): JsonResponse
+    {
+        // get the characters of the current game
+        $galleriesByGame = $game->getGalleries();
+
+        if (!$game) {
+            return $this->json('Partie introuvable', Response::HTTP_NOT_FOUND);
+        }
+
+        if (count($galleriesByGame) === 0) {
+            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
+    }
 }

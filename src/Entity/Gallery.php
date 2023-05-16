@@ -39,7 +39,6 @@ class Gallery
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gallery")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
      */
     private $game;
 
