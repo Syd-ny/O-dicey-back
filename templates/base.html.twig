@@ -48,11 +48,11 @@
 									<i class="bi bi-dice-4"></i>
 									Parties</a>
 							</li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="bi bi-controller"></i>
-                                    Modes</a>
-                            </li>
+							<li class="nav-item">
+									<a class="nav-link" href="{{path("app_backoffice_mode_list")}}">
+										<i class="bi bi-controller"></i>
+										Modes</a>
+							</li>
 						{% endblock %}
 					</ul>
 					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
