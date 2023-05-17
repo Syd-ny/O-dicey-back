@@ -185,6 +185,22 @@ class UserController extends AbstractController
     }
 
     /**
+     * endpoint for all games of a specific user
+     * 
+     * @Route("/api/users/{id}/games", name="app_api_user_getGamesByUser", methods={"GET"})
+     */
+    public function getGamesByUser(User $user): JsonResponse
+    {
+        // get the games of the current user
+        $gamesByUser[] = $user->getGameUsers();
+        $gamesByUser[] = $user->getGamesDM();
+
+        return $this->json($gamesByUser, Response::HTTP_OK, [], [
+            'groups' => 'gamesByUser'
+        ]);
+    }
+
+    /**
      * endpoint for getting all invitations of a specific user
      * 
      * @Route("/api/users/{id}/invites", name="app_api_user_getInvitesByUser", methods={"GET"})
