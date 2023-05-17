@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier du mode {{mode.name}}{% endblock %}
+
+{% block body %}
+    <h1 class="mt-3 mx-3">Modifier le mode de jeu {{mode.name}}</h1>
+
+    {{ include('backoffice/mode/_form.html.twig', {'button_label':'modifier','mode':mode}) }}
+
+{% endblock %}

@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 /**
@@ -18,6 +20,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ModeController extends AbstractController
 {
+    private $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
     /**
      * @Route("", name="app_backoffice_mode_list")
      */
@@ -28,6 +37,55 @@ class ModeController extends AbstractController
 
         return $this->render('backoffice/mode/index.html.twig', [
             'modes' => $modes,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="app_backoffice_mode_show", methods={"GET"}, requirements={"id"="\d+"})
+     */
+    public function show(Mode $mode): Response
+    {
+
+        return $this->render('backoffice/mode/show.html.twig', [
+            'mode' => $mode,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/edit", name="app_backoffice_mode_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    {
+        $jsonData = $mode->getJsonStats();
+
+        // Decode JSON into PHP Array.
+        // check if value is a valit JSON chain.
+        if (is_string($jsonData)) {
+            $decodedData = json_decode($jsonData, true);
+        } else {
+            $decodedData = []; 
+        }
+
+        $form= $this->createForm(ModeType::class, null, [
+            'data_class' => null,
+            'data' => $decodedData,
+        ]);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            // Encode modified datas before saving them into json_stats.
+            $encodedData = json_encode($form->getData());
+
+            $mode->setJsonStats($encodedData);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_backoffice_mode_list');
+        }
+
+        return $this->renderForm('backoffice/mode/edit.html.twig', [
+            'mode' => $mode,
+            'form'=> $form,
         ]);
     }
 }

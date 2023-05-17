@@ -77,7 +77,16 @@ class Mode
 
     public function setJsonStats(array $json_stats): self
     {
-        $this->json_stats = $json_stats;
+        if (is_string($json_stats)) {
+            $decodedStats = json_decode($json_stats, true);
+            if ($decodedStats !== null && is_array($decodedStats)) {
+                $this->json_stats = $decodedStats;
+            } else {
+                $this->json_stats = [];
+            }
+        } else {
+            $this->json_stats = $json_stats;
+        }
 
         return $this;
     }

@@ -12,6 +12,8 @@
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">name</th>
+                <th scope="col">Statistiques</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -28,7 +30,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <a href="{{ path('app_backoffice_user_show', {'id': mode.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                    <a href="{{ path('app_backoffice_mode_show', {'id': mode.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
                     <a href="{{ path('app_backoffice_user_edit', {'id': mode.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                 </td>
             </tr>
