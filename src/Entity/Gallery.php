@@ -18,6 +18,7 @@ class Gallery
      * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $id;
 
@@ -25,6 +26,7 @@ class Gallery
      * @ORM\Column(type="string", length=128)
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $picture;
 
@@ -32,6 +34,7 @@ class Gallery
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $mainPicture;
 
