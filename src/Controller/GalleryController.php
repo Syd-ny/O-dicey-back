@@ -63,7 +63,6 @@ class GalleryController extends AbstractController
         SerializerInterface $serializer, 
         ValidatorInterface $validator): JsonResponse
     {
-
         
         // we get the object
         $jsonContent = $request->getContent();
