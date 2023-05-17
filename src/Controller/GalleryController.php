@@ -45,7 +45,7 @@ class GalleryController extends AbstractController
     public function getGalleriesById(Gallery $gallery): JsonResponse
     {
 
-        if ($gallery === null){return $this->json("ce joueur n'existe pas", Response::HTTP_NOT_FOUND);}
+        if ($gallery === null){return $this->json("Cette image n'existe pas", Response::HTTP_NOT_FOUND);}
 
         return $this->json($gallery,200,[], ["groups"=> ["gallery_read"]]);
     }
@@ -130,7 +130,6 @@ class GalleryController extends AbstractController
         if (count($errors) > 0) {
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        //dd($gallery);
 
         // decode the content on JSON
         $data = json_decode($jsonContent, true);

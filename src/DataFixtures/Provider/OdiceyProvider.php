@@ -4,10 +4,6 @@ namespace App\DataFixtures\Provider;
 
 class OdiceyProvider
 {
-    // Array of games
-    private $games = [
-        
-    ];
 
     // array of dwarves names
     private $dwarves = [
@@ -71,19 +67,6 @@ class OdiceyProvider
         "Rondgun(elfe)",
     ];
 
-    // array of galleries
-    private $galleries = [
-        
-    ];
-
-    /**
-     * Get a random game
-     */
-    public function game()
-    {
-        return $this->games[array_rand($this->games)];
-    }
-
     /**
      * Get a random dwarf
      */
@@ -116,11 +99,4 @@ class OdiceyProvider
         return $this->elves[array_rand($this->elves)];
     }
 
-     /**
-     * Get a random gallery
-     */
-    public function gallery()
-    {
-        return $this->galleries[array_rand($this->galleries)];
-    }
 }

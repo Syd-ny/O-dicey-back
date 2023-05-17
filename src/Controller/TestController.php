@@ -18,9 +18,9 @@ class TestController extends AbstractController
     
     public function mercureTestAction(): Response
     {
-        // Publier une mise à jour Mercure
+        // Publish a Mercure update
         $update = new Update(
-            'https://example.com/my-channel', // URL du canal Mercure
+            'https://example.com/my-channel', // Mercure channel URL
             json_encode(['message' => 'Test message'])
         );
         

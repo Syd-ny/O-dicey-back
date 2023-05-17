@@ -13,7 +13,7 @@ class CharacterSecurityVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        // replace with your own logic
+        
         return in_array($attribute, [self::EDIT, self::DELETE])
             && $subject instanceof \App\Entity\Character;
     }
@@ -29,14 +29,16 @@ class CharacterSecurityVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::EDIT:
-                // if the game subject has been created by the current user connected, they can edit it
-                if($user == $subject->getUser()) {
+                // if the game subject has been created by the current user connected,
+                // or if the game subject is DMed by the current user, they can edit it
+                if($user == $subject->getUser() || $user == $subject->getGame()->getDm()) {
                     return true;
                 }
                 break;
             case self::DELETE:
-                // if the game subject has been created by the current user connected, they can delete it
-                if($user == $subject->getUser()) {
+                // if the game subject has been created by the current user connected,
+                // or if the game subject is DMed by the current user, they can delete it
+                if($user == $subject->getUser() || $user == $subject->getGame()->getDm()) {
                     return true;
                 }
                 break;
