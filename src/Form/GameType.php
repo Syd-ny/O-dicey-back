@@ -25,12 +25,12 @@ class GameType extends AbstractType
                 ]
             ])
 
-            ->add('Status',ChoiceType::class,[
-                "label" => "statut de la partie",
+            ->add('status',ChoiceType::class,[
+                "label" => "Statut de la partie",
                     "choices" => [
                         "En cours" => 0,
-                        "terminée" => 1,
-                        "inactive" => 2,
+                        "Terminée" => 1,
+                        "Inactive" => 2,
                     ],
                     "multiple" => false,
                     "expanded" => true
@@ -38,7 +38,7 @@ class GameType extends AbstractType
 
             // ! penser à ajouter la possibilité d'ajouter/supprimer une image
 
-            ->add('Mode',EntityType::class,[
+            ->add('mode',EntityType::class,[
                 "label" => "Mode de jeu",
                 'class' => Mode::class,
                 "choice_label" => "name",

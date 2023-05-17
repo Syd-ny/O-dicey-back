@@ -119,15 +119,13 @@ class GameController extends AbstractController
             $game = $game->setDm($dm->setRoles($dmRoles));
         }
 
-        // dd($game);
-
         // Add the game in the BDD
         $entityManager->persist($game);
         $entityManager->flush();
         
 
         //  Provide the link of the resource created
-        return $this->json(["creation successful"], Response::HTTP_CREATED,[
+        return $this->json(["Creation successful"], Response::HTTP_CREATED,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
         ]);
     }
@@ -149,7 +147,6 @@ class GameController extends AbstractController
         try{
             // Deserialize JSON into an entity
             $updatedGame = $serializer->deserialize($data,Game::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $game]);
-
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
@@ -205,7 +202,7 @@ class GameController extends AbstractController
         $entityManager->flush();
         
         //  Provide the link of the resource updated
-        return $this->json(["update successful"], Response::HTTP_OK,[
+        return $this->json(["Update successful"], Response::HTTP_OK,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGame->getId()])
         ]);
     }
@@ -215,7 +212,7 @@ class GameController extends AbstractController
     * 
     * @Route("/api/games/{id}", name="app_api_game_deleteGames", methods={"DELETE"})
     */
-    public function deleteGames($id, Game $game, EntityManagerInterface $entityManager): JsonResponse
+    public function deleteGames(Game $game, EntityManagerInterface $entityManager): JsonResponse
     {
 
         $this->denyAccessUnlessGranted('DELETE', $game);

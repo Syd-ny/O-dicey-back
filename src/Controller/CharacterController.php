@@ -82,7 +82,6 @@ class CharacterController extends AbstractController
         if (count($errors) > 0) {
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        //dd($character);
 
         // decode the content on JSON
         $data = json_decode($jsonContent, true);
@@ -136,7 +135,6 @@ class CharacterController extends AbstractController
             return $this->json("Le personnage n'existe pas.", Response::HTTP_NOT_FOUND);
         }
         
-
         // we get the Json
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
@@ -153,7 +151,7 @@ class CharacterController extends AbstractController
 
         // Converts request content to an array
         $data = json_decode($jsonContent, true);
-        // If request content a new user.
+        // If request contains a new user.
         if (isset($data["user"])) {
             // We check if the user of the request matches to an existing user 
             $userId = $data["user"] ?? null;
@@ -166,7 +164,7 @@ class CharacterController extends AbstractController
             $character->setUser($user);
         }
 
-        // If request content a new game.
+        // If request contains a new game.
         if (isset($data["game"])) {
             // We check if the game of the request matches to an existing game 
             $gameId = $data["game"] ?? null;

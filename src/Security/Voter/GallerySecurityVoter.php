@@ -22,7 +22,7 @@ class GallerySecurityVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        // replace with your own logic
+        
         return in_array($attribute, [self::POST, self::EDIT, self::DELETE])
             && $subject instanceof \App\Entity\Gallery;
     }

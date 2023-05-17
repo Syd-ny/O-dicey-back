@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
     {
         $this->connection->executeQuery('SET foreign_key_checks = 0');
         // On tronque
-        $this->connection->executeQuery('TRUNCATE TABLE `character`');// backticks are used to avoir an SQL error about the fact 'character' is a reserved term.
+        $this->connection->executeQuery('TRUNCATE TABLE `character`');// backticks are used to avoid an SQL error about 'character' being a reserved term.
         $this->connection->executeQuery('TRUNCATE TABLE gallery');
         $this->connection->executeQuery('TRUNCATE TABLE game');
         $this->connection->executeQuery('TRUNCATE TABLE game_users');

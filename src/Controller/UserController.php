@@ -28,7 +28,7 @@ class UserController extends AbstractController
     public function getUsers(UserRepository $userRepository): JsonResponse
     {
         $users = $userRepository->findAll();
-        // dd($users);
+        
         return $this->json($users, Response::HTTP_OK, [], [
             'groups' => 'users'
         ]);
@@ -65,7 +65,6 @@ class UserController extends AbstractController
             // hashing the password
             $passwordHashed = password_hash($user->getPassword(), PASSWORD_DEFAULT);
             $user->setPassword($passwordHashed);
-
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"], Response::HTTP_BAD_REQUEST);
@@ -90,7 +89,7 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
         
-        return $this->json(["creation successful"], Response::HTTP_CREATED, [
+        return $this->json(["Creation successful"], Response::HTTP_CREATED, [
             "Location" => $this->generateUrl("app_api_user_getUsersById", ["id" => $user->getId()])
         ]);
     }
@@ -149,7 +148,7 @@ class UserController extends AbstractController
         // edit the user in the DB
         $entityManager->flush();
  
-        return $this->json(["update successful"], Response::HTTP_OK, [
+        return $this->json(["Update successful"], Response::HTTP_OK, [
             "Location" => $this->generateUrl("app_api_user_getUsersById", ["id" => $updatedUser->getId()])
         ]);
     }
@@ -162,7 +161,7 @@ class UserController extends AbstractController
     public function deleteUsers(User $user, EntityManagerInterface $entityManager): JsonResponse
     {
 
-        $this->denyAccessUnlessGranted('EDIT', $user);
+        $this->denyAccessUnlessGranted('DELETE', $user);
 
         $entityManager->remove($user);
         $entityManager->flush();

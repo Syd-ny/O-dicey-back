@@ -67,8 +67,6 @@ class OdiceyCreateUserCommand extends Command
         }
 
         $this->entityManager->getRepository(User::class)->add($user, true);
-        // $this->entityManager->persist($user);
-        // $this->entityManager->flush();
 
         $io->success('You created a new User!');
 
