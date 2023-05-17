@@ -23,6 +23,7 @@ class Character
      * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"gamesByUser"})
      */
     private $id;
 
@@ -36,6 +37,7 @@ class Character
      * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
+     * @Groups({"gamesByUser"})
      */
     private $name;
 
@@ -49,6 +51,7 @@ class Character
      * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
+     * @Groups({"gamesByUser"})
      */
     private $picture;
 
@@ -62,6 +65,7 @@ class Character
      * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
+     * @Groups({"gamesByUser"})
      */
     private $stats = [];
 
@@ -101,6 +105,7 @@ class Character
      * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
+     * @Groups({"gamesByUser"})
      */
     private $updatedAt;
 
@@ -114,6 +119,7 @@ class Character
      * @Groups({"character_edit"})
      * @Groups({"games"})
      * @Groups({"users"})
+     * @Groups({"gamesByUser"})
      */
     private $createdAt;
 

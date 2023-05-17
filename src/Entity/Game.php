@@ -28,6 +28,7 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
      */
     private $id;
 
@@ -38,6 +39,7 @@ class Game
      * @Groups({"gallery_read"})
      * @Groups({"games"})
      * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
      * @Assert\NotBlank
      */
     private $name;
@@ -49,6 +51,7 @@ class Game
      * @Groups({"gallery_read"})
      * @Groups({"games"})
      * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
      */
     private $status;
 
@@ -58,6 +61,7 @@ class Game
      * @Groups({"gallery_read"})
      * @Groups({"games"})
      * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
      */
     private $updatedAt;
 
@@ -67,6 +71,7 @@ class Game
      * @Groups({"gallery_read"})
      * @Groups({"games"})
      * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
      */
     private $createdAt;
 
@@ -74,6 +79,7 @@ class Game
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games"})
+     * @Groups({"gamesByUser"})
      */
     private $mode;
 
@@ -81,12 +87,14 @@ class Game
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gamesDM")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games"})
+     * @Groups({"gamesByUser"})
      */
     private $dm;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="game", orphanRemoval=true)
      * @Groups({"games"})
+     * @Groups({"gamesByUser"})
      */
     private $characters;
 

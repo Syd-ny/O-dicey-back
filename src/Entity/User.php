@@ -21,6 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"users", "charactersByUser", "invitesByUser"})
+     * @Groups({"gamesByUser"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"character_add"})
@@ -34,6 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=128, unique=true)
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"gamesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -43,6 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=64, unique=true)
      * @Groups({"users", "charactersByUser", "invitesByUser"})
+     * @Groups({"gamesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
@@ -69,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"gamesByUser"})
      * @Groups({"users", "charactersByUser"})
      * @Groups({"games"})
      */
@@ -77,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"users", "charactersByUser"})
+     * @Groups({"gamesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})

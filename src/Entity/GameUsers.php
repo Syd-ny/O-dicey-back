@@ -28,6 +28,7 @@ class GameUsers
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gameUsers")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"invitesByUser"})
+     * @Groups({"gamesByUser"})
      */
     private $game;
 
