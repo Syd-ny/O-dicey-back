@@ -96,7 +96,7 @@ class GameController extends AbstractController
     */
     public function delete(Request $request, Game $game, GameRepository $gameRepository): Response
     {
-        // ! implement the CSRF tokens validation (symfony bundle)
+        // implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$game->getId(), $request->request->get('_token'))) {
             $gameRepository->remove($game, true);
         }

@@ -36,7 +36,7 @@ class CharacterController extends AbstractController
     {
         $characters = $characterRepository->findAll();
 
-        if ($characters === null){return $this->json("aucun joueur trouvé", Response::HTTP_NOT_FOUND);}
+        if ($characters === null){return $this->json("Aucun joueur trouvé", Response::HTTP_NOT_FOUND);}
 
         return $this->json($characters,200,[], ["groups"=> ["character_list"]]);
     }
@@ -204,13 +204,13 @@ class CharacterController extends AbstractController
         $this->denyAccessUnlessGranted('DELETE', $character);
 
         if ($character === null){
-            return $this->json("personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
+            return $this->json("Personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
         }
 
         $characterRepository->remove($character);
         $entityManager->flush();
 
-        return $this->json("personnage supprimé avec succès", Response::HTTP_OK);
+        return $this->json("Personnage supprimé avec succès", Response::HTTP_OK);
     }
 }
 
