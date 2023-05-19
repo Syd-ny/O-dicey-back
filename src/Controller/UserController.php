@@ -191,9 +191,24 @@ class UserController extends AbstractController
      */
     public function getGamesByUser(User $user): JsonResponse
     {
-        // get the games of the current user
-        $gamesByUser[] = $user->getGameUsers();
-        $gamesByUser[] = $user->getGamesDM();
+        
+        // Create a variable $gamesByUser which contains two empty arrays, player and DM.
+        $gamesByUser = ['player' => [], 'DM' => []];
+
+        // get the games of the current user is player
+        $gamesUsers = $user->getGameUsers()->toArray();
+        // get the games of the current user is DM
+        $gamesDM = $user->getGamesDM()->toArray();
+
+        // For each game in which the current user is a player, an entry in the player table is created
+        foreach ($gamesUsers as $gameByUser) {
+            $gamesByUser['player'][] = $gameByUser->getGame();
+        }
+
+        // For each game in which the current user is a DM, an entry in the DM table is created
+        foreach ($gamesDM as $gameDM) {
+            $gamesByUser['DM'][] = $gameDM;
+        }
 
         return $this->json($gamesByUser, Response::HTTP_OK, [], [
             'groups' => 'gamesByUser'
