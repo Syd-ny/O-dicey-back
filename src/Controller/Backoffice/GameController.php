@@ -2,6 +2,7 @@
 
 namespace App\Controller\Backoffice;
 
+use App\Entity\Gallery;
 use App\Entity\Game;
 use App\Form\GameType;
 use DateTimeImmutable;
@@ -56,6 +57,7 @@ class GameController extends AbstractController
 
             // register game informations in the database
             $entityManager->persist($game);
+            
             $entityManager->flush();
     
             return $this->redirectToRoute('app_backoffice_game_list');

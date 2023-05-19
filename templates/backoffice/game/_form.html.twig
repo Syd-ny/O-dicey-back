@@ -1,6 +1,15 @@
 <div class="container mx-4 mt-2 mb-2">
     {{ form_start(form) }}
-        {{ form_widget(form) }}
+
+        {# if we create a new game via the backoffice, we can't add a picture because it is reserved for the DM of the game #}
+        {% if "backoffice" in app.request.get("_route") %}
+            <div style="display: none;">
+                {% do form.galleries.setRendered() %}
+            </div>
+        {% endif %}
+        
+
+        {{ form_rest(form) }}
         <button class="btn btn-outline-primary mb-3 mt-3 mx-3">{{ button_label|default('Sauvegarder') }}</button>
         <a href="{{ path('app_backoffice_game_list') }}" class="btn btn-sm btn-outline-info mx-3 float-end">Retour à la liste</a>
     {{ form_end(form) }}

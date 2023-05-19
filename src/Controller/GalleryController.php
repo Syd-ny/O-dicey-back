@@ -96,7 +96,7 @@ class GalleryController extends AbstractController
         $entityManager->persist($gallery);
         $entityManager->flush();
 
-        return $this->json(["creation successful"], Response::HTTP_CREATED, [
+        return $this->json(["Creation successful"], Response::HTTP_CREATED, [
             "Location" => $this->generateUrl("app_api_gallery_getGalleriesById", ["id" => $gallery->getId()])
         ]);
     }
@@ -134,11 +134,11 @@ class GalleryController extends AbstractController
 
         // decode the content on JSON
         $data = json_decode($jsonContent, true);
-
-        // If request content a new game.
-        if (isset($data["game"])) {
+        
+        // If request contains a new game.
+        if (isset($data["game_id"])) {
             // We check if the $gameId of the request matches the ID of an existing game 
-            $gameId = $data["game"] ?? null;
+            $gameId = $data["game_id"] ?? null;
             $game = $gameId ? $gameRepository->find($gameId) : null;
             // If not, returns an error response
             if (!$game) {
@@ -152,7 +152,7 @@ class GalleryController extends AbstractController
         $entityManager->flush();
  
         //  Provide the link of the resource updated
-        return $this->json(["update successful"], Response::HTTP_OK,[
+        return $this->json(["Update successful"], Response::HTTP_OK,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGallery->getId()])
         ]);
     }
