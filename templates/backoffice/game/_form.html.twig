@@ -4,7 +4,7 @@
         {# if we create a new game via the backoffice, we can't add a picture because it is reserved for the DM of the game #}
         {% if "backoffice" in app.request.get("_route") %}
             <div style="display: none;">
-                {{ form_widget(form.galleries) }}
+                {% do form.galleries.setRendered() %}
             </div>
         {% endif %}
         
