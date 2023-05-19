@@ -21,13 +21,18 @@ class GameController extends AbstractController
     /**
      * @Route("", name="app_backoffice_game_list")
      */
-    public function list(GameRepository $gameRepository): Response
+    public function list(Request $request, GameRepository $gameRepository): Response
     {
+        $search = $request->query->get('search', '');
+        $sort = $request->query->get('sort', 'id');
+        $order = $request->query->get('order', 'asc');
 
-        $games = $gameRepository->findAll();
+        $games = $gameRepository->findBySearchGame($search, $sort, $order);
 
         return $this->render('backoffice/game/index.html.twig', [
             'games' => $games,
+            'sort' => $sort,
+            'order' => $order,
         ]);
     }
 
@@ -103,5 +108,4 @@ class GameController extends AbstractController
 
         return $this->redirectToRoute('app_backoffice_game_list', [], Response::HTTP_SEE_OTHER);
     }
-
 }

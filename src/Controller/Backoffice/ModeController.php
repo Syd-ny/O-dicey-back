@@ -30,13 +30,19 @@ class ModeController extends AbstractController
     /**
      * @Route("", name="app_backoffice_mode_list")
      */
-    public function list(ModeRepository $modeRepository): Response
+    public function list(Request $request, ModeRepository $modeRepository): Response
     {
 
-        $modes = $modeRepository->findAll();
+        $search = $request->query->get('search', '');
+        $sort = $request->query->get('sort', 'id');
+        $order = $request->query->get('order', 'asc');
+
+        $modes = $modeRepository->findBySearch($search, $sort, $order);
 
         return $this->render('backoffice/mode/index.html.twig', [
             'modes' => $modes,
+            'sort' => $sort,
+            'order' => $order,
         ]);
     }
 

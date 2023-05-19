@@ -24,11 +24,11 @@ class UserController extends AbstractController
      */
     public function list(Request $request, UserRepository $userRepository): Response
     {
-
+        $search = $request->query->get('search', '');
         $sort = $request->query->get('sort', 'id');
         $order = $request->query->get('order', 'asc');
 
-        $users = $userRepository->findBy([], [$sort => $order]);
+        $users = $userRepository->findBySearchUser($search, $sort, $order);
 
         return $this->render('backoffice/user/index.html.twig', [
             'users' => $users,

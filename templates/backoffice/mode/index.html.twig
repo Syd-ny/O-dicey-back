@@ -6,7 +6,17 @@
 
     <h1 class="mt-3 mx-3">Modes de jeu</h1>
 
-    <a href="{{ path('app_backoffice_user_new') }}" class="btn btn-outline-info mx-3 float-end">Create new</a>
+    {{ include('backoffice/mode/_search.html.twig') }}
+
+    <div class="text-end mb-3">
+        <a href="{{ path('app_backoffice_mode_list', { 'sort': 'id', 'order': (app.request.query.get('sort') == 'id' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+            Trier par ID {% if sort == 'id' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
+        </a>
+        <a href="{{ path('app_backoffice_mode_list', { 'sort': 'name', 'order': (app.request.query.get('sort') == 'name' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+            Trier par Name {% if sort == 'name' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
+        </a>
+        <a href="{{ path('app_backoffice_user_new') }}" class="btn btn-outline-info mx-3">Créer un nouvel utilisateur</a>
+    </div>
     <table class="table table-hover">
         <thead>
             <tr>
