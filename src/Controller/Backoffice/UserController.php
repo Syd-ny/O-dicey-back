@@ -127,17 +127,4 @@ class UserController extends AbstractController
             'users' => $users,
         ]);
     }
-
-    public function sortByRole(Request $request, UserRepository $userRepository)
-    {
-        $form = $this->createForm(UserSearchType::class);
-        $form->handleRequest($request);
-
-        $users = $userRepository->search($form->getData());
-
-        return $this->renderForm('user/index.html.twig', [
-            'form' => $form,
-            'users' => $users,
-        ]);
-    }
 }

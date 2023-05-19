@@ -54,41 +54,33 @@ class ModeController extends AbstractController
     /**
      * @Route("/{id}/edit", name="app_backoffice_mode_edit", methods={"GET","POST"})
      */
-    /**public function edit(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    public function edit(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
     {
-        $mode = $entityManager->getRepository(Mode::class)->find($id);
-        $jsonData = $mode->getJsonStats();
-        
-        $decodedData = json_decode($jsonData, true);
         
 
-        $form= $this->createForm(ModeType::class, null, [
-            'data_class' => null,
-            'data' => $decodedData,
-        ]);
+        $form= $this->createForm(ModeType::class, $mode);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
 
             // Encode modified datas before saving them into json_stats.
-            $encodedData = json_encode($form->getData());
-
-            $mode->setJsonStats($encodedData);
+            $jsonstats = ($form->get('jsonstats')->getData());
+            $mode->setJsonStats(json_decode($jsonstats, true));
+            $entityManager->persist($mode);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_backoffice_mode_list');
         }
-        //Sdump($mode);
 
         return $this->renderForm('backoffice/mode/edit.html.twig', [
             'mode' => $mode,
             'form'=> $form,
-        ]); */
+        ]);
 
         /**
      * @Route("/{id}/edit", name="app_backoffice_mode_edit", methods={"GET","POST"})
      */
-     /**public function edit( $id, Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    /**public function edit( $id, Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
     {
         $mode = $entityManager->getRepository(Mode::class)->find($id);
         $jsonData = $mode->getJsonStats();
@@ -101,5 +93,6 @@ class ModeController extends AbstractController
         return $this->render('backoffice/mode/edit.html.twig', [
             'decodedData' => $decodedData,
         ]);
-    }  */
+    } */
+}
 }
