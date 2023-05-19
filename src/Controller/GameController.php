@@ -303,7 +303,7 @@ class GameController extends AbstractController
         }
 
         // manually check if entity is valid
-        $errors = $validator->validate($gameUsers);
+        $errors = $validator->validate($gameUser);
         // If error array is upper 0, the form is invalid.
         if(count($errors) > 0){
             // Create an empty array and store all errors in it.
