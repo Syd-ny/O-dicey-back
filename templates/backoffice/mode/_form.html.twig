@@ -1,0 +1,21 @@
+<div class="container mx-4 mt-2 mb-2">
+    {{ form_start(form) }}
+
+        <h2>Informations</h2>
+        <div class="form-group">
+            {{ form_label(form.name, 'Nom de la partie') }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+        </div>
+
+        <h2>Statistiques JSON</h2>
+        {% for key, value in form.jsonstats %}
+            <div class="form-group">
+                {{ form_label(value, key|capitalize) }}
+                {{ form_widget(value, {'attr': {'class': 'form-control'}}) }}
+            </div>
+        {% endfor %}
+
+        <button class="btn btn-outline-primary mb-3 mt-3 mx-3">{{ button_label|default('Sauvegarder') }}</button>
+        <a href="{{ path('app_backoffice_user_list') }}" class="btn btn-sm btn-outline-info mx-3 float-end">Retour à la liste</a>
+    {{ form_end(form) }}
+</div>

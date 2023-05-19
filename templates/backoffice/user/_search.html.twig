@@ -1,0 +1,9 @@
+<!-- Formulaire de recherche -->
+        <form action="{{ path('app_backoffice_user_list') }}" method="GET" class="form-inline mb-3 justify-content-end">
+            <div class="input-group input-group-sm " style="max-width: 300px;">
+                <input type="text" name="search" class="form-control" placeholder="Rechercher par e-mail">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Rechercher</button>
+                </div>
+            </div>
+        </form>
