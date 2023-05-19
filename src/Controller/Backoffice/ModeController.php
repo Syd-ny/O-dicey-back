@@ -82,23 +82,32 @@ class ModeController extends AbstractController
             'mode' => $mode,
             'form'=> $form,
         ]);
+    }
 
-        /**
-     * @Route("/{id}/edit", name="app_backoffice_mode_edit", methods={"GET","POST"})
+    /**
+     * @Route("/new", name="app_backoffice_mode_new", methods={"GET","POST"})
      */
-    /**public function edit( $id, Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $mode = $entityManager->getRepository(Mode::class)->find($id);
-        $jsonData = $mode->getJsonStats();
-        
-        $decodedData = json_decode($jsonData, true);
-        
+        $mode = new Mode();
 
-        
+        $form= $this->createForm(ModeType::class, $mode);
+        $form->handleRequest($request);
 
-        return $this->render('backoffice/mode/edit.html.twig', [
-            'decodedData' => $decodedData,
+        if($form->isSubmitted() && $form->isValid()) {
+
+
+            // Encode modified datas before saving them into json_stats.
+            $jsonstats = $form->get('jsonstats')->getData();
+            $mode->setJsonStats(json_decode($jsonstats, true));
+            $entityManager->persist($mode);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_backoffice_mode_list');
+        }
+
+        return $this->renderForm('backoffice/mode/new.html.twig', [
+            'form'=> $form,
         ]);
-    } */
-}
+    }
 }

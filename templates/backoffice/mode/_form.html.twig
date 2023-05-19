@@ -8,10 +8,10 @@
         </div>
 
         <h2>Statistiques JSON</h2>
-        {% for key, value in form.jsonstats %}
+        {% for key, value in form.jsonstats.vars.value %}
             <div class="form-group">
-                {{ form_label(value, key|capitalize) }}
-                {{ form_widget(value, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.jsonstats, 'Statistiques(JSON)') }}
+            {{ form_widget(form.jsonstats, {'attr': {'class': 'form-control'}}) }}
             </div>
         {% endfor %}
 
