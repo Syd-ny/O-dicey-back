@@ -33,7 +33,7 @@ class UserController extends AbstractController
         return $this->render('backoffice/user/index.html.twig', [
             'users' => $users,
             'sort' => $sort,
-            'order'=> $order,
+            'order' => $order,
         ]);
     }
 

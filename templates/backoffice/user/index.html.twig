@@ -9,11 +9,10 @@
     {{ include('backoffice/user/_search.html.twig') }}
 
     <div class="text-end mb-3">
-        <a href="{{ path('app_backoffice_user_list', { 'sort': 'id', 'order': (sort == 'id' and order == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">Trier par ID</a>
-        <a href="{{ path('app_backoffice_user_list', { 'sort': 'email', 'order': (sort == 'email' and order == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">Trier par email</a>
-        <a href="{{ path('app_backoffice_user_list', { 'sort': 'login', 'order': (sort == 'login' and order == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">Trier par Username</a>
+        <a href="{{ path('app_backoffice_user_list', { 'sort': 'id', 'order': 'order' == 'asc' ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">Trier par ID</a>
+        <a href="{{ path('app_backoffice_user_list', { 'sort': 'email', 'order': 'order' == 'asc' ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">Trier par email</a>
+        <a href="{{ path('app_backoffice_user_list', { 'sort': 'login', 'order': 'order' == 'asc' ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">Trier par Username</a>
         <a href="{{ path('app_backoffice_user_new') }}" class="btn btn-outline-info mx-3">Créer un nouvel utilisateur</a>
-
     </div>
     <table class="table table-hover">
         <thead>
