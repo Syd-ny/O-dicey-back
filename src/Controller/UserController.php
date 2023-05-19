@@ -50,7 +50,7 @@ class UserController extends AbstractController
     /**
      * endpoint for adding a user
      * 
-     * @Route("/api/users", name="app_api_user_postUsers", methods={"POST"})
+     * @Route("/api/users/register", name="app_api_user_postUsers", methods={"POST"})
      */
     public function postUsers(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator): JsonResponse
     {
