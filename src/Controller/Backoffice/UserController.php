@@ -4,6 +4,7 @@ namespace App\Controller\Backoffice;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Form\UserSearchType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,13 +22,18 @@ class UserController extends AbstractController
     /**
      * @Route("", name="app_backoffice_user_list")
      */
-    public function list(UserRepository $userRepository): Response
+    public function list(Request $request, UserRepository $userRepository): Response
     {
 
-        $users = $userRepository->findAll();
+        $sort = $request->query->get('sort', 'id');
+        $order = $request->query->get('order', 'asc');
+
+        $users = $userRepository->findBy([], [$sort => $order]);
 
         return $this->render('backoffice/user/index.html.twig', [
             'users' => $users,
+            'sort' => $sort,
+            'order'=> $order,
         ]);
     }
 
@@ -105,5 +111,33 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/searchByMail", name="app_backoffice_user_searchByMail", methods={"GET"})
+     */
+    public function searchByMail(Request $request, UserRepository $userRepository): Response
+    {
+        $email = $request->query->get('email');
+
+        // Effectuez votre recherche d'utilisateurs en fonction de l'e-mail ici
+        $users = $userRepository->findByEmail($email);
+
+        return $this->render('backoffice/user/index.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    public function sortByRole(Request $request, UserRepository $userRepository)
+    {
+        $form = $this->createForm(UserSearchType::class);
+        $form->handleRequest($request);
+
+        $users = $userRepository->search($form->getData());
+
+        return $this->renderForm('user/index.html.twig', [
+            'form' => $form,
+            'users' => $users,
+        ]);
     }
 }

@@ -25,11 +25,9 @@ class ModeType extends AbstractType
                 ]
             ])
 
-            ->add('jsonstats',TextType::class,[
-                "label" => "Statistiques (JSON)",
-                    "attr" => [
-                        "placeholder"=>"Statistiques (JSON)",
-                    ]
+            ->add('jsonstats',EntityType::class,[
+                'class' => Mode::class,
+                'choice_label' => 'json_stats',
             ]);
     }
 

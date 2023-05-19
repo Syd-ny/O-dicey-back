@@ -62,4 +62,13 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
     
         return $this->loadUserByIdentifier($usernameOrEmail);
    }
+
+   public function findByEmail($email)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email LIKE :email')
+            ->setParameter('email', '%' . $email . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }

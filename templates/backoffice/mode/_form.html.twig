@@ -10,7 +10,7 @@
         <h2>Statistiques JSON</h2>
         {% for key, value in form.jsonstats %}
             <div class="form-group">
-                {{ form_label(value, key) }}
+                {{ form_label(value, key|capitalize) }}
                 {{ form_widget(value, {'attr': {'class': 'form-control'}}) }}
             </div>
         {% endfor %}

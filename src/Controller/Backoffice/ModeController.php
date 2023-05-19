@@ -54,17 +54,13 @@ class ModeController extends AbstractController
     /**
      * @Route("/{id}/edit", name="app_backoffice_mode_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    /**public function edit(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
     {
+        $mode = $entityManager->getRepository(Mode::class)->find($id);
         $jsonData = $mode->getJsonStats();
-
-        // Decode JSON into PHP Array.
-        // check if value is a valit JSON chain.
-        if (is_string($jsonData)) {
-            $decodedData = json_decode($jsonData, true);
-        } else {
-            $decodedData = []; 
-        }
+        
+        $decodedData = json_decode($jsonData, true);
+        
 
         $form= $this->createForm(ModeType::class, null, [
             'data_class' => null,
@@ -82,10 +78,28 @@ class ModeController extends AbstractController
 
             return $this->redirectToRoute('app_backoffice_mode_list');
         }
+        //Sdump($mode);
 
         return $this->renderForm('backoffice/mode/edit.html.twig', [
             'mode' => $mode,
             'form'=> $form,
+        ]); */
+
+        /**
+     * @Route("/{id}/edit", name="app_backoffice_mode_edit", methods={"GET","POST"})
+     */
+     /**public function edit( $id, Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    {
+        $mode = $entityManager->getRepository(Mode::class)->find($id);
+        $jsonData = $mode->getJsonStats();
+        
+        $decodedData = json_decode($jsonData, true);
+        
+
+        
+
+        return $this->render('backoffice/mode/edit.html.twig', [
+            'decodedData' => $decodedData,
         ]);
-    }
+    }  */
 }
