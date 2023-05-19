@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\GameUsersRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -21,6 +22,8 @@ class GameUsers
     /**
      * @ORM\Column(type="integer")
      * @Groups({"users", "invitesByUser"})
+     * @Assert\PositiveOrZero
+     * @Assert\NotBlank
      */
     private $status;
 
@@ -29,13 +32,14 @@ class GameUsers
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"invitesByUser"})
      * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $game;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gameUsers")
      * @ORM\JoinColumn(nullable=false)
-     * 
+     * @Assert\NotBlank
      */
     private $user;
 

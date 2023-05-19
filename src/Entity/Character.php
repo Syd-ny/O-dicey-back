@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CharacterRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -38,6 +39,7 @@ class Character
      * @Groups({"games"})
      * @Groups({"users"})
      * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $name;
 
@@ -52,6 +54,7 @@ class Character
      * @Groups({"games"})
      * @Groups({"users"})
      * @Groups({"gamesByUser"})
+     * @Assert\Url
      */
     private $picture;
 
@@ -120,6 +123,7 @@ class Character
      * @Groups({"games"})
      * @Groups({"users"})
      * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $createdAt;
 
@@ -130,6 +134,7 @@ class Character
      * @Groups({"character_read"})
      * @Groups({"character_add"})
      * @Groups({"character_edit"})
+     * @Assert\NotBlank
      */
     private $user;
 
@@ -141,6 +146,7 @@ class Character
      * @Groups({"character_read"})
      * @Groups({"character_add"})
      * @Groups({"character_edit"})
+     * @Assert\NotBlank
      */
     private $game;
 

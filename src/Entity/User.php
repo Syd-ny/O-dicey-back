@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -39,6 +40,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     private $email;
 
@@ -49,6 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Assert\NotBlank
      */
     private $login;
 
@@ -58,6 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Assert\NotBlank
      */
     private $password;
 
@@ -67,6 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Assert\Url
      */
     private $picture;
 
@@ -85,6 +91,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
+     * @Assert\NotBlank
      */
     private $createdAt;
 
@@ -118,15 +125,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="json")
      * @Groups({"users"})
      * @Groups({"games"})
+     * @Assert\NotBlank
      */
     private $roles = [];
 
     public function __construct()
     {
+        $this->createdAt = new DateTimeImmutable();
         $this->gamesDM = new ArrayCollection();
         $this->characters = new ArrayCollection();
         $this->gameUsers = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable();
+        $this->roles = ["ROLE_USER"];        
     }
 
     public function getId(): ?int

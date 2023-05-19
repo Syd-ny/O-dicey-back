@@ -77,6 +77,7 @@ class CharacterController extends AbstractController
 
         // Convert JSON into php object.
         $character = $serializer->deserialize( $jsonContent, Character::class,'json', ['datetime_format' => 'Y-m-d\TH:i:sP']);
+        // dd($character);
 
         $errors = $validator->validate($character);
         if (count($errors) > 0) {

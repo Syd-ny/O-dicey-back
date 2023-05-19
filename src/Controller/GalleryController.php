@@ -82,7 +82,7 @@ class GalleryController extends AbstractController
         $data = json_decode($jsonContent, true);
         
         // retrieve gameId if $data["game_id"] is set
-        $gameId = $data["game_id"] ?? null;
+        $gameId = $data["game"] ?? null;
         $game = $gameId ? $gameRepository->find($gameId) : null;
         
         if (!$game) {

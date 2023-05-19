@@ -52,6 +52,8 @@ class Game
      * @Groups({"games"})
      * @Groups({"charactersByGame"})
      * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $status;
 
@@ -62,6 +64,7 @@ class Game
      * @Groups({"games"})
      * @Groups({"charactersByGame"})
      * @Groups({"gamesByUser"})
+     * 
      */
     private $updatedAt;
 
@@ -72,6 +75,7 @@ class Game
      * @Groups({"games"})
      * @Groups({"charactersByGame"})
      * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $createdAt;
 
@@ -80,6 +84,7 @@ class Game
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games"})
      * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $mode;
 
@@ -88,6 +93,7 @@ class Game
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games"})
      * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $dm;
 
@@ -116,6 +122,7 @@ class Game
         $this->galleries = new ArrayCollection();
         $this->gameUsers = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
+        $this->status = 0;
     }
 
     public function getId(): ?int
