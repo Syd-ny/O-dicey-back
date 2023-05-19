@@ -7,13 +7,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class OdiceyCreateUserCommand extends Command
 {
-    protected static $defaultName = 'odicey:create-user';
+    protected static $defaultName = 'odicey:user:create';
     protected static $defaultDescription = 'Create a new user for O\'Dicey';
 
     private $entityManager;
@@ -29,6 +28,7 @@ class OdiceyCreateUserCommand extends Command
     protected function configure(): void
     {
         $this
+            ->setHelp('This command allows you to create a user!')
             ->addArgument('username', InputArgument::REQUIRED, 'Your email')
             ->addArgument('login', InputArgument::REQUIRED, 'Your login')
             ->addArgument('password', InputArgument::REQUIRED, 'Your password')

@@ -2,6 +2,9 @@
 
 namespace App\Security\Voter;
 
+use App\Entity\Game;
+use DateInterval;
+use DateTimeImmutable;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -27,6 +30,11 @@ class GameSecurityVoter extends Voter
             return false;
         }
 
+        // if the game is inactive, do not allow edit or delete (even from the DM)
+        if ($this->isInactive($subject)) {
+            return false;
+        }
+        
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::EDIT:
@@ -49,6 +57,25 @@ class GameSecurityVoter extends Voter
                 break;
         }
 
+        return false;
+    }
+
+    /**
+     * Checks if the status of a game is inactive
+     *
+     * @param Game $subject
+     * @return boolean
+     */
+    private function isInactive($subject): bool
+    {
+
+        if(!is_null($subject->getUpdatedAt())) {
+            if($subject->getStatus() == 2) {
+        
+                return true;
+            }
+        }
+        
         return false;
     }
 }

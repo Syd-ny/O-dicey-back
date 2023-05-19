@@ -33,8 +33,7 @@ class GameController extends AbstractController
 
         // get entities table of games
         $games = $gameRepository->findAll();
-        
-        
+          
         return $this->json($games,Response::HTTP_OK,[], ["groups" => "games"]);
     }
 
@@ -45,13 +44,11 @@ class GameController extends AbstractController
     */
     public function getGamesById(Game $game): JsonResponse
     {
-
         
         if (!$game) {
             return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
         }
         
-
         return $this->json($game,Response::HTTP_OK,[], ["groups" => "games"]);
     }
 
