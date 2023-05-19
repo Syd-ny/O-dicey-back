@@ -134,11 +134,11 @@ class GalleryController extends AbstractController
 
         // decode the content on JSON
         $data = json_decode($jsonContent, true);
-
-        // If request content a new game.
-        if (isset($data["game"])) {
+        
+        // If request contains a new game.
+        if (isset($data["game_id"])) {
             // We check if the $gameId of the request matches the ID of an existing game 
-            $gameId = $data["game"] ?? null;
+            $gameId = $data["game_id"] ?? null;
             $game = $gameId ? $gameRepository->find($gameId) : null;
             // If not, returns an error response
             if (!$game) {

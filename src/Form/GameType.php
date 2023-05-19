@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Gallery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -11,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Mode;
 use App\Entity\User;
 use App\Entity\Game;
+use App\Form\Type\GalleryType;
 
 class GameType extends AbstractType
 {
@@ -36,7 +38,9 @@ class GameType extends AbstractType
                     "expanded" => true
             ])
 
-            // ! penser à ajouter la possibilité d'ajouter/supprimer une image
+            ->add('galleries', GalleryType::class, [
+                'label' => 'Galerie d\'images'
+            ])
 
             ->add('mode',EntityType::class,[
                 "label" => "Mode de jeu",

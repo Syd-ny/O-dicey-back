@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Gallery;
 use App\Entity\Game;
 use App\Repository\GameRepository;
 use App\Repository\ModeRepository;
@@ -87,7 +88,7 @@ class GameController extends AbstractController
         
         // Converts request content to an array
         $dataDecoded = json_decode($data, true);
-
+        
         // We check if the mode of the request matches to an existing mode 
         $modeId = $dataDecoded["mode"] ?? null;
         $mode = $modeId ? $modeRepository->find($modeId) : null;
@@ -104,6 +105,7 @@ class GameController extends AbstractController
             return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
+
         // Add $mode and $dm in $game
         $game->setMode($mode);
         $game->setDm($dm);
@@ -115,9 +117,20 @@ class GameController extends AbstractController
             $dmRoles[] = "ROLE_DM";
             $game = $game->setDm($dm->setRoles($dmRoles));
         }
+        
+        // We link the gallery data of the game creation form (if there is any)
+        if (isset($dataDecoded['galleries'])) {
+
+            $gallery = new Gallery();
+            $gallery->setPicture($dataDecoded['galleries'][0]);
+            $gallery->setMainPicture($dataDecoded['galleries'][1]);
+            $gallery->setGame($game);
+            $entityManager->persist($gallery);
+        }
 
         // Add the game in the BDD
         $entityManager->persist($game);
+        
         $entityManager->flush();
         
 
