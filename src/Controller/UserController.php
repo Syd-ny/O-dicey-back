@@ -200,12 +200,12 @@ class UserController extends AbstractController
         // get the games of the current user is DM
         $gamesDM = $user->getGamesDM()->toArray();
 
-        // For each game in which the current user is a player, an entry in the player table is created
+        // For each game in which the current user as player, an entry in the player table is created
         foreach ($gamesUsers as $gameByUser) {
             $gamesByUser['player'][] = $gameByUser->getGame();
         }
 
-        // For each game in which the current user is a DM, an entry in the DM table is created
+        // For each game in which the current user as DM, an entry in the DM table is created
         foreach ($gamesDM as $gameDM) {
             $gamesByUser['DM'][] = $gameDM;
         }
