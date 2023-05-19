@@ -43,7 +43,7 @@ class Mode
      * @Groups({"games"})
      * @Assert\NotBlank
      */
-    private $json_stats = [];
+    private $jsonstats = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="mode", orphanRemoval=true)
@@ -75,12 +75,21 @@ class Mode
 
     public function getJsonStats(): ?array
     {
-        return $this->json_stats;
+        return $this->jsonstats;
     }
 
-    public function setJsonStats(array $json_stats): self
+    public function setJsonStats(array $jsonstats): self
     {
-        $this->json_stats = $json_stats;
+        if (is_string($jsonstats)) {
+            $decodedStats = json_decode($jsonstats, true);
+            if ($decodedStats !== null && is_array($decodedStats)) {
+                $this->jsonstats = $decodedStats;
+            } else {
+                $this->jsonstats = [];
+            }
+        } else {
+            $this->jsonstats = $jsonstats;
+        }
 
         return $this;
     }
