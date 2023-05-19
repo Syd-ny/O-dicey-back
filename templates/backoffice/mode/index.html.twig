@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modes de jeu{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-3 mx-3">Modes de jeu</h1>
+
+    {{ include('backoffice/mode/_search.html.twig') }}
+
+    <div class="text-end mb-3">
+        <a href="{{ path('app_backoffice_mode_list', { 'sort': 'id', 'order': (app.request.query.get('sort') == 'id' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+            Trier par ID {% if sort == 'id' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
+        </a>
+        <a href="{{ path('app_backoffice_mode_list', { 'sort': 'name', 'order': (app.request.query.get('sort') == 'name' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+            Trier par Name {% if sort == 'name' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
+        </a>
+        <a href="{{ path('app_backoffice_user_new') }}" class="btn btn-outline-info mx-3">Créer un nouvel utilisateur</a>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">name</th>
+                <th scope="col">Statistiques</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for mode in modes %}
+            <tr class="table-active">
+                <td>{{ mode.id }}</td>
+                <td>{{ mode.name }}</td>
+                <td>
+                    {% if mode.jsonstats %}
+                        {% set truncatedJsonStats = mode.jsonstats|json_encode|slice(0, 50) ~ (mode.jsonstats|json_encode|length > 50 ? '...' : '') %}
+                        {{ truncatedJsonStats }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ path('app_backoffice_mode_show', {'id': mode.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                    <a href="{{ path('app_backoffice_user_edit', {'id': mode.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

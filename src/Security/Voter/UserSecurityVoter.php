@@ -14,7 +14,7 @@ class UserSecurityVoter extends Voter
 
     protected function supports(string $attribute, $subject): bool
     {
-        // replace with your own logic
+        
         return in_array($attribute, [self::EDIT, self::DELETE])
             && $subject instanceof \App\Entity\User;
     }

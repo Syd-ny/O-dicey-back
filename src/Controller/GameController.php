@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Gallery;
 use App\Entity\Game;
+use App\Entity\GameUsers;
+use App\Entity\User;
 use App\Repository\GameRepository;
+use App\Repository\GameUsersRepository;
 use App\Repository\ModeRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -30,8 +34,7 @@ class GameController extends AbstractController
 
         // get entities table of games
         $games = $gameRepository->findAll();
-        
-        
+          
         return $this->json($games,Response::HTTP_OK,[], ["groups" => "games"]);
     }
 
@@ -42,13 +45,11 @@ class GameController extends AbstractController
     */
     public function getGamesById(Game $game): JsonResponse
     {
-
-        // TODO gérer si le film n'existe pas
+        
         if (!$game) {
             return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
         }
         
-
         return $this->json($game,Response::HTTP_OK,[], ["groups" => "games"]);
     }
 
@@ -90,7 +91,7 @@ class GameController extends AbstractController
         
         // Converts request content to an array
         $dataDecoded = json_decode($data, true);
-
+        
         // We check if the mode of the request matches to an existing mode 
         $modeId = $dataDecoded["mode"] ?? null;
         $mode = $modeId ? $modeRepository->find($modeId) : null;
@@ -111,13 +112,32 @@ class GameController extends AbstractController
         $game->setMode($mode);
         $game->setDm($dm);
 
+        // Adds the DM role to the user who created the game and does not yet have this role
+        $dm = $game->getDm();
+        $dmRoles = $dm->getRoles();
+        if(!in_array("ROLE_DM", $dmRoles)) {
+            $dmRoles[] = "ROLE_DM";
+            $game = $game->setDm($dm->setRoles($dmRoles));
+        }
+        
+        // We link the gallery data of the game creation form (if there is any)
+        if (isset($dataDecoded['galleries'])) {
+
+            $gallery = new Gallery();
+            $gallery->setPicture($dataDecoded['galleries'][0]);
+            $gallery->setMainPicture($dataDecoded['galleries'][1]);
+            $gallery->setGame($game);
+            $entityManager->persist($gallery);
+        }
+
         // Add the game in the BDD
         $entityManager->persist($game);
+        
         $entityManager->flush();
         
 
         //  Provide the link of the resource created
-        return $this->json(["creation successful"], Response::HTTP_CREATED,[
+        return $this->json(["Creation successful"], Response::HTTP_CREATED,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
         ]);
     }
@@ -139,7 +159,6 @@ class GameController extends AbstractController
         try{
             // Deserialize JSON into an entity
             $updatedGame = $serializer->deserialize($data,Game::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $game]);
-
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
@@ -189,13 +208,13 @@ class GameController extends AbstractController
         }
 
         // Update the updatedAt field with the current date and time
-        $game->setUpdatedAt(new DateTimeImmutable(date("Y-m-d H:i:s")));
+        $game->setUpdatedAt(new DateTimeImmutable());
 
         // Edit the game in the DB
         $entityManager->flush();
         
         //  Provide the link of the resource updated
-        return $this->json(["update successful"], Response::HTTP_OK,[
+        return $this->json(["Update successful"], Response::HTTP_OK,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGame->getId()])
         ]);
     }
@@ -205,7 +224,7 @@ class GameController extends AbstractController
     * 
     * @Route("/api/games/{id}", name="app_api_game_deleteGames", methods={"DELETE"})
     */
-    public function deleteGames($id, Game $game, EntityManagerInterface $entityManager): JsonResponse
+    public function deleteGames(Game $game, EntityManagerInterface $entityManager): JsonResponse
     {
 
         $this->denyAccessUnlessGranted('DELETE', $game);
@@ -232,4 +251,91 @@ class GameController extends AbstractController
             'groups' => 'charactersByGame'
         ]);
     }
+
+    /**
+    * endpoints for all galeries of a specific game
+    * 
+    * @Route("/api/games/{id}/galleries", name="app_api_game_getGalleriesByGame", requirements={"gameId"="\d+"},  methods={"GET"})
+    */
+    public function getGalleriesByGame(Game $game): JsonResponse
+    {
+        // get the characters of the current game
+        $galleriesByGame = $game->getGalleries();
+
+        if (!$game) {
+            return $this->json('Partie introuvable', Response::HTTP_NOT_FOUND);
+        }
+
+        if (count($galleriesByGame) === 0) {
+            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
+    }
+
+    /**
+    * Endpoint to invite an user to a game
+    * 
+    * @Route("/api/games/{id}/users", name="app_api_game_postGameUsersInvites", methods={"POST"})
+    */
+    public function postGameUsersInvites(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Game $game, validatorInterface $validator, GameUsersRepository $gameUsersRepository , UserRepository $userRepository): JsonResponse
+    {
+        // dd($game);
+        $this->denyAccessUnlessGranted('POSTINVITE', $game);
+
+        // Get request content (json)
+        $data = $request->getContent();
+        $dataDecoded = json_decode($data, true);
+        $user = $userRepository->find($dataDecoded['user']);
+
+        $gameUsers = $gameUsersRepository->findAll();
+
+        foreach ($gameUsers as $gameUser) {
+            if($gameUser->getGame() === $game && $gameUser->getUser() === $user) {
+                return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        // If JSON invalid, return a json to specify that it is invalid
+        try{
+            // Deserialize JSON into an entity
+            $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
+            $dataDecoded = json_decode($data, true);
+            $user = $userRepository->find($dataDecoded['user']);
+            // dd($user);
+            $gameUser->setUser($user);
+            $gameUser->setGame($game);
+            // dd($gameUsers);
+        }
+        catch(NotEncodableValueException $e){
+            return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
+        }
+
+        // manually check if entity is valid
+        $errors = $validator->validate($gameUser);
+        // If error array is upper 0, the form is invalid.
+        if(count($errors) > 0){
+            // Create an empty array and store all errors in it.
+            $dataErrors = [];
+
+            // Loop over errors
+            foreach($errors as $error){
+                // Create in my table an index by fields and list all errors of the field in question in a sub-table
+                $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            // Entity not being treatable because of incorrect data, return a code 422
+            return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Add the game in the BDD
+        $entityManager->persist($gameUser);
+        $entityManager->flush();
+        
+
+        //  Provide the link of the resource created
+        return $this->json(["Invitation created"], Response::HTTP_CREATED,[
+            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
+        ]);
+    }
+
 }

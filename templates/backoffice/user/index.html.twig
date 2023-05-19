@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+
+{% block body %}
+
+    <h1 class="mt-3 mx-3">Utilisateurs</h1>
+
+    {{ include('backoffice/user/_search.html.twig') }}
+
+    <div class="text-end mb-3">
+        <a href="{{ path('app_backoffice_user_list', { 'sort': 'id', 'order': (app.request.query.get('sort') == 'id' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+            Trier par ID {% if sort == 'id' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
+        </a>
+        <a href="{{ path('app_backoffice_user_list', { 'sort': 'email', 'order': (app.request.query.get('sort') == 'email' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+            Trier par Email {% if sort == 'email' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
+        </a>
+        <a href="{{ path('app_backoffice_user_list', { 'sort': 'login', 'order': (app.request.query.get('sort') == 'login' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+            Trier par Login {% if sort == 'login' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
+        </a>
+        <a href="{{ path('app_backoffice_user_new') }}" class="btn btn-outline-info mx-3">Créer un nouvel utilisateur</a>
+    </div>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Email</th>
+                <th scope="col">Username</th>
+                <th scope="col">Roles</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr class="table-active">
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.login }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>
+                    <a href="{{ path('app_backoffice_user_show', {'id': user.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                    <a href="{{ path('app_backoffice_user_edit', {'id': user.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

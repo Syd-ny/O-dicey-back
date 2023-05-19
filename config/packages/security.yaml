@@ -30,9 +30,18 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            logout:
+                path: app_logout
+                target: /backoffice/login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
+
+            form_login:
+                # "app_login" is the name of the route created previously
+                default_target_path: app_backoffice_home
+                login_path: app_login
+                check_path: app_login
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
@@ -40,20 +49,23 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users, roles: PUBLIC_ACCESS, methods: [POST] }
 
         # Security/Voter/UserSecurityVoter for specific permissions 
+        - { path: ^/backoffice/login, roles: PUBLIC_ACCESS }
+        - { path: ^/backoffice, roles: ROLE_ADMIN }
 
         # Security/Voter/GameSecurityVoter for specific permissions
-        - { path: ^/api/games/\d+, roles: ROLE_MJ, methods: [PUT, DELETE] }
-        - { path: ^/api/galleries, roles: ROLE_MJ }
+        - { path: ^/api/games/\d+, roles: ROLE_DM, methods: [PUT, DELETE] }
+        - { path: ^/api/galleries, roles: ROLE_DM }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
         # The admin also has a user role
         ROLE_ADMIN: ROLE_USER
         # The DM also has a user role
-        ROLE_MJ: ROLE_USER
+        ROLE_DM: ROLE_USER
 
 when@test:
     security:

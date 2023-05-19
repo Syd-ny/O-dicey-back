@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\GalleryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
@@ -15,9 +16,9 @@ class Gallery
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * 
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
      */
     private $id;
 
@@ -25,6 +26,9 @@ class Gallery
      * @ORM\Column(type="string", length=128)
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
+     * @Assert\NotBlank
+     * @Assert\Url
      */
     private $picture;
 
@@ -32,16 +36,23 @@ class Gallery
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"games"})
+     * @Assert\PositiveOrZero
      */
     private $mainPicture;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gallery")
+     * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="galleries")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Assert\NotBlank
      */
     private $game;
+
+    public function __construct()
+    {
+        $this->mainPicture = 0;
+    }
 
     public function getId(): ?int
     {

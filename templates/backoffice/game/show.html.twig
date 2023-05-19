@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ game.name }}{% endblock %}
+
+{% block body %}
+    <h1 class="mt-3 mx-3">{{ game.name }}</h1>
+
+    <table class="table table-hover">
+        <tbody>
+            <tr class="table-active">
+                <th scope="col">Id</th>
+                <td>{{ game.id }}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="col">Statut</th>
+                <td>{{ game.status }}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="col">Mode de jeu</th>
+                <td>{{ game.mode.name }}</td>
+            </tr>
+            <tr class="table-active">
+                <th scope="col">Maitre de jeu</th>
+                <td>{{ game.dm.login }}</td>
+            </tr>
+            {% if game.galleries is not empty %}
+                <tr class="table-active">
+                    <th scope="col">Images</th>
+                    <td>
+                        {% for gallery in game.galleries %}
+                            {% if gallery.picture is not empty %}
+                                <img src="{{ gallery.picture }}" height="150" width="150" alt="Image">
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+
+                <tr class="table-active">
+                    <th scope="col">Personnages</th>
+                    <td>
+                      {% if game.characters is not empty %}
+                        {% for character in game.characters %}
+                          {{ character.name }}
+                          appartient à : {{ character.user.login }}
+                          <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                          <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a>
+                          <br>
+                        {% endfor %}
+                      {% else %}
+                        Aucun personnage associé à cette partie.
+                      {% endif %}
+                    </td>
+                </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_backoffice_game_list') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
+
+    <a href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
+    <form method="post" action="{{ path('app_backoffice_game_delete', {'id': game.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">
+        <button class="btn btn-sm btn-outline-danger mx-3 mt-2">Supprimer</button>
+    </form>
+{% endblock %}

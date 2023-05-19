@@ -22,7 +22,6 @@ class ModeController extends AbstractController
         // get entities table of modes
         $modes = $modeRepository->findAll();
         
-        
         return $this->json($modes,Response::HTTP_OK,[], ["groups" => "modes"]);
     }
 

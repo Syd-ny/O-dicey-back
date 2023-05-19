@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\GameRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -26,7 +27,8 @@ class Game
      * @Groups({"character_edit"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
      */
     private $id;
 
@@ -36,7 +38,8 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
      * @Assert\NotBlank
      */
     private $name;
@@ -47,7 +50,10 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
+     * @Assert\PositiveOrZero
      */
     private $status;
 
@@ -56,7 +62,9 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
+     * 
      */
     private $updatedAt;
 
@@ -65,7 +73,9 @@ class Game
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"games"})
-     * @Groups({"$charactersByGame"})
+     * @Groups({"charactersByGame"})
+     * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $createdAt;
 
@@ -73,6 +83,8 @@ class Game
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games"})
+     * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $mode;
 
@@ -80,12 +92,15 @@ class Game
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gamesDM")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games"})
+     * @Groups({"gamesByUser"})
+     * @Assert\NotBlank
      */
     private $dm;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="game", orphanRemoval=true)
      * @Groups({"games"})
+     * @Groups({"gamesByUser"})
      */
     private $characters;
 
@@ -106,6 +121,13 @@ class Game
         $this->characters = new ArrayCollection();
         $this->galleries = new ArrayCollection();
         $this->gameUsers = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
+        $this->status = 0;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     public function getId(): ?int

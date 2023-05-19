@@ -11,15 +11,40 @@ use App\Entity\Character;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\DataFixtures\Provider\OdiceyProvider;
+use Doctrine\DBAL\Connection;
 use App\Entity\GameUsers;
 use DateTimeImmutable;
-use Doctrine\DBAL\Connection;
 
 class AppFixtures extends Fixture
 {
+    private $connection;
+
+    /**
+    * Constructor
+    */
+    public function __construct(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    private function truncate()
+    {
+        $this->connection->executeQuery('SET foreign_key_checks = 0');
+        // On tronque
+        $this->connection->executeQuery('TRUNCATE TABLE `character`');// backticks are used to avoid an SQL error about 'character' being a reserved term.
+        $this->connection->executeQuery('TRUNCATE TABLE gallery');
+        $this->connection->executeQuery('TRUNCATE TABLE game');
+        $this->connection->executeQuery('TRUNCATE TABLE game_users');
+        $this->connection->executeQuery('TRUNCATE TABLE mode');
+        $this->connection->executeQuery('TRUNCATE TABLE user');
+        // etc.
+    }
 
     public function load(ObjectManager $manager): void
     {
+
+        // truncate tables
+        $this->truncate();
 
         // Faker instanciation
         $faker = Factory::create();

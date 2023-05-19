@@ -39,6 +39,20 @@ class ModeRepository extends ServiceEntityRepository
         }
     }
 
+    public function findBySearch($search, $sort, $order)
+    {
+        $queryBuilder = $this->createQueryBuilder('u');
+
+        if (!empty($search)) {
+            $queryBuilder->andWhere('u.name LIKE :search')
+                ->setParameter('search','%' . $search . '%');
+        }
+
+        $queryBuilder-> orderBy('u.' . $sort, $order);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Mode[] Returns an array of Mode objects
 //     */

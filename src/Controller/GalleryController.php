@@ -22,9 +22,11 @@ class GalleryController extends AbstractController
 {
 
     /**
-    * @Route("", name="browse", methods={"GET"})
+    *  endpoint for all galleries 
+    * 
+    * @Route("", name="getGalleries", methods={"GET"})
     */
-    public function browse(GalleryRepository $galleryRepository): JsonResponse
+    public function getGalleries(GalleryRepository $galleryRepository): JsonResponse
     {
         $galleries = $galleryRepository->findAll();
         
@@ -36,41 +38,24 @@ class GalleryController extends AbstractController
     }
 
     /**
-    * @Route("/{id}", name="read", methods={"GET"})
+    * endpoint for a specific gallery
+    * 
+    * @Route("/{id}", name="getGalleriesById", methods={"GET"})
     */
-    public function read(Gallery $gallery): JsonResponse
+    public function getGalleriesById(Gallery $gallery): JsonResponse
     {
 
-        if ($gallery === null){return $this->json("ce joueur n'existe pas", Response::HTTP_NOT_FOUND);}
+        if ($gallery === null){return $this->json("Cette image n'existe pas", Response::HTTP_NOT_FOUND);}
 
         return $this->json($gallery,200,[], ["groups"=> ["gallery_read"]]);
     }
 
     /**
-     * @Route("/games/{gameId}", name="get_galleries_by_game", requirements={"gameId"="\d+"},  methods={"GET"})
-     */
-    public function getGalleriesByGame(int $gameId, GalleryRepository $galleryRepository, GameRepository $gameRepository): JsonResponse
-    {
-        $game = $gameRepository->find($gameId);
-
-        if (!$game) {
-            return $this->json('Jeu introuvable', Response::HTTP_NOT_FOUND);
-        }
-
-        $galleries = $galleryRepository->findByGame($game);
-
-        if (count($galleries) === 0) {
-            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($galleries, 200, [], ["groups"=> ["gallery_read"]]);
-    }
-
-
-    /**
-    * @Route("", name="add", methods={"POST"})
+    * endpoint to create a gallery
+    * 
+    * @Route("", name="postGalleries", methods={"POST"})
     */
-    public function add(
+    public function postGalleries(
         //important to import GameRepository to show the FK Game.
         GameRepository $gameRepository,
         EntityManagerInterface $entityManager,
@@ -78,44 +63,50 @@ class GalleryController extends AbstractController
         SerializerInterface $serializer, 
         ValidatorInterface $validator): JsonResponse
     {
-
+        
         // we get the object
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
         }
-
+        
         // Convert JSON into php object.
         $gallery = $serializer->deserialize( $jsonContent, Gallery::class,'json', ['datetime_format' => 'Y-m-d\TH:i:sP']);
-
+        
         $errors = $validator->validate($gallery);
         if (count($errors) > 0) {
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        //dd($gallery);
-
+        
         // decode the content on JSON
         $data = json_decode($jsonContent, true);
-
-        //take the decoded data of game
-        $gameId = $data["game"]["id"] ?? null;
+        
+        // retrieve gameId if $data["game_id"] is set
+        $gameId = $data["game"] ?? null;
         $game = $gameId ? $gameRepository->find($gameId) : null;
-    
+        
         if (!$game) {
-            return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
+            return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
         }
         $gallery->setGame($game);
 
+        // can't post a new gallery if you're not the DM of the game associated with the gallery
+        $this->denyAccessUnlessGranted('POST', $gallery);
+        
         $entityManager->persist($gallery);
         $entityManager->flush();
 
-        return $this->json($gallery,201,[], ["groups"=> ["gallery_read"]]);
+        return $this->json(["Creation successful"], Response::HTTP_CREATED, [
+            "Location" => $this->generateUrl("app_api_gallery_getGalleriesById", ["id" => $gallery->getId()])
+        ]);
     }
 
     /**
-    * @Route("/{id}", name="edit", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
+    *  endpoint to edit a gallery
+    * 
+    * @Route("/{id}", name="editGalleries", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
     */
-    public function edit(
+    public function editGalleries(
         //important to import GameRepository to show the FK Game.
         Gallery $gallery,
         GameRepository $gameRepository,
@@ -124,6 +115,8 @@ class GalleryController extends AbstractController
         SerializerInterface $serializer, 
         ValidatorInterface $validator): JsonResponse
     {
+
+        $this->denyAccessUnlessGranted('EDIT', $gallery);
 
         // we get the object
         $jsonContent = $request->getContent();
@@ -138,44 +131,53 @@ class GalleryController extends AbstractController
         if (count($errors) > 0) {
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        //dd($gallery);
 
         // decode the content on JSON
         $data = json_decode($jsonContent, true);
+        
+        // If request contains a new game.
+        if (isset($data["game_id"])) {
+            // We check if the $gameId of the request matches the ID of an existing game 
+            $gameId = $data["game_id"] ?? null;
+            $game = $gameId ? $gameRepository->find($gameId) : null;
+            // If not, returns an error response
+            if (!$game) {
+                return $this->json("La partie n'existe pas", Response::HTTP_BAD_REQUEST);
+            }
+            // Add $game in $updatedGallery
+            $gallery->setGame($game);
+        } 
 
-        //take the decoded data of game
-        $gameId = $data["game"]["id"] ?? null;
-        $game = $gameId ? $gameRepository->find($gameId) : null;
-    
-        if (!$game) {
-            return $this->json("le jeu n'existe pas", Response::HTTP_BAD_REQUEST);
-        }
-        $updatedGallery->setGame($game);
-
+        // Edit the gallery in the DB  
         $entityManager->flush();
-
-        return $this->json($updatedGallery,201,[], ["groups"=> ["gallery_read"]]);
+ 
+        //  Provide the link of the resource updated
+        return $this->json(["Update successful"], Response::HTTP_OK,[
+            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGallery->getId()])
+        ]);
     }
 
     /**
-    * @Route("/{id}", name="delete", requirements={"id"="\d+"}, methods={"DELETE"})
+    * endpoint to delete a gallery
+    * 
+    * @Route("/{id}", name="deleteGalleries", requirements={"id"="\d+"}, methods={"DELETE"})
     */
-    public function delete(
+    public function deleteGalleries(
         $id,
         Gallery $gallery,
         GalleryRepository $galleryRepository,
         EntityManagerInterface $entityManager): JsonResponse
     {
 
-        $gallery = $galleryRepository->find($id);
+        $this->denyAccessUnlessGranted('DELETE', $gallery);
 
         if ($gallery === null){
-            return $this->json("personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
+            return $this->json("Image introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
         }
 
         $galleryRepository->remove($gallery);
         $entityManager->flush();
 
-        return $this->json("personnage supprimé avec succès", Response::HTTP_OK);
+        return $this->json("Image supprimée avec succès", Response::HTTP_OK);
     }
 }

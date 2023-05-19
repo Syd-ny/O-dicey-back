@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\GameUsers;
+use App\Repository\GameRepository;
 use App\Entity\User;
-use App\Repository\GameUsersRepository;
+use App\Repository\CharacterRepository;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -27,7 +28,7 @@ class UserController extends AbstractController
     public function getUsers(UserRepository $userRepository): JsonResponse
     {
         $users = $userRepository->findAll();
-        // dd($users);
+        
         return $this->json($users, Response::HTTP_OK, [], [
             'groups' => 'users'
         ]);
@@ -64,7 +65,6 @@ class UserController extends AbstractController
             // hashing the password
             $passwordHashed = password_hash($user->getPassword(), PASSWORD_DEFAULT);
             $user->setPassword($passwordHashed);
-
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"], Response::HTTP_BAD_REQUEST);
@@ -89,7 +89,7 @@ class UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
         
-        return $this->json(["creation successful"], Response::HTTP_CREATED, [
+        return $this->json(["Creation successful"], Response::HTTP_CREATED, [
             "Location" => $this->generateUrl("app_api_user_getUsersById", ["id" => $user->getId()])
         ]);
     }
@@ -106,12 +106,22 @@ class UserController extends AbstractController
 
         // get the request content
         $data = $request->getContent();
+        // Converts request content to an array
+        $dataDecoded = json_decode($data, true);
+        // If the request content has a new password. 
+        if(isset($dataDecoded['password'])) {
+            // Hash the new password
+            $hashedPassword = password_hash($dataDecoded['password'],PASSWORD_DEFAULT);
+            // Replace the old password with the new one in $dataDecoded
+            $dataDecoded['password'] = $hashedPassword;
+        }
+        // Converts new data to a Json
+        $newData = json_encode($dataDecoded);
 
         // if invalid JSON, return JSON to inform of the invalidity
         try{
             // deserializing json into entity
-            $updatedUser = $serializer->deserialize($data, User::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
-
+            $updatedUser = $serializer->deserialize($newData, User::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $user]);
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"], Response::HTTP_BAD_REQUEST);
@@ -132,10 +142,13 @@ class UserController extends AbstractController
             return $this->json($dataErrors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        // Update the updatedAt field with the current date and time
+        $updatedUser->setUpdatedAt(new DateTimeImmutable());
+        
         // edit the user in the DB
         $entityManager->flush();
  
-        return $this->json(["update successful"], Response::HTTP_OK, [
+        return $this->json(["Update successful"], Response::HTTP_OK, [
             "Location" => $this->generateUrl("app_api_user_getUsersById", ["id" => $updatedUser->getId()])
         ]);
     }
@@ -148,7 +161,7 @@ class UserController extends AbstractController
     public function deleteUsers(User $user, EntityManagerInterface $entityManager): JsonResponse
     {
 
-        $this->denyAccessUnlessGranted('EDIT', $user);
+        $this->denyAccessUnlessGranted('DELETE', $user);
 
         $entityManager->remove($user);
         $entityManager->flush();
@@ -172,6 +185,37 @@ class UserController extends AbstractController
     }
 
     /**
+     * endpoint for all games of a specific user
+     * 
+     * @Route("/api/users/{id}/games", name="app_api_user_getGamesByUser", methods={"GET"})
+     */
+    public function getGamesByUser(User $user): JsonResponse
+    {
+        
+        // Create a variable $gamesByUser which contains two empty arrays, player and DM.
+        $gamesByUser = ['player' => [], 'DM' => []];
+
+        // get the games of the current user is player
+        $gamesUsers = $user->getGameUsers()->toArray();
+        // get the games of the current user is DM
+        $gamesDM = $user->getGamesDM()->toArray();
+
+        // For each game in which the current user as player, an entry in the player table is created
+        foreach ($gamesUsers as $gameByUser) {
+            $gamesByUser['player'][] = $gameByUser->getGame();
+        }
+
+        // For each game in which the current user as DM, an entry in the DM table is created
+        foreach ($gamesDM as $gameDM) {
+            $gamesByUser['DM'][] = $gameDM;
+        }
+
+        return $this->json($gamesByUser, Response::HTTP_OK, [], [
+            'groups' => 'gamesByUser'
+        ]);
+    }
+
+    /**
      * endpoint for getting all invitations of a specific user
      * 
      * @Route("/api/users/{id}/invites", name="app_api_user_getInvitesByUser", methods={"GET"})
@@ -189,6 +233,32 @@ class UserController extends AbstractController
 
         return $this->json($invitesByUser, Response::HTTP_OK, [], [
             'groups' => 'invitesByUser'
+        ]);
+    }
+
+    /**
+    * Get the character of an user for a specific game
+
+    * @Route("/api/users/{userId}/games/{gameId}/character", name="app_api_user_getCharacterByUserAndGame", methods={"GET"})
+    */
+    public function getCharacterByUserAndGame(UserRepository $userRepository, CharacterRepository $characterRepository, GameRepository $gameRepository, int $userId, int $gameId): JsonResponse
+    {
+        $user = $userRepository->find($userId);
+        $game = $gameRepository->find($gameId);
+
+        // get the entry of table Character for the user and specific game
+        $gameUser = $characterRepository->findOneBy(['user' => $user, 'game' => $game]);
+
+        // check if entry exist
+        if (!$gameUser) {
+            return $this->json(['error' => 'Aucun personnage trouvé pour cet utilisateur et cette partie'], Response::HTTP_NOT_FOUND);
+        }
+
+        // Get the character associated with GameUsers entry
+        $character = $user->getCharacter($game);
+
+        return $this->json($character, Response::HTTP_OK, [], [
+            'groups' => 'users'
         ]);
     }
 
