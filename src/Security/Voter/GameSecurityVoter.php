@@ -13,11 +13,12 @@ class GameSecurityVoter extends Voter
 {
     public const EDIT = 'EDIT';
     public const DELETE = 'DELETE';
+    public const POSTINVITE = 'POSTINVITE';
 
     protected function supports(string $attribute, $subject): bool
     {
         
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::POSTINVITE])
             && $subject instanceof \App\Entity\Game;
     }
 
@@ -43,6 +44,12 @@ class GameSecurityVoter extends Voter
                 }
                 break;
             case self::DELETE:
+                // if the game subject has been created by the current user connected, they can delete it
+                if($user == $subject->getDm()) {
+                    return true;
+                }
+                break;
+            case self::POSTINVITE:
                 // if the game subject has been created by the current user connected, they can delete it
                 if($user == $subject->getDm()) {
                     return true;

@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Game;
+use App\Entity\GameUsers;
+use App\Entity\User;
 use App\Repository\GameRepository;
+use App\Repository\GameUsersRepository;
 use App\Repository\ModeRepository;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
@@ -257,4 +260,70 @@ class GameController extends AbstractController
 
         return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
     }
+
+    /**
+    * Endpoint to invite an user to a game
+    * 
+    * @Route("/api/games/{id}/users", name="app_api_game_postGameUsersInvites", methods={"POST"})
+    */
+    public function postGameUsersInvites(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Game $game, validatorInterface $validator, GameUsersRepository $gameUsersRepository , UserRepository $userRepository): JsonResponse
+    {
+        // dd($game);
+        $this->denyAccessUnlessGranted('POSTINVITE', $game);
+
+        // Get request content (json)
+        $data = $request->getContent();
+        $dataDecoded = json_decode($data, true);
+        $user = $userRepository->find($dataDecoded['user']);
+
+        $gameUsers = $gameUsersRepository->findAll();
+
+        foreach ($gameUsers as $gameUser) {
+            if($gameUser->getGame() === $game && $gameUser->getUser() === $user) {
+                return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        // If JSON invalid, return a json to specify that it is invalid
+        try{
+            // Deserialize JSON into an entity
+            $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
+            $dataDecoded = json_decode($data, true);
+            $user = $userRepository->find($dataDecoded['user']);
+            // dd($user);
+            $gameUser->setUser($user);
+            $gameUser->setGame($game);
+            // dd($gameUsers);
+        }
+        catch(NotEncodableValueException $e){
+            return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
+        }
+
+        // manually check if entity is valid
+        $errors = $validator->validate($gameUser);
+        // If error array is upper 0, the form is invalid.
+        if(count($errors) > 0){
+            // Create an empty array and store all errors in it.
+            $dataErrors = [];
+
+            // Loop over errors
+            foreach($errors as $error){
+                // Create in my table an index by fields and list all errors of the field in question in a sub-table
+                $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
+            }
+            // Entity not being treatable because of incorrect data, return a code 422
+            return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Add the game in the BDD
+        $entityManager->persist($gameUser);
+        $entityManager->flush();
+        
+
+        //  Provide the link of the resource created
+        return $this->json(["Invitation created"], Response::HTTP_CREATED,[
+            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
+        ]);
+    }
+
 }
