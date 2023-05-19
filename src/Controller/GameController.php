@@ -105,7 +105,6 @@ class GameController extends AbstractController
             return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
-
         // Add $mode and $dm in $game
         $game->setMode($mode);
         $game->setDm($dm);
