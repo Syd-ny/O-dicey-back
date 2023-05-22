@@ -13,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class OdiceyDeactivateGamesCommand extends Command
 {
-    protected static $defaultName = 'odicey:games:deactivate';
+    protected static $defaultName = 'odicey:deactivate-games';
     protected static $defaultDescription = 'Deactive games with updates older than 1 year';
 
     private $entityManager;
