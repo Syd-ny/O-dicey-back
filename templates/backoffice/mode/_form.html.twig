@@ -9,11 +9,11 @@
 
         <h2>Statistiques JSON</h2>
             <div class="form-group">
-            {{ form_label(form.jsonStats, 'Statistiques(JSON)') }}
-            {{ form_widget(form.jsonStats, {'attr': {'class': 'form-control'}, 'value': form.vars.value.jsonstats|default('')|json_encode}) }}
+            {{ form_label(form.jsonstats, 'Statistiques(JSON)') }}
+            {{ form_widget(form.jsonstats, {'attr': {'class': 'form-control'}, 'value': form.vars.value.jsonstats|default('')|json_encode}) }}
             </div>
 
         <button class="btn btn-outline-primary mb-3 mt-3 mx-3">{{ button_label|default('Sauvegarder') }}</button>
-        <a href="{{ path('app_backoffice_user_list') }}" class="btn btn-sm btn-outline-info mx-3 float-end">Retour à la liste</a>
+        <a href="{{ path('app_backoffice_mode_list') }}" class="btn btn-sm btn-outline-info mx-3 mt-3 float-end">Retour à la liste</a>
     {{ form_end(form) }}
 </div>

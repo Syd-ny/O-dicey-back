@@ -18,17 +18,16 @@
         <a href="{{ path('app_backoffice_game_list', { 'sort': 'dm', 'order': (app.request.query.get('sort') == 'dm' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
             Trier par DM {% if sort == 'dm' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
         </a>
-        <a href="{{ path('app_backoffice_user_new') }}" class="btn btn-outline-info mx-3">Créer un nouvel utilisateur</a>
+        <a href="{{ path('app_backoffice_game_new') }}" class="btn btn-outline-info mx-3">Créer une nouvelle partie</a>
     </div>
 
-    <a href="{{ path('app_backoffice_game_new') }}" class="btn btn-outline-info mx-3 float-end">Create new</a>
     <table class="table table-hover">
         <thead>
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Status</th>
-                <th scope="col">DM</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Statut</th>
+                <th scope="col">Maître du jeu</th>
                 <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -46,7 +45,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">no records found</td>
+                <td colspan="5">Aucune partie trouvée.</td>
             </tr>
         {% endfor %}
         </tbody>

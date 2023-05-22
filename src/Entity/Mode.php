@@ -44,7 +44,7 @@ class Mode
      * ! notNull instead of not blank to be able to create a new mode
      * @Assert\NotNull
      */
-    private $jsonStats = [];
+    private $jsonstats = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="mode", orphanRemoval=true)
@@ -74,22 +74,22 @@ class Mode
         return $this;
     }
 
-    public function getJsonStats(): ?array
+    public function getJsonstats(): ?array
     {
-        return $this->jsonStats;
+        return $this->jsonstats;
     }
 
-    public function setJsonStats(array $jsonStats): self
+    public function setJsonStats(array $jsonstats): self
     {
-        if (is_string($jsonStats)) {
-            $decodedStats = json_decode($jsonStats, true);
+        if (is_string($jsonstats)) {
+            $decodedStats = json_decode($jsonstats, true);
             if ($decodedStats !== null && is_array($decodedStats)) {
-                $this->jsonStats = $decodedStats;
+                $this->jsonstats = $decodedStats;
             } else {
-                $this->jsonStats = [];
+                $this->jsonstats = [];
             }
         } else {
-            $this->jsonStats = $jsonStats;
+            $this->jsonstats = $jsonstats;
         }
 
         return $this;

@@ -8,7 +8,6 @@ use App\Repository\ModeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -70,8 +69,8 @@ class ModeController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
 
             // Encode modified datas before saving them into json_stats.
-            $jsonstats = ($form->get('jsonStats')->getData());
-            $mode->setJsonStats(json_decode($jsonstats, true));
+            $jsonstats = ($form->get('jsonstats')->getData());
+            $mode->setJsonstats(json_decode($jsonstats, true));
             $entityManager->persist($mode);
             $entityManager->flush();
 
@@ -98,8 +97,8 @@ class ModeController extends AbstractController
 
 
             // Encode modified datas before saving them into json_stats.
-            $jsonstats = $form->get('jsonStats')->getData();
-            $mode->setJsonStats(json_decode($jsonstats, true));
+            $jsonstats = $form->get('jsonstats')->getData();
+            $mode->setJsonstats(json_decode($jsonstats, true));
             $entityManager->persist($mode);
             $entityManager->flush();
 
