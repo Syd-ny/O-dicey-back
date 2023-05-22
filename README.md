@@ -32,7 +32,7 @@ ___
 
 ### Create your own user, using the following customized command
 
-| `php bin/console odicey:user:create` followed by the arguments *email* *login* *password* *roles*
+| `php bin/console odicey:create-user` followed by the arguments *email* *login* *password* *roles*
 
 You can use this command to create an admin and get access to the API routes for testing and for connecting the DB with the frontend of the app.
 If you're in the production environment, add `--env=prod` to the command line.
@@ -43,7 +43,7 @@ ___
 
 ### Deactivate games older than 1 year
 
-| `php bin/console odicey:games:deactivate`
+| `php bin/console odicey:deactivate-games`
 
 Allows you to change the status of games that have not been updated for 1 year or longer, to Inactive. When a game is inactive, they are no longer editable or deletable by the DMs. They can be deleted from the backoffice by the admins of the app.
 If you're in the production environment, add `--env=prod` to the command line.
