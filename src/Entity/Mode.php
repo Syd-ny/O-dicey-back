@@ -36,7 +36,7 @@ class Mode
     private $name;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", name="json_stats")
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
