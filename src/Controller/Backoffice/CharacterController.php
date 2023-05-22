@@ -32,7 +32,7 @@ class CharacterController extends AbstractController
             
             $characterRepository->add($character, true);
 
-            return $this->redirectToRoute('app_backoffice_user_show', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_backoffice_user_getUsersById', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
         }
         
         return $this->renderForm('backoffice/character/edit.html.twig', [
@@ -53,6 +53,6 @@ class CharacterController extends AbstractController
             $characterRepository->remove($character, true);
         }
 
-        return $this->redirectToRoute('app_backoffice_user_show', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_backoffice_user_getUsersById', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
     }
 }

@@ -75,7 +75,7 @@ class GameController extends AbstractController
             
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_backoffice_game_list');
+            return $this->redirectToRoute('app_backoffice_game_getGames');
         }
 
         return $this->renderForm('backoffice/game/new.html.twig', [
@@ -105,7 +105,7 @@ class GameController extends AbstractController
             $entityManager->persist($game);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_backoffice_game_list');
+            return $this->redirectToRoute('app_backoffice_game_getGames');
         }
 
         return $this->renderForm('backoffice/game/edit.html.twig', [
@@ -126,6 +126,6 @@ class GameController extends AbstractController
             $gameRepository->remove($game, true);
         }
 
-        return $this->redirectToRoute('app_backoffice_game_list', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_backoffice_game_getGames', [], Response::HTTP_SEE_OTHER);
     }
 }
