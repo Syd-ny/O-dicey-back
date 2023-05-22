@@ -79,7 +79,7 @@ class ModeController extends AbstractController
             $entityManager->persist($mode);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_backoffice_mode_list');
+            return $this->redirectToRoute('app_backoffice_mode_getModes');
         }
 
         return $this->renderForm('backoffice/mode/new.html.twig', [
@@ -110,7 +110,7 @@ class ModeController extends AbstractController
             $entityManager->persist($mode);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_backoffice_mode_list');
+            return $this->redirectToRoute('app_backoffice_mode_getModes');
         }
 
         return $this->renderForm('backoffice/mode/edit.html.twig', [

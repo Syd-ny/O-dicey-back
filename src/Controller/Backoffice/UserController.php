@@ -95,7 +95,7 @@ class UserController extends AbstractController
 
             $userRepository->add($user, true);
 
-            return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_backoffice_user_getUsers', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('backoffice/user/new.html.twig', [
@@ -122,7 +122,7 @@ class UserController extends AbstractController
 
             $userRepository->add($user, true);
 
-            return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_backoffice_user_getUsers', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('backoffice/user/edit.html.twig', [
@@ -143,6 +143,6 @@ class UserController extends AbstractController
             $userRepository->remove($user, true);
         }
 
-        return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_backoffice_user_getUsers', [], Response::HTTP_SEE_OTHER);
     }
 }
