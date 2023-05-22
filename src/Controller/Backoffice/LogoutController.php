@@ -11,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class LogoutController extends AbstractController
 {
     /**
+     * Endpoint for the disconnection to the backoffice
+     * 
      * @Route("", name="app_logout")
      */
     public function logout(): void

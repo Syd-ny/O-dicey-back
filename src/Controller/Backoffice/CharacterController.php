@@ -13,17 +13,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class CharacterController extends AbstractController
 {
     /**
-     * @Route("/backoffice/characters/{id}/edit", name="app_backoffice_character_edit", requirements={"id"="\d+"})
+     * endpoint for editing a character
+     * 
+     * @Route("/backoffice/characters/{id}/edit", name="app_backoffice_character_editCharacters", requirements={"id"="\d+"})
      */
-    public function edit(Request $request, Character $character, CharacterRepository $characterRepository): Response
+    public function editCharacters(Request $request, Character $character, CharacterRepository $characterRepository): Response
     {
+        // Instantiation of the CharacterType class using as starting data the instance of the Character $character class
         $form = $this->createForm(CharacterType::class, $character, ["custom_option" => "edit"]);
 
+        // Processing of the form entry
         $form->handleRequest($request);
 
+        // if the form has been entered and the validation rules are checked
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // Update of updatedAt to the date of the last modification
             $character->setUpdatedAt(new \DateTimeImmutable());
+            
             $characterRepository->add($character, true);
 
             return $this->redirectToRoute('app_backoffice_user_show', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
@@ -36,9 +42,11 @@ class CharacterController extends AbstractController
     }
 
     /**
-     * @Route("/backoffice/characters/{id}", name="app_backoffice_character_delete", methods={"POST"}, requirements={"id"="\d+"})
+     * endpoint for deleting a character
+     * 
+     * @Route("/backoffice/characters/{id}", name="app_backoffice_character_deleteCharacters", methods={"POST"}, requirements={"id"="\d+"})
      */
-    public function delete(Request $request, Character $character, CharacterRepository $characterRepository): Response
+    public function deleteCharacters(Request $request, Character $character, CharacterRepository $characterRepository): Response
     {
         // implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$character->getId(), $request->request->get('_token'))) {

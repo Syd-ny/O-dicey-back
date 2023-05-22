@@ -4,7 +4,6 @@ namespace App\Controller\Backoffice;
 
 use App\Entity\User;
 use App\Form\UserType;
-use App\Form\UserSearchType;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,14 +19,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     /**
-     * @Route("", name="app_backoffice_user_list")
+     * Endpoint for all users
+     * 
+     * @Route("", name="app_backoffice_user_getUsers")
      */
-    public function list(Request $request, UserRepository $userRepository): Response
+    public function getUsers(Request $request, UserRepository $userRepository): Response
     {
+        // Variables to determine the display order of the users
         $search = $request->query->get('search', '');
         $sort = $request->query->get('sort', 'id');
         $order = $request->query->get('order', 'asc');
 
+        // Use the method findBySearchUser of the user repository to search the users according to the variables
         $users = $userRepository->findBySearchUser($search, $sort, $order);
 
         return $this->render('backoffice/user/index.html.twig', [
@@ -38,9 +41,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_backoffice_user_show", methods={"GET"}, requirements={"id"="\d+"})
+     * Endpoint for a specific user
+     * 
+     * @Route("/{id}", name="app_backoffice_user_getUsersById", methods={"GET"}, requirements={"id"="\d+"})
      */
-    public function show(User $user): Response
+    public function getUsersById(User $user): Response
     {
         return $this->render('backoffice/user/show.html.twig', [
             'user' => $user,
@@ -48,14 +53,37 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="app_backoffice_user_new", methods={"GET", "POST"})
+     * Endpoint for finding an user with his Email
+     * 
+     * @Route("/searchByMail", name="app_backoffice_user_getUsersByMail", methods={"GET"})
      */
-    public function new(Request $request, UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): Response
+    public function getUsersByMail(Request $request, UserRepository $userRepository): Response
     {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+        // Get the email value from the request
+        $email = $request->query->get('email');
 
+        // Search users by email with the function findByEmail of the userRepository
+        $users = $userRepository->findByEmail($email);
+
+        return $this->render('backoffice/user/index.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
+    /**
+     * Endpoint for creating an user
+     * 
+     * @Route("/new", name="app_backoffice_user_postUsers", methods={"GET", "POST"})
+     */
+    public function postUsers(Request $request, UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): Response
+    {
+        // Instantiation of the User entity
+        $user = new User();
+        // Instantiation of the UserType class using as starting data the instance of the User $user class
+        $form = $this->createForm(UserType::class, $user);
+        // Processing of the form entry
+        $form->handleRequest($request);
+        // if the form has been entered and the validation rules are checked
         if ($form->isSubmitted() && $form->isValid()) {
 
             // retrieving the plain password
@@ -77,18 +105,21 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_backoffice_user_edit", methods={"GET", "POST"}, requirements={"id"="\d+"})
+     * Endpoint for editing an user
+     * 
+     * @Route("/{id}/edit", name="app_backoffice_user_editUsers", methods={"GET", "POST"}, requirements={"id"="\d+"})
      */
-    public function edit(Request $request, User $user, UserRepository $userRepository): Response
+    public function editUsers(Request $request, User $user, UserRepository $userRepository): Response
     {
-
+        // Instantiation of the UserType class using as starting data the instance of the User $user class
         $form = $this->createForm(UserType::class, $user, ["custom_option" => "edit"]);
-
+        // Processing of the form entry
         $form->handleRequest($request);
-
+        // if the form has been entered and the validation rules are checked
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // Update of updatedAt to the date of the last modification
             $user->setUpdatedAt(new \DateTimeImmutable());
+
             $userRepository->add($user, true);
 
             return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
@@ -101,9 +132,11 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_backoffice_user_delete", methods={"POST"}, requirements={"id"="\d+"})
+     * Endpoint for deleting an user
+     * 
+     * @Route("/{id}", name="app_backoffice_user_deleteUsers", methods={"POST"}, requirements={"id"="\d+"})
      */
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    public function deleteUsers(Request $request, User $user, UserRepository $userRepository): Response
     {
         // implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
@@ -111,20 +144,5 @@ class UserController extends AbstractController
         }
 
         return $this->redirectToRoute('app_backoffice_user_list', [], Response::HTTP_SEE_OTHER);
-    }
-
-    /**
-     * @Route("/searchByMail", name="app_backoffice_user_searchByMail", methods={"GET"})
-     */
-    public function searchByMail(Request $request, UserRepository $userRepository): Response
-    {
-        $email = $request->query->get('email');
-
-        // Effectuez votre recherche d'utilisateurs en fonction de l'e-mail ici
-        $users = $userRepository->findByEmail($email);
-
-        return $this->render('backoffice/user/index.html.twig', [
-            'users' => $users,
-        ]);
     }
 }
