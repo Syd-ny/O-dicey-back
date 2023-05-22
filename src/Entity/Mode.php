@@ -41,7 +41,7 @@ class Mode
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
      * @Groups({"games"})
-     * // ! notNull instead of not blank to be able to create a new mode
+     * ! notNull instead of not blank to be able to create a new mode
      * @Assert\NotNull
      */
     private $jsonStats = [];
