@@ -41,9 +41,10 @@ class Mode
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
      * @Groups({"games"})
-     * @Assert\NotBlank
+     * // ! notNull instead of not blank to be able to create a new mode
+     * @Assert\NotNull
      */
-    private $jsonstats = [];
+    private $jsonStats = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="mode", orphanRemoval=true)
@@ -75,20 +76,20 @@ class Mode
 
     public function getJsonStats(): ?array
     {
-        return $this->jsonstats;
+        return $this->jsonStats;
     }
 
-    public function setJsonStats(array $jsonstats): self
+    public function setJsonStats(array $jsonStats): self
     {
-        if (is_string($jsonstats)) {
-            $decodedStats = json_decode($jsonstats, true);
+        if (is_string($jsonStats)) {
+            $decodedStats = json_decode($jsonStats, true);
             if ($decodedStats !== null && is_array($decodedStats)) {
-                $this->jsonstats = $decodedStats;
+                $this->jsonStats = $decodedStats;
             } else {
-                $this->jsonstats = [];
+                $this->jsonStats = [];
             }
         } else {
-            $this->jsonstats = $jsonstats;
+            $this->jsonStats = $jsonStats;
         }
 
         return $this;

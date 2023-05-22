@@ -70,7 +70,7 @@ class ModeController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
 
             // Encode modified datas before saving them into json_stats.
-            $jsonstats = ($form->get('jsonstats')->getData());
+            $jsonstats = ($form->get('jsonStats')->getData());
             $mode->setJsonStats(json_decode($jsonstats, true));
             $entityManager->persist($mode);
             $entityManager->flush();
@@ -98,7 +98,7 @@ class ModeController extends AbstractController
 
 
             // Encode modified datas before saving them into json_stats.
-            $jsonstats = $form->get('jsonstats')->getData();
+            $jsonstats = $form->get('jsonStats')->getData();
             $mode->setJsonStats(json_decode($jsonstats, true));
             $entityManager->persist($mode);
             $entityManager->flush();
