@@ -19,10 +19,6 @@
                 <th scope="col">Rôles</th>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
             </tr>
-            <tr class="table-active">
-                <th scope="col">Mot de passe</th>
-                <td>{{ user.password }}</td>
-            </tr>
             {% if (user.picture != null) %}
             
                 <tr class="table-active">
