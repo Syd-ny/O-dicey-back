@@ -15,9 +15,9 @@ class LoginController extends AbstractController
     /**
     * endpoints for return the login error 
     * 
-    * @Route("", name="app_backoffice_login_loginError")
+    * @Route("", name="app_login")
     */
-    public function loginError(AuthenticationUtils $authenticationUtils): Response
+    public function index(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
