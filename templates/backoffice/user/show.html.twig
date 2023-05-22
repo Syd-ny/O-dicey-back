@@ -35,8 +35,8 @@
                     {% for gameDm in user.gamesDm %}
                         
                         Partie : {{gameDm.name}}
-                        <a href="{{ path('app_backoffice_game_show', {'id': gameDm.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
-                        <a href="{{ path('app_backoffice_game_edit', {'id': gameDm.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                        <a href="{{ path('app_backoffice_game_getGamesById', {'id': gameDm.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                        <a href="{{ path('app_backoffice_game_editGames', {'id': gameDm.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                         <br>
 
                     {% endfor %}
@@ -50,7 +50,7 @@
                     <th scope="col">Partie : {{character.game.name}}</th>
                         
                         <td>{{ character.name }}
-                        <a href="{{ path('app_backoffice_character_edit', {'id': character.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a></td>
+                        <a href="{{ path('app_backoffice_character_editCharacters', {'id': character.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a></td>
 
                 </tr>
                 {% endfor %}
@@ -58,8 +58,8 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_backoffice_user_list') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
+    <a href="{{ path('app_backoffice_user_getUsers') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
 
-    <a href="{{ path('app_backoffice_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
+    <a href="{{ path('app_backoffice_user_editUsers', {'id': user.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
     {{ include('backoffice/user/_delete_form.html.twig') }}
 {% endblock %}

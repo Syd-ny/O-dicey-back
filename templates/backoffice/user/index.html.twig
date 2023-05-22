@@ -9,16 +9,16 @@
     {{ include('backoffice/user/_search.html.twig') }}
 
     <div class="text-end mb-3">
-        <a href="{{ path('app_backoffice_user_list', { 'sort': 'id', 'order': (app.request.query.get('sort') == 'id' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+        <a href="{{ path('app_backoffice_user_getUsers', { 'sort': 'id', 'order': (app.request.query.get('sort') == 'id' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
             Trier par ID {% if sort == 'id' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
         </a>
-        <a href="{{ path('app_backoffice_user_list', { 'sort': 'email', 'order': (app.request.query.get('sort') == 'email' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+        <a href="{{ path('app_backoffice_user_getUsers', { 'sort': 'email', 'order': (app.request.query.get('sort') == 'email' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
             Trier par Email {% if sort == 'email' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
         </a>
-        <a href="{{ path('app_backoffice_user_list', { 'sort': 'login', 'order': (app.request.query.get('sort') == 'login' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+        <a href="{{ path('app_backoffice_user_getUsers', { 'sort': 'login', 'order': (app.request.query.get('sort') == 'login' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
             Trier par Login {% if sort == 'login' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
         </a>
-        <a href="{{ path('app_backoffice_user_new') }}" class="btn btn-outline-info mx-3">Créer un nouvel utilisateur</a>
+        <a href="{{ path('app_backoffice_user_postUsers') }}" class="btn btn-outline-info mx-3">Créer un nouvel utilisateur</a>
     </div>
     <table class="table table-hover">
         <thead>
@@ -38,8 +38,8 @@
                 <td>{{ user.login }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 <td>
-                    <a href="{{ path('app_backoffice_user_show', {'id': user.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
-                    <a href="{{ path('app_backoffice_user_edit', {'id': user.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                    <a href="{{ path('app_backoffice_user_getUsersById', {'id': user.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                    <a href="{{ path('app_backoffice_user_editUsers', {'id': user.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                 </td>
             </tr>
         {% else %}

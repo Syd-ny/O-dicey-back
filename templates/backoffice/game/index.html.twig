@@ -9,16 +9,16 @@
     {{ include('backoffice/game/_search.html.twig') }}
 
     <div class="text-end mb-3">
-        <a href="{{ path('app_backoffice_game_list', { 'sort': 'id', 'order': (app.request.query.get('sort') == 'id' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+        <a href="{{ path('app_backoffice_game_getGames', { 'sort': 'id', 'order': (app.request.query.get('sort') == 'id' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
             Trier par ID {% if sort == 'id' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
         </a>
-        <a href="{{ path('app_backoffice_game_list', { 'sort': 'name', 'order': (app.request.query.get('sort') == 'name' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+        <a href="{{ path('app_backoffice_game_getGames', { 'sort': 'name', 'order': (app.request.query.get('sort') == 'name' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
             Trier par name {% if sort == 'name' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
         </a>
-        <a href="{{ path('app_backoffice_game_list', { 'sort': 'dm', 'order': (app.request.query.get('sort') == 'dm' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
+        <a href="{{ path('app_backoffice_game_getGames', { 'sort': 'dm', 'order': (app.request.query.get('sort') == 'dm' and app.request.query.get('order') == 'asc') ? 'desc' : 'asc' }) }}" class="btn btn-outline-primary mx-1">
             Trier par DM {% if sort == 'dm' %}{% if order == 'asc' %}<i class="bi bi-caret-up-fill"></i>{% else %}<i class="bi bi-caret-down-fill"></i>{% endif %}{% endif %}
         </a>
-        <a href="{{ path('app_backoffice_game_new') }}" class="btn btn-outline-info mx-3">Créer une nouvelle partie</a>
+        <a href="{{ path('app_backoffice_game_postGames') }}" class="btn btn-outline-info mx-3">Créer une nouvelle partie</a>
     </div>
 
     <table class="table table-hover">
@@ -39,8 +39,8 @@
                 <td>{{ game.status }}</td>
                 <td>{{ game.dm.login }}</td>
                 <td>
-                    <a href="{{ path('app_backoffice_game_show', {'id': game.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
-                    <a href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
+                    <a href="{{ path('app_backoffice_game_getGamesById', {'id': game.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                    <a href="{{ path('app_backoffice_game_editGames', {'id': game.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                 </td>
             </tr>
         {% else %}
