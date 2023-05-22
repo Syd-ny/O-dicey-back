@@ -13,9 +13,11 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class LoginController extends AbstractController
 {
     /**
-     * @Route("", name="app_login")
-     */
-    public function index(AuthenticationUtils $authenticationUtils): Response
+    * endpoints for return the login error 
+    * 
+    * @Route("", name="app_backoffice_login_loginError")
+    */
+    public function loginError(AuthenticationUtils $authenticationUtils): Response
     {
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();

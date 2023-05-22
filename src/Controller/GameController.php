@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Gallery;
 use App\Entity\Game;
 use App\Entity\GameUsers;
-use App\Entity\User;
 use App\Repository\GameRepository;
 use App\Repository\GameUsersRepository;
 use App\Repository\ModeRepository;
