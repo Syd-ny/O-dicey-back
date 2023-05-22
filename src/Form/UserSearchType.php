@@ -11,7 +11,7 @@ class UserSearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            // ...
+            
             ->add('role', ChoiceType::class, [
                 'label' => 'Rôle',
                 'required' => false,

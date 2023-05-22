@@ -35,7 +35,6 @@ class UserSecurityVoter extends Voter
                     return true;
                 }
             break;
-            
             case self::DELETE:
                 // if the user subject has the same email/identifier as the current connected user, they can delete the account
                 if($subject->getEmail() === $user->getUserIdentifier()) {

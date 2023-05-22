@@ -50,7 +50,7 @@ class GameSecurityVoter extends Voter
                 }
                 break;
             case self::POSTINVITE:
-                // if the game subject has been created by the current user connected, they can delete it
+                // if the game subject has been created by the current user connected, they can invite players
                 if($user == $subject->getDm()) {
                     return true;
                 }

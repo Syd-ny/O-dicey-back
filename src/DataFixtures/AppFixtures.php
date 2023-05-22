@@ -206,7 +206,7 @@ class AppFixtures extends Fixture
             }
 
             elseif($race === 2) {
-                $newCharacter->setName($faker->unique()->humains());
+                $newCharacter->setName($faker->unique()->humans());
             }
 
             elseif($race === 3) {
