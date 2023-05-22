@@ -20,7 +20,7 @@
                 <td>{{ game.mode.name }}</td>
             </tr>
             <tr class="table-active">
-                <th scope="col">Maitre de jeu</th>
+                <th scope="col">Maitre du jeu</th>
                 <td>{{ game.dm.login }}</td>
             </tr>
             {% if game.galleries is not empty %}
@@ -43,8 +43,7 @@
                         {% for character in game.characters %}
                           {{ character.name }}
                           appartient à : {{ character.user.login }}
-                          <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
-                          <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a>
+                          <a href="{{ path('app_backoffice_character_editCharacters', {'id': character.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                           <br>
                         {% endfor %}
                       {% else %}
@@ -55,10 +54,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_backoffice_game_list') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
+    <a href="{{ path('app_backoffice_game_getGames') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
 
-    <a href="{{ path('app_backoffice_game_edit', {'id': game.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
-    <form method="post" action="{{ path('app_backoffice_game_delete', {'id': game.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');">
+    <a href="{{ path('app_backoffice_game_editGames', {'id': game.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
+    <form method="post" action="{{ path('app_backoffice_game_deleteGames', {'id': game.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">
         <button class="btn btn-sm btn-outline-danger mx-3 mt-2">Supprimer</button>
     </form>

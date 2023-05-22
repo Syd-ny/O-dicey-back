@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Gallery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -12,7 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Mode;
 use App\Entity\User;
 use App\Entity\Game;
-use App\Form\Type\GalleryType;
+use App\Form\GalleryType;
 
 class GameType extends AbstractType
 {

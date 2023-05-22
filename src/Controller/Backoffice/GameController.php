@@ -2,10 +2,8 @@
 
 namespace App\Controller\Backoffice;
 
-use App\Entity\Gallery;
 use App\Entity\Game;
 use App\Form\GameType;
-use App\Form\GalleryType;
 use DateTimeImmutable;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,14 +19,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class GameController extends AbstractController
 {
     /**
-     * @Route("", name="app_backoffice_game_list")
+     * endpoint for all games
+     * 
+     * @Route("", name="app_backoffice_game_getGames")
      */
-    public function list(Request $request, GameRepository $gameRepository): Response
+    public function getGames(Request $request, GameRepository $gameRepository): Response
     {
+        // Variables to determine the display order of the games
         $search = $request->query->get('search', '');
         $sort = $request->query->get('sort', 'id');
         $order = $request->query->get('order', 'asc');
 
+        // Use the method findBySearchGame of the game repository to search the games according to the variables
         $games = $gameRepository->findBySearchGame($search, $sort, $order);
 
         return $this->render('backoffice/game/index.html.twig', [
@@ -39,9 +41,11 @@ class GameController extends AbstractController
     }
 
     /**
-    * @Route("/{id}", name="app_backoffice_game_show", methods={"GET"}, requirements={"id"="\d+"})
+    * endpoint for a specific game
+    *
+    * @Route("/{id}", name="app_backoffice_game_getGamesById", methods={"GET"}, requirements={"id"="\d+"})
     */
-    public function show(Game $game): Response
+    public function getGamesById(Game $game): Response
     {
         return $this->render('backoffice/game/show.html.twig', [
             'game' => $game,
@@ -49,24 +53,29 @@ class GameController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="app_backoffice_game_new", methods={"GET", "POST"})
+     * endpoint for create a new game
+     * 
+     * @Route("/new", name="app_backoffice_game_postGames", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function postGames(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // Instantiation of the Game entity
         $game = new Game();
+
+        // Instantiation of the GameType class using as starting data the instance of the Game $game class
         $form = $this->createForm(GameType::class, $game);
+
+        // Processing of the form entry
         $form->handleRequest($request);
 
+        // if the form has been entered and the validation rules are checked
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $game->setcreatedAt(new DateTimeImmutable(date("Y-m-d H:i:s")));
-
             // register game informations in the database
             $entityManager->persist($game);
             
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_backoffice_game_list');
+            return $this->redirectToRoute('app_backoffice_game_getGames');
         }
 
         return $this->renderForm('backoffice/game/new.html.twig', [
@@ -76,21 +85,27 @@ class GameController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_backoffice_game_edit", methods={"GET", "POST"})
+     * endpoint for editing a game
+     * 
+     * @Route("/{id}/edit", name="app_backoffice_game_editGames", methods={"GET", "POST"})
      */
-    public function edit(Request $request, EntityManagerInterface $entityManager, Game $game): Response
+    public function editGames(Request $request, EntityManagerInterface $entityManager, Game $game): Response
     {
+         // Instantiation of the GameType class using as starting data the instance of the Game $game class
         $form = $this->createForm(GameType::class, $game);
+        // Processing of the form entry
         $form->handleRequest($request);
-
+        // if the form has been entered and the validation rules are checked
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $game->setupdatedAt(new DateTimeImmutable(date("Y-m-d H:i:s")));
+            // Update of updatedAt to the date of the last modification
+            $game->setupdatedAt(new DateTimeImmutable());
 
             // register game informations in the database
+            $entityManager->persist($game);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_backoffice_game_list');
+            return $this->redirectToRoute('app_backoffice_game_getGames');
         }
 
         return $this->renderForm('backoffice/game/edit.html.twig', [
@@ -100,15 +115,17 @@ class GameController extends AbstractController
     }
 
     /**
-    * @Route("/{id}", name="app_backoffice_game_delete", methods={"POST"}, requirements={"id"="\d+"})
+    * endpoint for deleting a game 
+    *
+    * @Route("/{id}", name="app_backoffice_game_deleteGames", methods={"POST"}, requirements={"id"="\d+"})
     */
-    public function delete(Request $request, Game $game, GameRepository $gameRepository): Response
+    public function deleteGames(Request $request, Game $game, GameRepository $gameRepository): Response
     {
         // implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$game->getId(), $request->request->get('_token'))) {
             $gameRepository->remove($game, true);
         }
 
-        return $this->redirectToRoute('app_backoffice_game_list', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_backoffice_game_getGames', [], Response::HTTP_SEE_OTHER);
     }
 }

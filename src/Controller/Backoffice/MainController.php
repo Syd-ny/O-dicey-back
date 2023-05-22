@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
+     * Endpoint for displaying the backoffice homepage
+     * 
      * @Route("", name="app_backoffice_home")
      */
     public function home(): Response

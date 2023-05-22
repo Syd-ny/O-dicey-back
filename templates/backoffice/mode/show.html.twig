@@ -12,7 +12,7 @@
                 <td>{{ mode.id }}</td>
             </tr>
             <tr class="table-active">
-                <th scope="col">Name</th>
+                <th scope="col">Nom</th>
                 <td>{{ mode.name }}</td>
             </tr>
             <tr class="table-active">
@@ -26,8 +26,8 @@
                         {% for game in mode.games %}
                             <span class = "bold-text">{{ game.dm.login }}</span>
                             est le maître de jeu de la partie : <span class = "bold-text">{{game.name}}</span>
-                            <a href="#"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
-                            <a onclick="return confirm('Confirmer la suppression')" href="#"><i class="bi bi-trash btn btn-sm btn-danger rounded"></i></a>
+                            <a href="{{ path('app_backoffice_game_getGamesById', {'id': game.id}) }}"><i class="bi bi-eye btn btn-sm btn-success rounded"></i></a>
+                            <a href="{{ path('app_backoffice_game_editGames', {'id': game.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
                             <br>
                         {% endfor %}
                     {% else %}
@@ -40,10 +40,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_backoffice_mode_list') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
+    <a href="{{ path('app_backoffice_mode_getModes') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
 
-    <a href="{{ path('app_backoffice_mode_edit', {'id': mode.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
-    <form method="post" action="" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce mode de jeu ?');">
+    <a href="{{ path('app_backoffice_mode_editModes', {'id': mode.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
+    <form method="post" action="{{ path('app_backoffice_mode_deleteModes', {'id': mode.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce mode de jeu ?');">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mode.id) }}">
         <button class="btn btn-sm btn-outline-danger mx-3 mt-2">Supprimer</button>
     </form>
