@@ -56,7 +56,7 @@ class AppFixtures extends Fixture
         $mode = new Mode();
         $mode->setName('Dungeons and Dragons 5');
 
-        $mode->setJsonStats([
+        $mode->setJsonstats([
             'hp' => 'integer',
             'race' => 'string',
             'class' => 'string',
@@ -206,7 +206,7 @@ class AppFixtures extends Fixture
             }
 
             elseif($race === 2) {
-                $newCharacter->setName($faker->unique()->humains());
+                $newCharacter->setName($faker->unique()->humans());
             }
 
             elseif($race === 3) {

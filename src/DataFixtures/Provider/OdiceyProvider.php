@@ -5,7 +5,7 @@ namespace App\DataFixtures\Provider;
 class OdiceyProvider
 {
 
-    // array of dwarves names
+    // array of dwarf names
     private $dwarves = [
         "Ilgni(nain)",
         "Gimkhur(nain)",
@@ -21,8 +21,8 @@ class OdiceyProvider
         "Tulbann(nain)",
     ];
 
-    // array of humains names
-    private $humains = [
+    // array of human names
+    private $humans = [
         "Roneter(humain)",
         "Landwin(humain)",
         "Varuin(humain)",
@@ -36,7 +36,7 @@ class OdiceyProvider
         "Noredrago(humain)",
         "Jasmar(humain)",
     ];
-    // array of orcs names
+    // array of orc names
     private $orcs = [
         "Orrod(orc)",
         "Onkzak(orc)",
@@ -51,7 +51,7 @@ class OdiceyProvider
         "Uzozor(orc)",
         "Snagbo(orc)",
     ];
-    // array of elves names
+    // array of elf names
     private $elves = [
         "Calatrid(elfe)",
         "Denedio(elfe)",
@@ -76,15 +76,15 @@ class OdiceyProvider
     }
 
     /**
-     * Get a random humains
+     * Get a random human
      */
-    public function Humains()
+    public function humans()
     {
-        return $this->humains[array_rand($this->humains)];
+        return $this->humans[array_rand($this->humans)];
     }
 
     /**
-     * Get a random orcs
+     * Get a random orc
      */
     public function orcs()
     {
@@ -92,7 +92,7 @@ class OdiceyProvider
     }
 
     /**
-     * Get a random elves
+     * Get a random elf
      */
     public function elves()
     {

@@ -41,9 +41,7 @@ class CharacterType extends AbstractType
                 ]
             ])
           
-        ;
-
-        
+        ;   
     }
 
     public function configureOptions(OptionsResolver $resolver): void

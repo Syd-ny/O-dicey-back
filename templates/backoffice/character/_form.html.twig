@@ -2,6 +2,6 @@
     {{ form_start(form) }}
         {{ form_widget(form) }}
         <button class="btn btn-outline-primary mb-3 mt-3 mx-3">{{ button_label|default('Sauvegarder') }}</button>
-        <a href="{{ path('app_backoffice_user_show', {'id': character.user.id}) }}" class="btn btn-sm btn-outline-info mx-3">Retour au profil utilisateur</a>
+        <a href="{{ path('app_backoffice_user_getUsersById', {'id': character.user.id}) }}" class="btn btn-sm btn-outline-info mx-3">Retour au profil utilisateur</a>
     {{ form_end(form) }}
 </div>
