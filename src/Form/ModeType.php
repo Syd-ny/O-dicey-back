@@ -26,9 +26,8 @@ class ModeType extends AbstractType
                 ]
             ])
 
-            ->add('jsonstats', TextareaType::class, [
+            ->add('jsonStats', TextareaType::class, [
                 'label' => 'Statistiques(JSON)',
-                'data' => json_encode($mode->getJsonStats()),
                 'mapped' => false,
             ]);
     }

@@ -8,12 +8,10 @@
         </div>
 
         <h2>Statistiques JSON</h2>
-        {% for key, value in form.jsonstats %}
             <div class="form-group">
-                {{ form_label(value, key|capitalize) }}
-                {{ form_widget(value, {'attr': {'class': 'form-control'}}) }}
+            {{ form_label(form.jsonStats, 'Statistiques(JSON)') }}
+            {{ form_widget(form.jsonStats, {'attr': {'class': 'form-control'}, 'value': form.vars.value.jsonstats|default('')|json_encode}) }}
             </div>
-        {% endfor %}
 
         <button class="btn btn-outline-primary mb-3 mt-3 mx-3">{{ button_label|default('Sauvegarder') }}</button>
         <a href="{{ path('app_backoffice_user_list') }}" class="btn btn-sm btn-outline-info mx-3 float-end">Retour à la liste</a>
