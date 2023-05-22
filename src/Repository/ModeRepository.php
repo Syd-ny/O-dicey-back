@@ -39,7 +39,7 @@ class ModeRepository extends ServiceEntityRepository
         }
     }
 
-    public function findBySearch($search, $sort, $order)
+    public function findBySearchMode($search, $sort, $order)
     {
         $queryBuilder = $this->createQueryBuilder('u');
 

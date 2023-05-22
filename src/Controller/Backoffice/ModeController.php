@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 
 /**
@@ -19,24 +18,20 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ModeController extends AbstractController
 {
-    private $serializer;
-
-    public function __construct(SerializerInterface $serializer)
-    {
-        $this->serializer = $serializer;
-    }
-
     /**
-     * @Route("", name="app_backoffice_mode_list")
+     * endpoint for all modes
+     * 
+     * @Route("", name="app_backoffice_mode_getModes")
      */
-    public function list(Request $request, ModeRepository $modeRepository): Response
+    public function getModes(Request $request, ModeRepository $modeRepository): Response
     {
-
+        // Variables to determine the display order of the games
         $search = $request->query->get('search', '');
         $sort = $request->query->get('sort', 'id');
         $order = $request->query->get('order', 'asc');
 
-        $modes = $modeRepository->findBySearch($search, $sort, $order);
+        // Use the method findBySearchMode of the Mode repository to search the games according to the variables
+        $modes = $modeRepository->findBySearchMode($search, $sort, $order);
 
         return $this->render('backoffice/mode/index.html.twig', [
             'modes' => $modes,
@@ -46,9 +41,11 @@ class ModeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="app_backoffice_mode_show", methods={"GET"}, requirements={"id"="\d+"})
+     * endpoint for a specific mode
+     * 
+     * @Route("/{id}", name="app_backoffice_mode_getModesById", methods={"GET"}, requirements={"id"="\d+"})
      */
-    public function show(Mode $mode): Response
+    public function getModesById(Mode $mode): Response
     {
 
         return $this->render('backoffice/mode/show.html.twig', [
@@ -57,20 +54,59 @@ class ModeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="app_backoffice_mode_edit", methods={"GET","POST"})
-     */
-    public function edit(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    * endpoint for adding a mode
+    * 
+    * @Route("/new", name="app_backoffice_mode_postModes", methods={"GET","POST"})
+    */
+    public function postModes(Request $request, EntityManagerInterface $entityManager): Response
     {
-        
+        // Instantiation of the Mode entity
+        $mode = new Mode();
 
+        // Instantiation of the ModeType class using as starting data the instance of the Mode $mode class
         $form= $this->createForm(ModeType::class, $mode);
+        // Processing of the form entry
         $form->handleRequest($request);
 
+        // if the form has been entered and the validation rules are checked
         if($form->isSubmitted() && $form->isValid()) {
 
             // Encode modified datas before saving them into json_stats.
             $jsonstats = ($form->get('jsonstats')->getData());
             $mode->setJsonstats(json_decode($jsonstats, true));
+
+            // register game informations in the database
+            $entityManager->persist($mode);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_backoffice_mode_list');
+        }
+
+        return $this->renderForm('backoffice/mode/new.html.twig', [
+            'form'=> $form,
+        ]);
+    }
+
+    /**
+    * endpoint for editing a mode
+    * 
+    * @Route("/{id}/edit", name="app_backoffice_mode_editModes", methods={"GET","POST"})
+    */
+    public function editModes(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
+    {
+        
+        // Instantiation of the ModeType class using as starting data the instance of the Mode $mode class
+        $form= $this->createForm(ModeType::class, $mode);
+        // Processing of the form entry
+        $form->handleRequest($request);
+        // if the form has been entered and the validation rules are checked
+        if($form->isSubmitted() && $form->isValid()) {
+
+            // Encode modified datas before saving them into json_stats.
+            $jsonstats = $form->get('jsonstats')->getData();
+            $mode->setJsonstats(json_decode($jsonstats, true));
+          
+            // register game informations in the database
             $entityManager->persist($mode);
             $entityManager->flush();
 
@@ -79,33 +115,6 @@ class ModeController extends AbstractController
 
         return $this->renderForm('backoffice/mode/edit.html.twig', [
             'mode' => $mode,
-            'form'=> $form,
-        ]);
-    }
-
-    /**
-     * @Route("/new", name="app_backoffice_mode_new", methods={"GET","POST"})
-     */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $mode = new Mode();
-
-        $form= $this->createForm(ModeType::class, $mode);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-
-
-            // Encode modified datas before saving them into json_stats.
-            $jsonstats = $form->get('jsonstats')->getData();
-            $mode->setJsonstats(json_decode($jsonstats, true));
-            $entityManager->persist($mode);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_backoffice_mode_list');
-        }
-
-        return $this->renderForm('backoffice/mode/new.html.twig', [
             'form'=> $form,
         ]);
     }

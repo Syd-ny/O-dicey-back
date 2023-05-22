@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Gallery;
-use App\Entity\Game;
 use App\Repository\GameRepository;
 use App\Repository\GalleryRepository;
 use Doctrine\ORM\EntityManagerInterface;
