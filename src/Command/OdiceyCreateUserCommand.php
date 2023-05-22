@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class OdiceyCreateUserCommand extends Command
 {
-    protected static $defaultName = 'odicey:user:create';
+    protected static $defaultName = 'odicey:create-user';
     protected static $defaultDescription = 'Create a new user for O\'Dicey';
 
     private $entityManager;
