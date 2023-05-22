@@ -5,6 +5,7 @@ namespace App\Controller\Backoffice;
 use App\Entity\Gallery;
 use App\Entity\Game;
 use App\Form\GameType;
+use App\Form\GalleryType;
 use DateTimeImmutable;
 use App\Repository\GameRepository;
 use Doctrine\ORM\EntityManagerInterface;
