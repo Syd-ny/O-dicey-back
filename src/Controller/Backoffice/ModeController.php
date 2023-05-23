@@ -118,4 +118,19 @@ class ModeController extends AbstractController
             'form'=> $form,
         ]);
     }
+
+    /**
+     * endpoint for deleting a mode
+     * 
+     * @Route("/{id}", name="app_backoffice_mode_deleteModes", methods={"POST"}, requirements={"id"="\d+"})
+     */
+    public function deleteModes(Request $request, Mode $mode, ModeRepository $modeRepository): Response
+    {
+        // implementation of the CSRF token validation (symfony bundle)
+        if ($this->isCsrfTokenValid('delete'.$mode->getId(), $request->request->get('_token'))) {
+            $modeRepository->remove($mode, true);
+        }
+
+        return $this->redirectToRoute('app_backoffice_mode_getModes', [], Response::HTTP_SEE_OTHER);
+    }
 }
