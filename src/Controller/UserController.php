@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Character;
+use App\Entity\Game;
 use App\Repository\GameRepository;
 use App\Entity\User;
 use App\Repository\CharacterRepository;
@@ -25,9 +27,9 @@ class UserController extends AbstractController
      * 
      * @Route("/api/users", name="app_api_user_getUsers", methods={"GET"})
      */
-    public function getUsers(UserRepository $userRepository): JsonResponse
+    public function getUsers(EntityManagerInterface $entityManager): JsonResponse
     {
-        $users = $userRepository->findAll();
+        $users = $entityManager->getRepository(User::class)->findAll();
         
         return $this->json($users, Response::HTTP_OK, [], [
             'groups' => 'users'
@@ -52,7 +54,12 @@ class UserController extends AbstractController
      * 
      * @Route("/api/users", name="app_api_user_postUsers", methods={"POST"})
      */
-    public function postUsers(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator): JsonResponse
+    public function postUsers(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator
+        ): JsonResponse
     {
 
         // get the request content
@@ -99,7 +106,13 @@ class UserController extends AbstractController
      * 
      * @Route("/api/users/{id}", name="app_api_user_editUsers", methods={"PUT", "PATCH"})
      */
-    public function editUsers(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, User $user, ValidatorInterface $validator): JsonResponse
+    public function editUsers(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        User $user,
+        ValidatorInterface $validator
+        ): JsonResponse
     {
 
         $this->denyAccessUnlessGranted('EDIT', $user);
@@ -241,13 +254,13 @@ class UserController extends AbstractController
 
     * @Route("/api/users/{userId}/games/{gameId}/character", name="app_api_user_getCharacterByUserAndGame", methods={"GET"})
     */
-    public function getCharacterByUserAndGame(UserRepository $userRepository, CharacterRepository $characterRepository, GameRepository $gameRepository, int $userId, int $gameId): JsonResponse
+    public function getCharacterByUserAndGame(EntityManagerInterface $entityManager, int $userId, int $gameId): JsonResponse
     {
-        $user = $userRepository->find($userId);
-        $game = $gameRepository->find($gameId);
+        $user = $entityManager->getRepository(User::class)->find($userId);
+        $game = $entityManager->getRepository(Game::class)->find($gameId);
 
         // get the entry of table Character for the user and specific game
-        $gameUser = $characterRepository->findOneBy(['user' => $user, 'game' => $game]);
+        $gameUser = $entityManager->getRepository(Character::class)->findOneBy(['user' => $user, 'game' => $game]);
 
         // check if entry exist
         if (!$gameUser) {
