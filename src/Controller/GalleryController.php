@@ -3,8 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Gallery;
-use App\Repository\GameRepository;
-use App\Repository\GalleryRepository;
+use App\Entity\Game;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +24,9 @@ class GalleryController extends AbstractController
     * 
     * @Route("", name="getGalleries", methods={"GET"})
     */
-    public function getGalleries(GalleryRepository $galleryRepository): JsonResponse
+    public function getGalleries(EntityManagerInterface $entityManager): JsonResponse
     {
-        $galleries = $galleryRepository->findAll();
+        $galleries = $entityManager->getRepository(Gallery::class)->findAll();
         
         if (count($galleries) === 0) {
             return $this->json('Aucune image trouvée', Response::HTTP_NOT_FOUND);
@@ -55,8 +54,6 @@ class GalleryController extends AbstractController
     * @Route("", name="postGalleries", methods={"POST"})
     */
     public function postGalleries(
-        //important to import GameRepository to show the FK Game.
-        GameRepository $gameRepository,
         EntityManagerInterface $entityManager,
         Request $request, 
         SerializerInterface $serializer, 
@@ -82,7 +79,7 @@ class GalleryController extends AbstractController
         
         // retrieve gameId if $data["game_id"] is set
         $gameId = $data["game"] ?? null;
-        $game = $gameId ? $gameRepository->find($gameId) : null;
+        $game = $gameId ? $entityManager->getRepository(Game::class)->find($gameId) : null;
         
         if (!$game) {
             return $this->json("Cette partie n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -108,7 +105,6 @@ class GalleryController extends AbstractController
     public function editGalleries(
         //important to import GameRepository to show the FK Game.
         Gallery $gallery,
-        GameRepository $gameRepository,
         EntityManagerInterface $entityManager,
         Request $request, 
         SerializerInterface $serializer, 
@@ -138,7 +134,7 @@ class GalleryController extends AbstractController
         if (isset($data["game_id"])) {
             // We check if the $gameId of the request matches the ID of an existing game 
             $gameId = $data["game_id"] ?? null;
-            $game = $gameId ? $gameRepository->find($gameId) : null;
+            $game = $gameId ? $entityManager->getRepository(Game::class)->find($gameId) : null;
             // If not, returns an error response
             if (!$game) {
                 return $this->json("La partie n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -161,11 +157,7 @@ class GalleryController extends AbstractController
     * 
     * @Route("/{id}", name="deleteGalleries", requirements={"id"="\d+"}, methods={"DELETE"})
     */
-    public function deleteGalleries(
-        $id,
-        Gallery $gallery,
-        GalleryRepository $galleryRepository,
-        EntityManagerInterface $entityManager): JsonResponse
+    public function deleteGalleries($id, Gallery $gallery, EntityManagerInterface $entityManager): JsonResponse
     {
 
         $this->denyAccessUnlessGranted('DELETE', $gallery);
@@ -174,7 +166,7 @@ class GalleryController extends AbstractController
             return $this->json("Image introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
         }
 
-        $galleryRepository->remove($gallery);
+        $entityManager->getRepository(Gallery::class)->remove($gallery);
         $entityManager->flush();
 
         return $this->json("Image supprimée avec succès", Response::HTTP_OK);

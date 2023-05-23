@@ -38,7 +38,8 @@ class GameType extends AbstractType
             ])
 
             ->add('galleries', GalleryType::class, [
-                'label' => 'Galerie d\'images'
+                'label' => 'Galerie d\'images',
+                "required" => false
             ])
 
             ->add('mode',EntityType::class,[

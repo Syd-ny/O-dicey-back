@@ -5,10 +5,8 @@ namespace App\Controller;
 use App\Entity\Gallery;
 use App\Entity\Game;
 use App\Entity\GameUsers;
-use App\Repository\GameRepository;
-use App\Repository\GameUsersRepository;
-use App\Repository\ModeRepository;
-use App\Repository\UserRepository;
+use App\Entity\Mode;
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,11 +26,11 @@ class GameController extends AbstractController
     * 
     * @Route("/api/games", name="app_api_game_getGames", methods={"GET"})
     */
-    public function getGames(GameRepository $gameRepository): JsonResponse
+    public function getGames(EntityManagerInterface $entityManager): JsonResponse
     {
 
         // get entities table of games
-        $games = $gameRepository->findAll();
+        $games = $entityManager->getRepository(Game::class)->findAll();
           
         return $this->json($games,Response::HTTP_OK,[], ["groups" => "games"]);
     }
@@ -57,7 +55,12 @@ class GameController extends AbstractController
     * 
     * @Route("/api/games", name="app_api_game_postGames", methods={"POST"})
     */
-    public function postGames(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, ValidatorInterface $validator, UserRepository $userRepository, ModeRepository $modeRepository): JsonResponse
+    public function postGames(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        ValidatorInterface $validator
+        ): JsonResponse
     {
         // Get request content (json)
         $data = $request->getContent();
@@ -93,7 +96,7 @@ class GameController extends AbstractController
         
         // We check if the mode of the request matches to an existing mode 
         $modeId = $dataDecoded["mode"] ?? null;
-        $mode = $modeId ? $modeRepository->find($modeId) : null;
+        $mode = $modeId ? $entityManager->getRepository(Mode::class)->find($modeId) : null;
         // If not, returns an error response
         if (!$mode) {
             return $this->json("Ce mode n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -101,7 +104,7 @@ class GameController extends AbstractController
 
         // We check if the $dmId of the request matches the ID of an existing user 
         $dmId = $dataDecoded["dm"] ?? null;
-        $dm = $dmId ? $userRepository->find($dmId) : null;
+        $dm = $dmId ? $entityManager->getRepository(User::class)->find($dmId) : null;
         // If not, returns an error response
         if (!$dm) {
             return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -134,11 +137,11 @@ class GameController extends AbstractController
         
         $entityManager->flush();
         
-
         //  Provide the link of the resource created
-        return $this->json(["Creation successful"], Response::HTTP_CREATED,[
-            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
-        ]);
+        return $this->json($game, Response::HTTP_CREATED,[
+            "Location" => $this->generateUrl("app_api_game_getGames", ["id" => $game->getId()])],
+            ["groups" => "newGame"]
+        );
     }
 
     /**
@@ -146,7 +149,13 @@ class GameController extends AbstractController
     * 
     * @Route("/api/games/{id}", name="app_api_game_editGames", methods={"PUT", "PATCH"})
     */
-    public function editGames(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Game $game, ValidatorInterface $validator, UserRepository $userRepository, ModeRepository $modeRepository): JsonResponse
+    public function editGames(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        Game $game,
+        ValidatorInterface $validator
+        ): JsonResponse
     {
 
         $this->denyAccessUnlessGranted('EDIT', $game);
@@ -185,7 +194,7 @@ class GameController extends AbstractController
         if (isset($dataDecoded["mode"])) {
             // We check if the mode of the request matches to an existing mode 
             $modeId = $dataDecoded["mode"] ?? null;
-            $mode = $modeId ? $modeRepository->find($modeId) : null;
+            $mode = $modeId ? $entityManager->getRepository(Mode::class)->find($modeId) : null;
             // If not, returns an error response
             if (!$mode) {
                 return $this->json("Ce mode n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -197,7 +206,7 @@ class GameController extends AbstractController
         if (isset($dataDecoded["dm"])) {
             // We check if the $dmId of the request matches the ID of an existing user 
             $dmId = $dataDecoded["dm"] ?? null;
-            $dm = $dmId ? $userRepository->find($dmId) : null;
+            $dm = $dmId ? $entityManager->getRepository(User::class)->find($dmId) : null;
             // If not, returns an error response
             if (!$dm) {
                 return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -277,17 +286,23 @@ class GameController extends AbstractController
     * 
     * @Route("/api/games/{id}/users", name="app_api_game_postGameUsersInvites", methods={"POST"})
     */
-    public function postGameUsersInvites(Request $request, SerializerInterface $serializer, EntityManagerInterface $entityManager, Game $game, validatorInterface $validator, GameUsersRepository $gameUsersRepository , UserRepository $userRepository): JsonResponse
+    public function postGameUsersInvites(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        Game $game,
+        ValidatorInterface $validator
+        ): JsonResponse
     {
-        // dd($game);
+        
         $this->denyAccessUnlessGranted('POSTINVITE', $game);
 
         // Get request content (json)
         $data = $request->getContent();
         $dataDecoded = json_decode($data, true);
-        $user = $userRepository->find($dataDecoded['user']);
+        $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
 
-        $gameUsers = $gameUsersRepository->findAll();
+        $gameUsers = $entityManager->getRepository(GameUsers::class)->findAll();
 
         foreach ($gameUsers as $gameUser) {
             if($gameUser->getGame() === $game && $gameUser->getUser() === $user) {
@@ -300,11 +315,10 @@ class GameController extends AbstractController
             // Deserialize JSON into an entity
             $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
             $dataDecoded = json_decode($data, true);
-            $user = $userRepository->find($dataDecoded['user']);
-            // dd($user);
+            $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
+            
             $gameUser->setUser($user);
             $gameUser->setGame($game);
-            // dd($gameUsers);
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
@@ -330,7 +344,6 @@ class GameController extends AbstractController
         $entityManager->persist($gameUser);
         $entityManager->flush();
         
-
         //  Provide the link of the resource created
         return $this->json(["Invitation created"], Response::HTTP_CREATED,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])

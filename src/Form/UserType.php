@@ -36,7 +36,8 @@ class UserType extends AbstractType
                 "label" => "Image de profil",
                 "attr" => [
                     "placeholder" => "Url de l'image"
-                ]
+                ],
+                "required" => false
             ]);
 
             // Custom form options to display conditionnally, if I'm updating a user I can't change their password
