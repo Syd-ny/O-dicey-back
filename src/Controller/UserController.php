@@ -202,7 +202,7 @@ class UserController extends AbstractController
     public function getGamesByUser(User $user): JsonResponse
     {
         
-        // Create a variable $gamesByUser which contains two empty arrays, player and DM.
+        // Create a variable $gamesByUser which contains two empty arrays, player and DM
         $gamesByUser = ['player' => [], 'DM' => []];
 
         // Get the games of the current user as player

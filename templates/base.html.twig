@@ -34,10 +34,10 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 						{% block nav %}
+						{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 							<li class="nav-item">
-								<a class="nav-link" href="{{path("app_backoffice_home")}}">Accueil</a>
+								<a class="nav-link" href="{{path("app_backoffice_home")}}"> | Accueil</a>
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" href="{{path("app_backoffice_user_getUsers")}}">
@@ -50,55 +50,72 @@
 									Parties</a>
 							</li>
 							<li class="nav-item">
-									<a class="nav-link" href="{{path("app_backoffice_mode_getModes")}}">
-										<i class="bi bi-controller"></i>
-										Modes</a>
+								<a class="nav-link" href="{{path("app_backoffice_mode_getModes")}}">
+									<i class="bi bi-controller"></i>
+									Modes</a>
 							</li>
-						{% endblock %}
-					{% else %}
-						<li class="nav-item">
-							<a class="nav-link text-grey" href="http://bruno-meckler-server.eddi.cloud/">
-							<i class="bi bi-dice-5"></i>
-							Front-Office</a>
-						</li>
-					{% endif %}
-					</ul>
-					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
-						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-							<li class="nav-item dropdown">
-								<a
-									class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-									<!-- Bootstrap CSS -->
-									<link
-									href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-									<!-- Bootstrap icons -->
-									<link
-									rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+							<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+										<!-- Bootstrap CSS -->
+										<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+										<!-- Bootstrap icons -->
+										<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
 
-									<title>O'Dicey</title>
-									<span>{{app.user.email}} | 
-									<i class="bi bi-person-square"></i>
-								</a>
-								<ul class="dropdown-menu">
-									<li>
-										<a class="dropdown-item" href="http://bruno-meckler-server.eddi.cloud/profile">Profil</a>
-									</li>
+										<title>O'Dicey</title>
+										<span>{{app.user.email}} | 
+										<i class="bi bi-person-square"></i>
+									</a>
+									<ul class="dropdown-menu">
 										<li>
-											<a class="dropdown-item" href="http://bruno-meckler-server.eddi.cloud/">Frontoffice</a>
+											<a class="dropdown-item" href="http://bruno-meckler-server.eddi.cloud/profile">Profil</a>
 										</li>
-									
-									<li>
-										<hr class="dropdown-divider">
-									</li>
-									<li>
-										<a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion Backoffice</a>
-									</li>
-								</ul>
+											<li>
+												<a class="dropdown-item" href="http://bruno-meckler-server.eddi.cloud/">Frontoffice</a>
+											</li>
+										
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li>
+											<a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion Backoffice</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						{% else %}
+							<li class="nav-item">
+								<a class="nav-link text-grey" href="http://bruno-meckler-server.eddi.cloud/">
+								 | Frontoffice</a>
 							</li>
-						</ul>
-					{% else %}
-						<a href="{{ path('app_login') }}"  class="btn btn-danger me-2 rounded">Connexion</a>
-					{% endif %}
+							<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+								<li class="nav-item dropdown">
+									<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+										<!-- Bootstrap CSS -->
+										<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+										<!-- Bootstrap icons -->
+										<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+										<title>O'Dicey</title>
+										<span>Un visiteur! Venu d'ailleurs! | 
+										<i class="bi bi-moon-stars"></i>
+									</a>
+									<ul class="dropdown-menu">
+										<li>
+											<a class="dropdown-item" href="http://bruno-meckler-server.eddi.cloud/profile">Mon profil O'Dicey</a>
+										</li>
+										<li>
+											<hr class="dropdown-divider">
+										</li>
+										<li>
+											<a class="dropdown-item" href="{{ path('app_login') }}">Connexion Backoffice</a>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						{% endif %}
+						{% endblock %}
+					</ul>
 				</div>
 			</div>
 		</nav>
