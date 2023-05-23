@@ -29,6 +29,8 @@ class Game
      * @Groups({"gallery_read"})
      * @Groups({"charactersByGame"})
      * @Groups({"gamesByUser"})
+     * @Groups({"gameUsers"})
+     * @Groups({"invitesByUser"})
      */
     private $id;
 
@@ -82,7 +84,7 @@ class Game
     /**
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Groups({"gamesByUser"})
      * @Assert\NotBlank
      */

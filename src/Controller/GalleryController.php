@@ -92,9 +92,9 @@ class GalleryController extends AbstractController
         $entityManager->persist($gallery);
         $entityManager->flush();
 
-        return $this->json(["Creation successful"], Response::HTTP_CREATED, [
+        return $this->json($gallery, Response::HTTP_CREATED, [
             "Location" => $this->generateUrl("app_api_gallery_getGalleriesById", ["id" => $gallery->getId()])
-        ]);
+        ], ["groups"=> ["gallery_read"]]);
     }
 
     /**
@@ -147,9 +147,9 @@ class GalleryController extends AbstractController
         $entityManager->flush();
  
         //  Provide the link of the resource updated
-        return $this->json(["Update successful"], Response::HTTP_OK,[
+        return $this->json($gallery, Response::HTTP_OK,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGallery->getId()])
-        ]);
+        ], ["groups"=> ["gallery_read"]]);
     }
 
     /**

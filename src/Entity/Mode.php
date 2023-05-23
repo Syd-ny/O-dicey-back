@@ -21,7 +21,7 @@ class Mode
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      */
     private $id;
 
@@ -30,7 +30,7 @@ class Mode
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
      * @Groups({"modes"})
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Assert\NotBlank
      */
     private $name;

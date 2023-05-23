@@ -29,7 +29,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"character_edit"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
+     * @Groups({"gameUsers"})
      */
     private $id;
 
@@ -39,7 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gamesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -51,7 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gamesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Assert\NotBlank
      */
     private $login;
