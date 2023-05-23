@@ -13,21 +13,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class CharacterController extends AbstractController
 {
     /**
-     * endpoint for editing a character
+     * Endpoint for editing a character
      * 
      * @Route("/backoffice/characters/{id}/edit", name="app_backoffice_character_editCharacters", requirements={"id"="\d+"})
      */
     public function editCharacters(Request $request, Character $character, CharacterRepository $characterRepository): Response
     {
-        // Instantiation of the CharacterType class using as starting data the instance of the Character $character class
+        // Instance of the CharacterType class using as starting data the instance of the Character $character
         $form = $this->createForm(CharacterType::class, $character, ["custom_option" => "edit"]);
 
-        // Processing of the form entry
+        // Processing the form data
         $form->handleRequest($request);
 
-        // if the form has been entered and the validation rules are checked
+        // If the form has been completed and is valid
         if ($form->isSubmitted() && $form->isValid()) {
-            // Update of updatedAt to the date of the last modification
+            // Update of updatedAt to the current date and time
             $character->setUpdatedAt(new \DateTimeImmutable());
             
             $characterRepository->add($character, true);
@@ -42,13 +42,13 @@ class CharacterController extends AbstractController
     }
 
     /**
-     * endpoint for deleting a character
+     * Endpoint for deleting a character
      * 
      * @Route("/backoffice/characters/{id}", name="app_backoffice_character_deleteCharacters", methods={"POST"}, requirements={"id"="\d+"})
      */
     public function deleteCharacters(Request $request, Character $character, CharacterRepository $characterRepository): Response
     {
-        // implementation of the CSRF token validation (symfony bundle)
+        // Implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$character->getId(), $request->request->get('_token'))) {
             $characterRepository->remove($character, true);
         }

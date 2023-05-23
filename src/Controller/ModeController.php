@@ -12,21 +12,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class ModeController extends AbstractController
 {
     /**
-    * endpoint for all modes
+    * Endpoint for all modes
     * 
     * @Route("/api/modes", name="app_api_mode_getModes", methods={"GET"})
     */
     public function getModes(ModeRepository $modeRepository): JsonResponse
     {
 
-        // get entities table of modes
+        // Get all modes
         $modes = $modeRepository->findAll();
         
         return $this->json($modes,Response::HTTP_OK,[], ["groups" => "modes"]);
     }
 
     /**
-    * endpoint for a specific mode
+    * Endpoint for a specific mode
     * 
     * @Route("/api/modes/{id}", name="app_api_mode_getModesById", methods={"GET"}, requirements={"id"="\d+"})
     */

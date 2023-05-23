@@ -13,16 +13,16 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class LoginController extends AbstractController
 {
     /**
-    * endpoints for return the login error 
+    * Endpoint for logging in
     * 
     * @Route("", name="app_login")
     */
     public function index(AuthenticationUtils $authenticationUtils): Response
     {
-        // get the login error if there is one
+        // Get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        // last username entered by the user
+        // Last username typed by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('login/index.html.twig', [

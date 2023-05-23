@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class GameController extends AbstractController
 {
     /**
-     * endpoint for all games
+     * Endpoint for all games
      * 
      * @Route("", name="app_backoffice_game_getGames")
      */
@@ -41,7 +41,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * endpoint for a specific game
+    * Endpoint for a specific game
     *
     * @Route("/{id}", name="app_backoffice_game_getGamesById", methods={"GET"}, requirements={"id"="\d+"})
     */
@@ -53,24 +53,24 @@ class GameController extends AbstractController
     }
 
     /**
-     * endpoint for create a new game
+     * Endpoint for creating a new game
      * 
      * @Route("/new", name="app_backoffice_game_postGames", methods={"GET", "POST"})
      */
     public function postGames(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Instantiation of the Game entity
+        // Instance of the Game entity
         $game = new Game();
 
-        // Instantiation of the GameType class using as starting data the instance of the Game $game class
+        // Instance of the GameType class using as starting data the instance of the Game $game
         $form = $this->createForm(GameType::class, $game);
 
-        // Processing of the form entry
+        // Processing the form data
         $form->handleRequest($request);
 
-        // if the form has been entered and the validation rules are checked
+        // If the form has been completed and is valid
         if ($form->isSubmitted() && $form->isValid()) {
-            // register game informations in the database
+            // Register game informations in the database
             $entityManager->persist($game);
             
             $entityManager->flush();
@@ -85,23 +85,23 @@ class GameController extends AbstractController
     }
 
     /**
-     * endpoint for editing a game
+     * Endpoint for editing a game
      * 
      * @Route("/{id}/edit", name="app_backoffice_game_editGames", methods={"GET", "POST"})
      */
     public function editGames(Request $request, EntityManagerInterface $entityManager, Game $game): Response
     {
-         // Instantiation of the GameType class using as starting data the instance of the Game $game class
+         // Instance of the GameType class using as starting data the instance of the Game $game
         $form = $this->createForm(GameType::class, $game);
-        // Processing of the form entry
+        // Processing the form data
         $form->handleRequest($request);
-        // if the form has been entered and the validation rules are checked
+        // If the form has been completed and is valid
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Update of updatedAt to the date of the last modification
+            // Update of updatedAt to the current date and time
             $game->setupdatedAt(new DateTimeImmutable());
 
-            // register game informations in the database
+            // Register game informations in the database
             $entityManager->persist($game);
             $entityManager->flush();
     
@@ -115,13 +115,13 @@ class GameController extends AbstractController
     }
 
     /**
-    * endpoint for deleting a game 
+    * Endpoint for deleting a game 
     *
     * @Route("/{id}", name="app_backoffice_game_deleteGames", methods={"POST"}, requirements={"id"="\d+"})
     */
     public function deleteGames(Request $request, Game $game, GameRepository $gameRepository): Response
     {
-        // implementation of the CSRF token validation (symfony bundle)
+        // Implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$game->getId(), $request->request->get('_token'))) {
             $gameRepository->remove($game, true);
         }

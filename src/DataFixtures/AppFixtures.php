@@ -30,29 +30,29 @@ class AppFixtures extends Fixture
     private function truncate()
     {
         $this->connection->executeQuery('SET foreign_key_checks = 0');
-        // On tronque
+        // Truncate
         $this->connection->executeQuery('TRUNCATE TABLE `character`');// backticks are used to avoid an SQL error about 'character' being a reserved term.
         $this->connection->executeQuery('TRUNCATE TABLE gallery');
         $this->connection->executeQuery('TRUNCATE TABLE game');
         $this->connection->executeQuery('TRUNCATE TABLE game_users');
         $this->connection->executeQuery('TRUNCATE TABLE mode');
         $this->connection->executeQuery('TRUNCATE TABLE user');
-        // etc.
+        
     }
 
     public function load(ObjectManager $manager): void
     {
 
-        // truncate tables
+        // Truncate tables
         $this->truncate();
 
-        // Faker instanciation
+        // Faker instance
         $faker = Factory::create();
-        // include Provider
+        // Include Provider
         $faker->addProvider(new OdiceyProvider());
 
-        // Mode Fixture
-        // create a new Mode object (always the same for V1 of our app)
+        // Mode Fixtures
+        // Create a new Mode object (always the same for V1 of our app)
         $mode = new Mode();
         $mode->setName('Dungeons and Dragons 5');
 
@@ -132,16 +132,16 @@ class AppFixtures extends Fixture
             ]
         ]);
 
-        // persist the mode
+        // Persist the mode
         $manager->persist($mode);
         
         // User Fixtures
         $users = [];
         for ($i=0; $i < 20; $i++) { 
             
-            // create my User object
+            // Create my User object
             $user = new User();
-            // set its parameters
+            // Set its parameters
             $user->setEmail($faker->unique()->safeEmail());
             $user->setLogin($faker->unique()->name());
             $user->setPassword(password_hash($user->getLogin(),PASSWORD_DEFAULT));
@@ -149,10 +149,10 @@ class AppFixtures extends Fixture
             $user->setCreatedAt(new DateTimeImmutable($faker->date()));
             $user->setRoles(['ROLE_USER']);
             
-            // add the user to the array
+            // Add the user to the array
             $users[] = $user;
             
-            // persist
+            // Persist
             $manager->persist($user);
         }
 
@@ -164,34 +164,34 @@ class AppFixtures extends Fixture
         // Game Fixtures
         $games = [];
         for ($g=0; $g < 10; $g++) {
-            // create a new Game object
+            // Create a new Game object
             $game = new Game();
-            // assign values to properties
+            // Assign values to properties
             $game->setName($faker->sentence(3));
             $game->setStatus($faker->numberBetween(0, 1));
             $game->setCreatedAt(new DateTimeImmutable($faker->date()));
             $game->setMode($mode);
             
-            // choose a DM for the game
+            // Choose a DM for the game
             $game->setDm($users[$faker->numberBetween(0,count($users) -1)]);
             
             // Gallery Fixtures
             for ($i=0; $i < mt_rand(1, 10); $i++) {
-                // create a new Gallery object
+                // Create a new Gallery object
                 $gallery = new Gallery();
-                // assign values to properties
+                // Assign values to properties
                 $gallery->setPicture("https://picsum.photos/id/".mt_rand(1,180)."/300/500");
                 $gallery->setMainPicture(0);
                 $gallery->setGame($game);
                 
-                // persist
+                // Persist
                 $manager->persist($gallery);
             }
             
-            // add the game to the $games array
+            // Add the game to the $games array
             $games[] = $game;
 
-            // persist
+            // Persist
             $manager->persist($game);
         }
 
@@ -228,15 +228,15 @@ class AppFixtures extends Fixture
 
         // Game-Users Fixtures
         for ($i = 0; $i < 10; $i++) {
-            // create a new Invitation 
+            // Create a new Invitation 
             $invitation = new GameUsers();
 
-            // associate user_id and game_id
+            // Associate user_id and game_id
             $invitation->setUser($users[mt_rand(1, count($users) - 1)]);
             $invitation->setGame($games[mt_rand(1, count($games) - 1)]);
-            // set status
+            // Set status
             $invitation->setStatus(1);
-            // persist
+            // Persist
             $manager->persist($invitation);
         }
 
