@@ -20,7 +20,7 @@ class GalleryController extends AbstractController
 {
 
     /**
-    *  endpoint for all galleries 
+    *  Endpoint for all galleries 
     * 
     * @Route("", name="getGalleries", methods={"GET"})
     */
@@ -36,7 +36,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-    * endpoint for a specific gallery
+    * Endpoint for a specific gallery
     * 
     * @Route("/{id}", name="getGalleriesById", methods={"GET"})
     */
@@ -49,7 +49,7 @@ class GalleryController extends AbstractController
     }
 
     /**
-    * endpoint to create a gallery
+    * Endpoint for creating a gallery
     * 
     * @Route("", name="postGalleries", methods={"POST"})
     */
@@ -60,13 +60,13 @@ class GalleryController extends AbstractController
         ValidatorInterface $validator): JsonResponse
     {
         
-        // we get the object
+        // We get the object
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
         }
         
-        // Convert JSON into php object.
+        // Convert JSON into php object
         $gallery = $serializer->deserialize( $jsonContent, Gallery::class,'json', ['datetime_format' => 'Y-m-d\TH:i:sP']);
         
         $errors = $validator->validate($gallery);
@@ -74,10 +74,10 @@ class GalleryController extends AbstractController
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
-        // decode the content on JSON
+        // Decode the content on JSON
         $data = json_decode($jsonContent, true);
         
-        // retrieve gameId if $data["game_id"] is set
+        // Retrieve gameId if the key is set
         $gameId = $data["game"] ?? null;
         $game = $gameId ? $entityManager->getRepository(Game::class)->find($gameId) : null;
         
@@ -86,7 +86,7 @@ class GalleryController extends AbstractController
         }
         $gallery->setGame($game);
 
-        // can't post a new gallery if you're not the DM of the game associated with the gallery
+        // Can't post a new gallery if you're not the DM of the game associated with the gallery
         $this->denyAccessUnlessGranted('POST', $gallery);
         
         $entityManager->persist($gallery);
@@ -98,12 +98,11 @@ class GalleryController extends AbstractController
     }
 
     /**
-    *  endpoint to edit a gallery
+    *  Endpoint for editing a gallery
     * 
     * @Route("/{id}", name="editGalleries", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
     */
     public function editGalleries(
-        //important to import GameRepository to show the FK Game.
         Gallery $gallery,
         EntityManagerInterface $entityManager,
         Request $request, 
@@ -113,7 +112,7 @@ class GalleryController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $gallery);
 
-        // we get the object
+        // We get the object
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
@@ -127,10 +126,10 @@ class GalleryController extends AbstractController
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // decode the content on JSON
+        // Decode the content on JSON
         $data = json_decode($jsonContent, true);
         
-        // If request contains a new game.
+        // If the request contains a new game.
         if (isset($data["game_id"])) {
             // We check if the $gameId of the request matches the ID of an existing game 
             $gameId = $data["game_id"] ?? null;
@@ -139,21 +138,21 @@ class GalleryController extends AbstractController
             if (!$game) {
                 return $this->json("La partie n'existe pas", Response::HTTP_BAD_REQUEST);
             }
-            // Add $game in $updatedGallery
+            // Link the $game to the $updatedGallery
             $gallery->setGame($game);
         } 
 
         // Edit the gallery in the DB  
         $entityManager->flush();
  
-        //  Provide the link of the resource updated
+        //  Provide the link of the updated resource
         return $this->json(["Update successful"], Response::HTTP_OK,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGallery->getId()])
         ]);
     }
 
     /**
-    * endpoint to delete a gallery
+    * Endpoint for deleting a gallery
     * 
     * @Route("/{id}", name="deleteGalleries", requirements={"id"="\d+"}, methods={"DELETE"})
     */

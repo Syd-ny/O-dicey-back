@@ -32,27 +32,27 @@ class GallerySecurityVoter extends Voter
         
         $user = $token->getUser();
         $userEntity = $this->userRepository->loadUserByIdentifier($user->getUserIdentifier());
-        // if the user is anonymous, do not grant access
+        // If the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
         }
 
-        // ... (check conditions and return true to grant permission) ...
+        // Check conditions and return true to grant permission
         switch ($attribute) {
             case self::POST:
-                // if the gallery subject is associated with a game that the user is DMing, they can post it
+                // If the gallery subject is associated with a game that the user is DMing, they can post it
                 if(in_array($subject->getGame(), $userEntity->getGamesDM()->toArray(), true)) {
                     return true;
                 }
                 break;
             case self::EDIT:
-                // if the gallery subject is associated with a game that the user is DMing, they can edit it
+                // If the gallery subject is associated with a game that the user is DMing, they can edit it
                 if(in_array($subject->getGame(), $userEntity->getGamesDM()->toArray(), true)) {
                     return true;
                 }
                 break;
             case self::DELETE:
-                // if the gallery subject is associated with a game that the user is DMing, they can delete it
+                // If the gallery subject is associated with a game that the user is DMing, they can delete it
                 if(in_array($subject->getGame(), $userEntity->getGamesDM()->toArray(), true)) {
                     return true;
                 }

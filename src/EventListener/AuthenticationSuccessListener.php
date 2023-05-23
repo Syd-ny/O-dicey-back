@@ -1,7 +1,6 @@
 <?php
 namespace App\EventListener;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +21,7 @@ class AuthenticationSuccessListener
      */
     public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $event)
     {
-        // when authentication is successful, retrieve the user
+        // When authentication is successful, retrieve the user
         $data = $event->getData();
         $user = $event->getUser();
 
@@ -30,7 +29,7 @@ class AuthenticationSuccessListener
             return;
         }
 
-        // get the $userEntity from the UserInterface $user
+        // Get the $userEntity from the UserInterface $user
         $userIdentifier = $user->getUserIdentifier();
         $userEntity = $this->userRepository->loadUserByIdentifier($userIdentifier);
 
@@ -40,7 +39,7 @@ class AuthenticationSuccessListener
             'login' => $userEntity->getLogin()
         );
 
-        // save the user's info
+        // Save the user's info
         $event->setData($data);
     }
 }

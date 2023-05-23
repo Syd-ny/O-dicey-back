@@ -36,21 +36,21 @@ class OdiceyDeactivateGamesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         
-        // retrieve all games
+        // Retrieve all games
         $games = $this->entityManager->getRepository(Game::class)->findAll();
         
-        // establish the period for which the game is playable/editable
+        // Establish the period for which the game is playable/editable
         $date = new DateTimeImmutable();
         $delay = $date->sub(new DateInterval('P1Y'));
 
         foreach ($games as $game) {
-            // if updatedAt is not null
+            // If updatedAt is not null
             if(!is_null($game->getUpdatedAt())) {
 
-                // and if updatedAt is older than 1 year
+                // If updatedAt is older than 1 year
                 if($game->getUpdatedAt() < $delay) {
 
-                    // then the game's status is changed to inactive
+                    // Then the game's status is changed to inactive
                     $game->setStatus(2);
                 }
 
