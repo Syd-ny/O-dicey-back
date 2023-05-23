@@ -92,9 +92,9 @@ class GalleryController extends AbstractController
         $entityManager->persist($gallery);
         $entityManager->flush();
 
-        return $this->json(["Creation successful"], Response::HTTP_CREATED, [
+        return $this->json($gallery, Response::HTTP_CREATED, [
             "Location" => $this->generateUrl("app_api_gallery_getGalleriesById", ["id" => $gallery->getId()])
-        ]);
+        ], ["groups"=> ["gallery_read"]]);
     }
 
     /**
@@ -118,7 +118,7 @@ class GalleryController extends AbstractController
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
         }
 
-        // Convert JSON into php object.
+        // Convert JSON into php object
         $updatedGallery = $serializer->deserialize( $jsonContent, Gallery::class,'json', ['object_to_populate' => $gallery], ['datetime_format' => 'Y-m-d\TH:i:sP']);
 
         $errors = $validator->validate($updatedGallery);
@@ -126,10 +126,10 @@ class GalleryController extends AbstractController
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // Decode the content on JSON
+        // Decode the content of JSON
         $data = json_decode($jsonContent, true);
         
-        // If the request contains a new game.
+        // If the request contains a new game
         if (isset($data["game_id"])) {
             // We check if the $gameId of the request matches the ID of an existing game 
             $gameId = $data["game_id"] ?? null;
@@ -146,9 +146,9 @@ class GalleryController extends AbstractController
         $entityManager->flush();
  
         //  Provide the link of the updated resource
-        return $this->json(["Update successful"], Response::HTTP_OK,[
+        return $this->json($gallery, Response::HTTP_OK,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGallery->getId()])
-        ]);
+        ], ["groups"=> ["gallery_read"]]);
     }
 
     /**
