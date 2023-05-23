@@ -2,22 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Gallery;
 use App\Entity\Game;
-use App\Entity\GameUsers;
 use App\Entity\Mode;
 use App\Entity\User;
 use DateTimeImmutable;
+use App\Entity\Gallery;
+use App\Entity\GameUsers;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class GameController extends AbstractController
 {
@@ -260,6 +261,7 @@ class GameController extends AbstractController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
         Game $game,
         ValidatorInterface $validator
     ): JsonResponse
@@ -276,11 +278,11 @@ class GameController extends AbstractController
             return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
         }
 
-        $users = $entityManager->getRepository(User::class)->findBy(['id' => $userIds]);
+        $users = $userRepository->findUserById($userIds);
 
         $invitations = [];
         foreach ($userIds as $userId) {
-            $user = $this->findUserById($users, $userId);
+            $user = $userRepository->find($userId);
             if ($user) {
                 $invitation = new GameUsers();
                 $invitation->setUser($user);
@@ -314,23 +316,6 @@ class GameController extends AbstractController
         return $this->json($invitations, Response::HTTP_CREATED, [
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
         ], ["groups" => "gameUsers"]);
-    }
-
-    /**
-     * Find a user by ID in an array of users
-     * 
-     * @param array $users
-     * @param int $userId
-     * @return User|null
-     */
-    private function findUserById(array $users, int $userId): ?User
-    {
-        foreach ($users as $user) {
-            if ($user->getId() === $userId) {
-                return $user;
-            }
-        }
-        return null;
     }
 
 

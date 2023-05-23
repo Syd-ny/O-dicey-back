@@ -76,4 +76,19 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
 
         return $queryBuilder->getQuery()->getResult();
     }
+    
+    
+    public function findByIds(array $userIds): array
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.id IN (:ids)')
+            ->setParameter('ids', $userIds)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findUserById($userId)
+    {
+        return $this->findOneBy(['id' => $userId]);
+    }
 }
