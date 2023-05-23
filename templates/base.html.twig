@@ -35,6 +35,7 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 						{% block nav %}
 							<li class="nav-item">
 								<a class="nav-link" href="{{path("app_backoffice_home")}}">Accueil</a>
@@ -55,6 +56,13 @@
 										Modes</a>
 							</li>
 						{% endblock %}
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link text-grey" href="http://bruno-meckler-server.eddi.cloud/">
+							<i class="bi bi-dice-5"></i>
+							Front-Office</a>
+						</li>
+					{% endif %}
 					</ul>
 					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
