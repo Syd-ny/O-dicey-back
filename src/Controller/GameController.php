@@ -138,9 +138,10 @@ class GameController extends AbstractController
         $entityManager->flush();
         
         //  Provide the link of the resource created
-        return $this->json(["Creation successful"], Response::HTTP_CREATED,[
-            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
-        ]);
+        return $this->json($game, Response::HTTP_CREATED,[
+            "Location" => $this->generateUrl("app_api_game_getGames", ["id" => $game->getId()])],
+            ["groups" => "newGame"]
+        );
     }
 
     /**
