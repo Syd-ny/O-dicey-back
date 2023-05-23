@@ -1,7 +1,7 @@
 <div class="container mx-4 mt-2 mb-2">
     {{ form_start(form) }}
 
-        {# if we create a new game via the backoffice, we can't add a picture because it is reserved for the DM of the game #}
+        {# If we create a new game via the backoffice, we can't add a picture because it is reserved for the DM of the game #}
         {% if "backoffice" in app.request.get("_route") %}
             <div style="display: none;">
                 {% do form.galleries.setRendered() %}

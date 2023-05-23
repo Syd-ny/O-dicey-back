@@ -21,22 +21,22 @@ class CharacterSecurityVoter extends Voter
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        // if the user is anonymous, do not grant access
+        // If the user is anonymous, do not grant access
         if (!$user instanceof UserInterface) {
             return false;
         }
 
-        // ... (check conditions and return true to grant permission) ...
+        // Check conditions and return true to grant permission
         switch ($attribute) {
             case self::EDIT:
-                // if the game subject has been created by the current user connected,
+                // If the game subject has been created by the current user connected,
                 // or if the game subject is DMed by the current user, they can edit it
                 if($user == $subject->getUser() || $user == $subject->getGame()->getDm()) {
                     return true;
                 }
                 break;
             case self::DELETE:
-                // if the game subject has been created by the current user connected,
+                // If the game subject has been created by the current user connected,
                 // or if the game subject is DMed by the current user, they can delete it
                 if($user == $subject->getUser() || $user == $subject->getGame()->getDm()) {
                     return true;

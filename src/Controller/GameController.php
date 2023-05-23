@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class GameController extends AbstractController
 {
     /**
-    * endpoint for all games with infos of all relations
+    * Endpoint for all games with infos of all relations
     * 
     * @Route("/api/games", name="app_api_game_getGames", methods={"GET"})
     */
@@ -36,7 +36,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * endpoint for a specific game
+    * Endpoint for a specific game
     * 
     * @Route("/api/games/{id}", name="app_api_game_getGamesById", methods={"GET"}, requirements={"id"="\d+"})
     */
@@ -51,7 +51,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * endpoint to create a game
+    * Endpoint for creating a game
     * 
     * @Route("/api/games", name="app_api_game_postGames", methods={"POST"})
     */
@@ -62,12 +62,12 @@ class GameController extends AbstractController
         ValidatorInterface $validator
         ): JsonResponse
     {
-        // Get request content (json)
+        // Get the request content (JSON)
         $data = $request->getContent();
 
-        // If JSON invalid, return a json to specify that it is invalid
+        // If JSON invalid, returns a JSON to specify that it is invalid
         try{
-            // Deserialize JSON into an entity
+            // Deserialize JSON into an Entity
             $game = $serializer->deserialize($data,Game::class, "json");
 
         }
@@ -75,26 +75,26 @@ class GameController extends AbstractController
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
         }
 
-        // manually check if entity is valid
+        // Manually checks if the Entity is valid
         $errors = $validator->validate($game);
-        // If error array is upper 0, the form is invalid.
+        // If $errors contains at least 1 item, the form is invalid
         if(count($errors) > 0){
-            // Create an empty array and store all errors in it.
+            // Create an empty array and store all errors in it
             $dataErrors = [];
 
             // Loop over errors
             foreach($errors as $error){
-                // Create in my table an index by fields and list all errors of the field in question in a sub-table
+                // Create in the array an index by fields and list all errors of the field in question in a sub-table
                 $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
             }
-            // Entity not being treatable because of incorrect data, return a code 422
+            // Entity not treatable because of incorrect data, return a code 422
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
         // Converts request content to an array
         $dataDecoded = json_decode($data, true);
         
-        // We check if the mode of the request matches to an existing mode 
+        // We check if the mode of the request matches an existing mode 
         $modeId = $dataDecoded["mode"] ?? null;
         $mode = $modeId ? $entityManager->getRepository(Mode::class)->find($modeId) : null;
         // If not, returns an error response
@@ -110,11 +110,11 @@ class GameController extends AbstractController
             return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
-        // Add $mode and $dm in $game
+        // Link the $mode and the $dm to the $game
         $game->setMode($mode);
         $game->setDm($dm);
 
-        // Adds the DM role to the user who created the game and does not yet have this role
+        // Add the DM role to the user who created the game and does not yet have this role
         $dm = $game->getDm();
         $dmRoles = $dm->getRoles();
         if(!in_array("ROLE_DM", $dmRoles)) {
@@ -137,7 +137,7 @@ class GameController extends AbstractController
         
         $entityManager->flush();
         
-        //  Provide the link of the resource created
+        //  Provide the link of the created resource
         return $this->json($game, Response::HTTP_CREATED,[
             "Location" => $this->generateUrl("app_api_game_getGames", ["id" => $game->getId()])],
             ["groups" => "newGame"]
@@ -145,7 +145,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * endpoint to edit a game
+    * Endpoint for editing a game
     * 
     * @Route("/api/games/{id}", name="app_api_game_editGames", methods={"PUT", "PATCH"})
     */
@@ -160,49 +160,49 @@ class GameController extends AbstractController
 
         $this->denyAccessUnlessGranted('EDIT', $game);
 
-        // Get request content (json)
+        // Get the request content (JSON)
         $data = $request->getContent();
 
-        // If JSON invalid, return a json to specify that it is invalid
+        // If JSON invalid, return a JSON to specify that it is invalid
         try{
-            // Deserialize JSON into an entity
+            // Deserialize JSON into an Entity
             $updatedGame = $serializer->deserialize($data,Game::class, "json", [AbstractNormalizer::OBJECT_TO_POPULATE => $game]);
         }
         catch(NotEncodableValueException $e){
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
         }
 
-        // Manually check if entity is valid
+        // Manually checks if the Entity is valid
         $errors = $validator->validate($updatedGame);
-        // If error array is upper 0, the form is invalid.
+        // If $errors contains at least 1 item, the form is invalid
         if(count($errors) > 0){
             // Create an empty array and store all errors in it.
             $dataErrors = [];
 
             // Loop over errors
             foreach($errors as $error){
-                // Create in my table an index by fields and list all errors of the field in question in a sub-table
+                // Create in the array an index by fields and list all errors of the field in question in a sub-table
                 $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
             }
-            // Entity not being treatable because of incorrect data, return a code 422
+            // Entity not treatable because of incorrect data, return a code 422
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         
-        // Converts request content to an array
+        // Converts the request content to an array
         $dataDecoded = json_decode($data, true);
-        // If request content a new mode.
+        // If request contains a new mode
         if (isset($dataDecoded["mode"])) {
-            // We check if the mode of the request matches to an existing mode 
+            // We check if the mode of the request matches an existing mode 
             $modeId = $dataDecoded["mode"] ?? null;
             $mode = $modeId ? $entityManager->getRepository(Mode::class)->find($modeId) : null;
             // If not, returns an error response
             if (!$mode) {
                 return $this->json("Ce mode n'existe pas", Response::HTTP_BAD_REQUEST);
             }
-            // Add $mode in $game
+            // Link the $mode to the $game
             $game->setMode($mode);
         }
-        // If request content a new dm.
+        // If the request contains a new DM
         if (isset($dataDecoded["dm"])) {
             // We check if the $dmId of the request matches the ID of an existing user 
             $dmId = $dataDecoded["dm"] ?? null;
@@ -211,7 +211,7 @@ class GameController extends AbstractController
             if (!$dm) {
                 return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
             }
-            // Add $dm in $game
+            // Link the $dm to the $game
             $game->setDm($dm);
         }
 
@@ -221,14 +221,14 @@ class GameController extends AbstractController
         // Edit the game in the DB
         $entityManager->flush();
         
-        //  Provide the link of the resource updated
+        //  Provide the link of the updated resource
         return $this->json(["Update successful"], Response::HTTP_OK,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $updatedGame->getId()])
         ]);
     }
 
     /**
-    * endpoint to delete a game
+    * Endpoint for deleting a game
     * 
     * @Route("/api/games/{id}", name="app_api_game_deleteGames", methods={"DELETE"})
     */
@@ -246,13 +246,13 @@ class GameController extends AbstractController
     }
 
     /**
-     * endpoint for all characters of a specific game
+     * Endpoint for all characters of a specific game
      * 
      * @Route("/api/games/{id}/characters", name="app_api_game_getCharactersByGame", methods={"GET"})
      */
     public function getCharactersByGame(Game $game): JsonResponse
     {
-        // get the characters of the current game
+        // Get the characters of the current game
         $charactersByGame = $game->getCharacters();
         
         return $this->json($charactersByGame, Response::HTTP_OK, [], [
@@ -261,13 +261,13 @@ class GameController extends AbstractController
     }
 
     /**
-    * endpoints for all galeries of a specific game
+    * Endpoint for all galleries of a specific game
     * 
     * @Route("/api/games/{id}/galleries", name="app_api_game_getGalleriesByGame", requirements={"gameId"="\d+"},  methods={"GET"})
     */
     public function getGalleriesByGame(Game $game): JsonResponse
     {
-        // get the characters of the current game
+        // Get the galleries of the current game
         $galleriesByGame = $game->getGalleries();
 
         if (!$game) {
@@ -282,7 +282,7 @@ class GameController extends AbstractController
     }
 
     /**
-    * Endpoint to invite an user to a game
+    * Endpoint for inviting a user to a game
     * 
     * @Route("/api/games/{id}/users", name="app_api_game_postGameUsersInvites", methods={"POST"})
     */
@@ -297,7 +297,7 @@ class GameController extends AbstractController
         
         $this->denyAccessUnlessGranted('POSTINVITE', $game);
 
-        // Get request content (json)
+        // Get the request content (json)
         $data = $request->getContent();
         $dataDecoded = json_decode($data, true);
         $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
@@ -310,7 +310,7 @@ class GameController extends AbstractController
             }
         }
 
-        // If JSON invalid, return a json to specify that it is invalid
+        // If JSON invalid, return a JSON to specify that it is invalid
         try{
             // Deserialize JSON into an entity
             $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
@@ -324,19 +324,19 @@ class GameController extends AbstractController
             return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
         }
 
-        // manually check if entity is valid
+        // Manually check if the Entity is valid
         $errors = $validator->validate($gameUser);
-        // If error array is upper 0, the form is invalid.
+        // If error array is upper 0, the form is invalid
         if(count($errors) > 0){
-            // Create an empty array and store all errors in it.
+            // Create an empty array and store all errors in it
             $dataErrors = [];
 
             // Loop over errors
             foreach($errors as $error){
-                // Create in my table an index by fields and list all errors of the field in question in a sub-table
+                // Create in the array an index by fields and list all errors of the field in question in a sub-table
                 $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
             }
-            // Entity not being treatable because of incorrect data, return a code 422
+            // Entity not being treatable because of incorrect data, returns a code 422
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -344,7 +344,7 @@ class GameController extends AbstractController
         $entityManager->persist($gameUser);
         $entityManager->flush();
         
-        //  Provide the link of the resource created
+        //  Provide the link of the created resource
         return $this->json(["Invitation created"], Response::HTTP_CREATED,[
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
         ]);
