@@ -201,12 +201,14 @@ class GameController extends AbstractController
         $dataDecoded = json_decode($data, true);
         $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
 
-        $gameUsers = $entityManager->getRepository(GameUsers::class)->findAll();
+        $existingInvitation = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
 
-        foreach ($gameUsers as $gameUser) {
-            if($gameUser->getGame() === $game && $gameUser->getUser() === $user) {
-                return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
-            }
+        if ($existingInvitation) {
+            return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!$user) {
+            return $this->json("Le joueur n'existe pas", Response::HTTP_NOT_FOUND);
         }
 
         // If JSON invalid, return a JSON to specify that it is invalid
