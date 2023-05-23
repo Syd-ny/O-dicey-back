@@ -252,6 +252,89 @@ class GameController extends AbstractController
     }
 
     /**
+     * Endpoint to invite users to a game
+     * 
+     * @Route("/api/games/{id}/usersMultiple", name="app_api_game_postGameUsersInvites", methods={"POST"})
+     */
+    public function postGameUsersInvitesMultiples(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        Game $game,
+        ValidatorInterface $validator
+    ): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('POSTINVITE', $game);
+
+        // Get the request content (JSON)
+        $data = json_decode($request->getContent(), true);
+        $userIds = $data['users'];
+
+        $existingInvitations = $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game, 'user' => $userIds]);
+
+        if (!empty($existingInvitations)) {
+            return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
+        }
+
+        $users = $entityManager->getRepository(User::class)->findBy(['id' => $userIds]);
+
+        $invitations = [];
+        foreach ($userIds as $userId) {
+            $user = $this->findUserById($users, $userId);
+            if ($user) {
+                $invitation = new GameUsers();
+                $invitation->setUser($user);
+                $invitation->setGame($game);
+                $invitations[] = $invitation;
+            }
+        }
+
+        // Manually check if the Entities are valid
+        $errors = [];
+        foreach ($invitations as $invitation) {
+            $violations = $validator->validate($invitation);
+            if (count($violations) > 0) {
+                foreach ($violations as $violation) {
+                    $errors[$invitation->getUser()->getId()][$violation->getPropertyPath()][] = $violation->getMessage();
+                }
+            }
+        }
+
+        // If there are validation errors, return a JSON response with the errors
+        if (!empty($errors)) {
+            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Persist the invitations
+        foreach ($invitations as $invitation) {
+            $entityManager->persist($invitation);
+        }
+        $entityManager->flush();
+
+        return $this->json($invitations, Response::HTTP_CREATED, [
+            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
+        ], ["groups" => "gameUsers"]);
+    }
+
+    /**
+     * Find a user by ID in an array of users
+     * 
+     * @param array $users
+     * @param int $userId
+     * @return User|null
+     */
+    private function findUserById(array $users, int $userId): ?User
+    {
+        foreach ($users as $user) {
+            if ($user->getId() === $userId) {
+                return $user;
+            }
+        }
+        return null;
+    }
+
+
+    /**
     * Endpoint for editing a game
     * 
     * @Route("/api/games/{id}", name="app_api_game_editGames", methods={"PUT", "PATCH"})
