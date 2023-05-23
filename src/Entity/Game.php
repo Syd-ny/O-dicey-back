@@ -20,7 +20,7 @@ class Game
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Groups({"character_list"})
      * @Groups({"character_read"})
      * @Groups({"character_add"})
@@ -29,6 +29,8 @@ class Game
      * @Groups({"gallery_read"})
      * @Groups({"charactersByGame"})
      * @Groups({"gamesByUser"})
+     * @Groups({"gameUsers"})
+     * @Groups({"invitesByUser"})
      */
     private $id;
 
@@ -37,7 +39,7 @@ class Game
      * @Groups({"users", "charactersByUser", "invitesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Groups({"charactersByGame"})
      * @Groups({"gamesByUser"})
      * @Assert\NotBlank
@@ -72,7 +74,7 @@ class Game
      * @ORM\Column(type="datetime_immutable")
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Groups({"charactersByGame"})
      * @Groups({"gamesByUser"})
      * @Assert\NotBlank
@@ -82,7 +84,7 @@ class Game
     /**
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Groups({"gamesByUser"})
      * @Assert\NotBlank
      */
@@ -91,7 +93,7 @@ class Game
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gamesDM")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"games"})
+     * @Groups({"games", "newGame"})
      * @Groups({"gamesByUser"})
      * @Assert\NotBlank
      */

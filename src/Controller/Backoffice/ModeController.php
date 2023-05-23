@@ -19,13 +19,13 @@ use Doctrine\ORM\EntityManagerInterface;
 class ModeController extends AbstractController
 {
     /**
-     * endpoint for all modes
+     * Endpoint for all modes
      * 
      * @Route("", name="app_backoffice_mode_getModes")
      */
     public function getModes(Request $request, ModeRepository $modeRepository): Response
     {
-        // Variables to determine the display order of the games
+        // Variables to determine the display order of the modes
         $search = $request->query->get('search', '');
         $sort = $request->query->get('sort', 'id');
         $order = $request->query->get('order', 'asc');
@@ -41,7 +41,7 @@ class ModeController extends AbstractController
     }
 
     /**
-     * endpoint for a specific mode
+     * Endpoint for a specific mode
      * 
      * @Route("/{id}", name="app_backoffice_mode_getModesById", methods={"GET"}, requirements={"id"="\d+"})
      */
@@ -54,28 +54,28 @@ class ModeController extends AbstractController
     }
 
     /**
-    * endpoint for adding a mode
+    * Endpoint for adding a mode
     * 
     * @Route("/new", name="app_backoffice_mode_postModes", methods={"GET","POST"})
     */
     public function postModes(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // Instantiation of the Mode entity
+        // Instance of the Mode entity
         $mode = new Mode();
 
-        // Instantiation of the ModeType class using as starting data the instance of the Mode $mode class
+        // Instance of the ModeType class using as starting data the instance of the Mode $mode
         $form= $this->createForm(ModeType::class, $mode);
-        // Processing of the form entry
+        // Processing the form data
         $form->handleRequest($request);
 
-        // if the form has been entered and the validation rules are checked
+        // Ff the form has been completed and is valid
         if($form->isSubmitted() && $form->isValid()) {
 
-            // Encode modified datas before saving them into json_stats.
+            // Encode modified data before saving it into json_stats.
             $jsonstats = ($form->get('jsonstats')->getData());
             $mode->setJsonstats(json_decode($jsonstats, true));
 
-            // register game informations in the database
+            // Register mode informations in the database
             $entityManager->persist($mode);
             $entityManager->flush();
 
@@ -88,25 +88,25 @@ class ModeController extends AbstractController
     }
 
     /**
-    * endpoint for editing a mode
+    * Endpoint for editing a mode
     * 
     * @Route("/{id}/edit", name="app_backoffice_mode_editModes", methods={"GET","POST"})
     */
     public function editModes(Request $request, EntityManagerInterface $entityManager, Mode $mode): Response
     {
         
-        // Instantiation of the ModeType class using as starting data the instance of the Mode $mode class
+        // Instance of the ModeType class using as starting data the instance of the Mode $mode 
         $form= $this->createForm(ModeType::class, $mode);
-        // Processing of the form entry
+        // Processing the form data
         $form->handleRequest($request);
-        // if the form has been entered and the validation rules are checked
+        // If the form has been completed and is valid
         if($form->isSubmitted() && $form->isValid()) {
 
-            // Encode modified datas before saving them into json_stats.
+            // Encode modified data before saving it  into json_stats.
             $jsonstats = $form->get('jsonstats')->getData();
             $mode->setJsonstats(json_decode($jsonstats, true));
           
-            // register game informations in the database
+            // Register mode informations in the database
             $entityManager->persist($mode);
             $entityManager->flush();
 
@@ -117,5 +117,20 @@ class ModeController extends AbstractController
             'mode' => $mode,
             'form'=> $form,
         ]);
+    }
+
+    /**
+     * Endpoint for deleting a mode
+     * 
+     * @Route("/{id}", name="app_backoffice_mode_deleteModes", methods={"POST"}, requirements={"id"="\d+"})
+     */
+    public function deleteModes(Request $request, Mode $mode, ModeRepository $modeRepository): Response
+    {
+        // Implementation of the CSRF token validation (symfony bundle)
+        if ($this->isCsrfTokenValid('delete'.$mode->getId(), $request->request->get('_token'))) {
+            $modeRepository->remove($mode, true);
+        }
+
+        return $this->redirectToRoute('app_backoffice_mode_getModes', [], Response::HTTP_SEE_OTHER);
     }
 }

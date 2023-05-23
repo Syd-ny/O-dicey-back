@@ -6,7 +6,6 @@
 		<meta charset="utf-8">
 		<meta
 		name="viewport" content="width=device-width, initial-scale=1">
-
 		<!-- Bootstrap CSS -->
 		<link
 		href="https://bootswatch.com/5/lux/bootstrap.min.css" rel="stylesheet">
@@ -35,6 +34,7 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 						{% block nav %}
 							<li class="nav-item">
 								<a class="nav-link" href="{{path("app_backoffice_home")}}">Accueil</a>
@@ -55,6 +55,13 @@
 										Modes</a>
 							</li>
 						{% endblock %}
+					{% else %}
+						<li class="nav-item">
+							<a class="nav-link text-grey" href="http://bruno-meckler-server.eddi.cloud/">
+							<i class="bi bi-dice-5"></i>
+							Front-Office</a>
+						</li>
+					{% endif %}
 					</ul>
 					{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 						<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
@@ -74,7 +81,7 @@
 								</a>
 								<ul class="dropdown-menu">
 									<li>
-										<a class="dropdown-item" href="#">Profil</a>
+										<a class="dropdown-item" href="http://bruno-meckler-server.eddi.cloud/profile">Profil</a>
 									</li>
 										<li>
 											<a class="dropdown-item" href="http://bruno-meckler-server.eddi.cloud/">Frontoffice</a>
@@ -98,7 +105,7 @@
 
         {% block body %}{% endblock %}
 
-        <!-- footer -->
+        <!-- Footer -->
         <footer class="container-fluid py-4 border-top text-center">
             <span class="text-muted">O'Dicey made with &hearts; at O'clock !
                 <br><small>Thème :<a href="" class="link-secondary text-decoration-none">

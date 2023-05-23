@@ -4,9 +4,8 @@ namespace App\Controller;
 
 
 use App\Entity\Character;
-use App\Repository\CharacterRepository;
-use App\Repository\GameRepository;
-use App\Repository\UserRepository;
+use App\Entity\Game;
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,13 +23,13 @@ class CharacterController extends AbstractController
 {
 
     /**
-    * endpoint for all characters
+    * Endpoint for all characters
     * 
     * @Route("", name="getCharacters", methods={"GET"})
     */
-    public function getCharacters(CharacterRepository $characterRepository): JsonResponse
+    public function getCharacters(EntityManagerInterface $entityManager): JsonResponse
     {
-        $characters = $characterRepository->findAll();
+        $characters = $entityManager->getRepository(Character::class)->findAll();
 
         if ($characters === null){return $this->json("Aucun joueur trouvé", Response::HTTP_NOT_FOUND);}
 
@@ -38,7 +37,7 @@ class CharacterController extends AbstractController
     }
 
     /**
-    * endpoint for a specific character
+    * Endpoint for a specific character
     * 
     * @Route("/{id}", name="getCharactersById", methods={"GET"})
     */
@@ -51,48 +50,44 @@ class CharacterController extends AbstractController
     }
 
     /**
-    *  endpoint for adding a character
+    *  Endpoint for adding a character
     * 
     * @Route("", name="postCharacters", methods={"POST"})
     */
     public function postCharacters(
-        //important to import UserRepository and GameRepository to show the 2 FK User and Game.
-        UserRepository $userRepository,
-        GameRepository $gameRepository,
         EntityManagerInterface $entityManager,
         Request $request, 
         SerializerInterface $serializer, 
         ValidatorInterface $validator): JsonResponse
     {
 
-        // we get the object
+        // We get the object
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
         }
 
-        // Convert JSON into php object.
+        // Convert JSON into php object
         $character = $serializer->deserialize( $jsonContent, Character::class,'json', ['datetime_format' => 'Y-m-d\TH:i:sP']);
-        // dd($character);
 
         $errors = $validator->validate($character);
         if (count($errors) > 0) {
             return $this->json($errors,response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // decode the content on JSON
+        // Decode the content on JSON
         $data = json_decode($jsonContent, true);
-        //take the decoded data of user
+        // Take the decoded data of user
         $userId = $data["user"] ?? null;
-        $user = $userId ? $userRepository->find($userId) : null;
+        $user = $userId ? $entityManager->getRepository(User::class)->find($userId) : null;
 
         if (!$user) {
             return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
-        //take the decoded data of game
+        // Take the decoded data of game
         $gameId = $data["game"] ?? null;
-        $game = $gameId ? $gameRepository->find($gameId) : null;
+        $game = $gameId ? $entityManager->getRepository(Game::class)->find($gameId) : null;
     
         if (!$game) {
             return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
@@ -108,23 +103,19 @@ class CharacterController extends AbstractController
     }
 
     /**
-    *  endpoint for editing a character
+    *  Endpoint for editing a character
     * 
     * @Route("/{id}", name="editCharacters", requirements={"id"="\d+"}, methods={"PUT","PATCH"})
     */
     public function editCharacters(
         $id,
-        UserRepository $userRepository,
-        GameRepository $gameRepository,
-        CharacterRepository $characterRepository,
         EntityManagerInterface $entityManager,
         Request $request, 
         SerializerInterface $serializer, 
         ValidatorInterface $validator): JsonResponse
     {
-
         
-        $character = $characterRepository->find($id);
+        $character = $entityManager->getRepository(Character::class)->find($id);
 
         $this->denyAccessUnlessGranted('EDIT', $character);
 
@@ -132,13 +123,13 @@ class CharacterController extends AbstractController
             return $this->json("Le personnage n'existe pas.", Response::HTTP_NOT_FOUND);
         }
         
-        // we get the Json
+        // We get the JSON
         $jsonContent = $request->getContent();
         if ($jsonContent === ""){
             return $this->json("Le contenu de la requête est invalide",Response::HTTP_BAD_REQUEST);
         }
 
-        // Convert JSON into php object.
+        // Convert JSON into php object
         $character = $serializer->deserialize( $jsonContent, Character::class,'json',['object_to_populate' => $character] , ['datetime_format' => 'Y-m-d\TH:i:sP']);
 
         $errors = $validator->validate($character);
@@ -148,29 +139,29 @@ class CharacterController extends AbstractController
 
         // Converts request content to an array
         $data = json_decode($jsonContent, true);
-        // If request contains a new user.
+        // If the request contains a new user
         if (isset($data["user"])) {
-            // We check if the user of the request matches to an existing user 
+            // We check if the user of the request matches an existing user 
             $userId = $data["user"] ?? null;
-            $user = $userId ? $userRepository->find($userId) : null;
+            $user = $userId ? $entityManager->getRepository(User::class)->find($userId) : null;
             // If not, returns an error response
             if (!$user) {
                 return $this->json("Cet utilisateur n'existe pas", Response::HTTP_BAD_REQUEST);
             }
-            // Add $user in $character
+            // Link the $user to the $character
             $character->setUser($user);
         }
 
-        // If request contains a new game.
+        // If the request contains a new game
         if (isset($data["game"])) {
-            // We check if the game of the request matches to an existing game 
+            // We check if the game of the request matches an existing game 
             $gameId = $data["game"] ?? null;
-            $game = $userId ? $gameRepository->find($gameId) : null;
+            $game = $userId ? $entityManager->getRepository(Game::class)->find($gameId) : null;
             // If not, returns an error response
             if (!$game) {
                 return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
             }
-            // Add $game in $character
+            // Link the $game to the $character
             $character->setGame($game);
         }
 
@@ -184,17 +175,14 @@ class CharacterController extends AbstractController
     }
 
     /**
-    * endpoint for deleting a character
+    * Endpoint for deleting a character
     *
     * @Route("/{id}", name="deleteCharacters", requirements={"id"="\d+"}, methods={"DELETE"})
     */
-    public function deleteCharacters(
-        $id,
-        CharacterRepository $characterRepository,
-        EntityManagerInterface $entityManager): JsonResponse
+    public function deleteCharacters($id, EntityManagerInterface $entityManager): JsonResponse
     {
 
-        $character = $characterRepository->find($id);
+        $character = $entityManager->getRepository(Character::class)->find($id);
 
         $this->denyAccessUnlessGranted('DELETE', $character);
 
@@ -202,7 +190,7 @@ class CharacterController extends AbstractController
             return $this->json("Personnage introuvable avec cet ID :" . $id,Response::HTTP_NOT_FOUND);
         }
 
-        $characterRepository->remove($character);
+        $entityManager->getRepository(Character::class)->remove($character);
         $entityManager->flush();
 
         return $this->json("Personnage supprimé avec succès", Response::HTTP_OK);
