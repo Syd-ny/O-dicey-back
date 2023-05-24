@@ -28,7 +28,7 @@ class GameSecurityVoter extends Voter
             return false;
         }
 
-        // If the game is inactive, do not allow editing or deleting (even from the DM)
+        // If the game is inactive, do not allow editing, deleting (even from the DM) or inviting new players 
         if ($this->isInactive($subject)) {
             return false;
         }
@@ -38,6 +38,10 @@ class GameSecurityVoter extends Voter
             case self::EDIT:
                 // If the game subject has been created by the current user connected, they can edit it
                 if($user == $subject->getDm()) {
+                    // If the game is over, do not allow editing (even from the DM)
+                    if ($this->isOver($subject)) {
+                        return false;
+                    }
                     return true;
                 }
                 break;
@@ -50,6 +54,10 @@ class GameSecurityVoter extends Voter
             case self::POSTINVITE:
                 // If the game subject has been created by the current user connected, they can invite players
                 if($user == $subject->getDm()) {
+                    // If the game is over, do not allow inviting new players
+                    if ($this->isOver($subject)) {
+                        return false;
+                    }
                     return true;
                 }
                 break;
@@ -72,6 +80,23 @@ class GameSecurityVoter extends Voter
         
                 return true;
             }
+        }
+        
+        return false;
+    }
+
+    /**
+     * Checks if the status of a game is over
+     *
+     * @param Game $subject
+     * @return boolean
+     */
+    private function isOver($subject): bool
+    {
+
+        if($subject->getStatus() == 1) {
+    
+            return true;
         }
         
         return false;
