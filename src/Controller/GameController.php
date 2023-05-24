@@ -200,23 +200,27 @@ class GameController extends AbstractController
         // Get the request content (JSON)
         $data = $request->getContent();
         $dataDecoded = json_decode($data, true);
-        $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
 
-        $existingInvitation = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
-
-        if ($existingInvitation) {
-            return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
-        }
+        $userId = $dataDecoded['user'];
+        
+        $user = $entityManager->getRepository(User::class)->find($userId);
 
         if (!$user) {
             return $this->json("Le joueur n'existe pas", Response::HTTP_NOT_FOUND);
         }
+        
+        // Check if the invitation already exists
+        $existingInvitation = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
+        
+        if ($existingInvitation) {
+             return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
+        }
 
         // If JSON invalid, return a JSON to specify that it is invalid
         try{
-            // Deserialize JSON into an Entity
-            $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
-            $dataDecoded = json_decode($data, true);
+            // Deserialize JSON into an entity
+            $gameUser = $serializer->deserialize($data, GameUsers::class, "json");
+
             $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
             
             $gameUser->setUser($user);
