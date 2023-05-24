@@ -53,7 +53,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Endpoint for finding an user with his Email
+     * Endpoint for finding a user with their email
      * 
      * @Route("/searchByMail", name="app_backoffice_user_getUsersByMail", methods={"GET"})
      */
@@ -77,20 +77,20 @@ class UserController extends AbstractController
      */
     public function postUsers(Request $request, UserRepository $userRepository,UserPasswordHasherInterface $passwordHasher): Response
     {
-        // Instantiation of the User entity
+        // Instance of the User entity
         $user = new User();
-        // Instantiation of the UserType class using as starting data the instance of the User $user class
+        // Instance of the UserType class using as starting data the instance of the User $user
         $form = $this->createForm(UserType::class, $user);
-        // Processing of the form entry
+        // Processing the form data
         $form->handleRequest($request);
-        // if the form has been entered and the validation rules are checked
+        // If the form has been completed and is valid
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // retrieving the plain password
+            // Retrieving the plain password
             $plainPassword = $user->getPassword();
-            // hashing the paswword
+            // Hashing the paswword
             $passwordHash = $passwordHasher->hashPassword($user,$plainPassword);
-            // set the password
+            // Setting the password
             $user->setPassword($passwordHash);
 
             $userRepository->add($user, true);
@@ -111,13 +111,13 @@ class UserController extends AbstractController
      */
     public function editUsers(Request $request, User $user, UserRepository $userRepository): Response
     {
-        // Instantiation of the UserType class using as starting data the instance of the User $user class
+        // Instance of the UserType class using as starting data the instance of the User $user
         $form = $this->createForm(UserType::class, $user, ["custom_option" => "edit"]);
-        // Processing of the form entry
+        // Processing the form data
         $form->handleRequest($request);
-        // if the form has been entered and the validation rules are checked
+        // If the form has been completed and is valid
         if ($form->isSubmitted() && $form->isValid()) {
-            // Update of updatedAt to the date of the last modification
+            // Setting updatedAt to the date of the last modification
             $user->setUpdatedAt(new \DateTimeImmutable());
 
             $userRepository->add($user, true);
@@ -138,7 +138,7 @@ class UserController extends AbstractController
      */
     public function deleteUsers(Request $request, User $user, UserRepository $userRepository): Response
     {
-        // implementation of the CSRF token validation (symfony bundle)
+        // Implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $userRepository->remove($user, true);
         }

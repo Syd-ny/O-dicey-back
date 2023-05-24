@@ -19,7 +19,7 @@ class OdiceyCreateUserCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager)
     {
-        // my command dependencies
+        // Command dependencies
         $this->entityManager = $entityManager;
 
         parent::__construct();
