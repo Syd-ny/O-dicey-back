@@ -10,7 +10,7 @@ class UserSecurityVoter extends Voter
 {
     public const EDIT = 'EDIT';
     public const DELETE = 'DELETE';
-    public const DELETE_GAME_USER_LINK = 'REMOVE_GAME_USER_LINK';
+    public const DELETE_GAME_USER_LINK = 'DELETE_GAME_USER_LINK';
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -42,8 +42,8 @@ class UserSecurityVoter extends Voter
                 }
             break;
             case self::DELETE_GAME_USER_LINK:
-                // Check if the user has the role "ROLE_MJ" or "ROLE_ADMIN"
-                if (in_array('ROLE_MJ', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles())) {
+                // Check if the user is the DM
+                if ($user->isDmOfGame($subject)) {
                     return true;
                 }
                 break;

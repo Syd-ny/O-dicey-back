@@ -376,14 +376,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isDmOfGame(Game $game): bool
     {
-        // Verify if user is dm of the game.
-        foreach ($this->getGamesDM() as $dmGame) {
-            if ($dmGame === $game) {
-                return true;
-            }
-        }
-
-        return false;
+        // Vérifier si l'utilisateur est le DM du jeu spécifié
+        return $this->getGamesDM()->contains($game);
     }
 
 }

@@ -304,4 +304,5 @@ class UserController extends AbstractController
         return $this->json("L'utilisateur a été supprimé de la partie avec succès", Response::HTTP_OK);
     }
 
+    
 }
