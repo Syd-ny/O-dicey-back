@@ -2,22 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Gallery;
 use App\Entity\Game;
-use App\Entity\GameUsers;
 use App\Entity\Mode;
 use App\Entity\User;
 use DateTimeImmutable;
+use App\Entity\Gallery;
+use App\Entity\GameUsers;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class GameController extends AbstractController
 {
@@ -199,6 +200,7 @@ class GameController extends AbstractController
         // Get the request content (JSON)
         $data = $request->getContent();
         $dataDecoded = json_decode($data, true);
+
         $userId = $dataDecoded['user'];
         
         $user = $entityManager->getRepository(User::class)->find($userId);
@@ -253,6 +255,73 @@ class GameController extends AbstractController
             "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
         ], ["groups" => "gameUsers"]);
     }
+
+    /**
+     * Endpoint to invite users to a game
+     * 
+     * @Route("/api/games/{id}/usersMultiple", name="app_api_game_postGameUsersInvites", methods={"POST"})
+     */
+    public function postGameUsersInvitesMultiples(
+        Request $request,
+        SerializerInterface $serializer,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        Game $game,
+        ValidatorInterface $validator
+    ): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('POSTINVITE', $game);
+
+        // Get the request content (JSON)
+        $data = json_decode($request->getContent(), true);
+        $userIds = $data['users'];
+
+        $existingInvitations = $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game, 'user' => $userIds]);
+
+        if (!empty($existingInvitations)) {
+            return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
+        }
+
+        $users = $entityManager->getRepository(User::class)->findBy(['id' => $userIds]);
+
+        $invitations = [];
+        foreach ($userIds as $userId) {
+            $user = $entityManager->find(User::class, $userId);
+            if ($user) {
+                $invitation = new GameUsers();
+                $invitation->setUser($user);
+                $invitation->setGame($game);
+                $invitations[] = $invitation;
+            }
+        }
+
+        // Manually check if the Entities are valid
+        $errors = [];
+        foreach ($invitations as $invitation) {
+            $violations = $validator->validate($invitation);
+            if (count($violations) > 0) {
+                foreach ($violations as $violation) {
+                    $errors[$invitation->getUser()->getId()][$violation->getPropertyPath()][] = $violation->getMessage();
+                }
+            }
+        }
+
+        // If there are validation errors, return a JSON response with the errors
+        if (!empty($errors)) {
+            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        // Persist the invitations
+        foreach ($invitations as $invitation) {
+            $entityManager->persist($invitation);
+        }
+        $entityManager->flush();
+
+        return $this->json($invitations, Response::HTTP_CREATED, [
+            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
+        ], ["groups" => "gameUsers"]);
+    }
+
 
     /**
     * Endpoint for editing a game
