@@ -10,11 +10,12 @@ class UserSecurityVoter extends Voter
 {
     public const EDIT = 'EDIT';
     public const DELETE = 'DELETE';
+    public const DELETE_GAME_USER_LINK = 'REMOVE_GAME_USER_LINK';
 
     protected function supports(string $attribute, $subject): bool
     {
         
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::DELETE_GAME_USER_LINK])
             && $subject instanceof \App\Entity\User;
     }
 
@@ -40,6 +41,12 @@ class UserSecurityVoter extends Voter
                     return true;
                 }
             break;
+            case self::DELETE_GAME_USER_LINK:
+                // Check if the user has the role "ROLE_MJ" or "ROLE_ADMIN"
+                if (in_array('ROLE_MJ', $user->getRoles()) || in_array('ROLE_ADMIN', $user->getRoles())) {
+                    return true;
+                }
+                break;
         }
 
         return false;
