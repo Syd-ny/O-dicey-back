@@ -271,67 +271,67 @@ class GameController extends AbstractController
         ], ["groups" => "gameUsers"]);
     }
 
-    /**
-     * Endpoint to invite multiple users to a game
-     * 
-     * @Route("/api/games/{id}/usersMultiple", name="app_api_game_postGameUsersInvites", methods={"POST"})
-     */
-    public function postGameUsersInvitesMultiples(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        Game $game,
-        ValidatorInterface $validator
-    ): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('POSTINVITE', $game);
+    // /**
+    //  * Endpoint to invite multiple users to a game
+    //  * 
+    //  * @Route("/api/games/{id}/usersMultiple", name="app_api_game_postGameUsersInvites", methods={"POST"})
+    //  */
+    // public function postGameUsersInvitesMultiples(
+    //     Request $request,
+    //     EntityManagerInterface $entityManager,
+    //     Game $game,
+    //     ValidatorInterface $validator
+    // ): JsonResponse
+    // {
+    //     $this->denyAccessUnlessGranted('POSTINVITE', $game);
 
-        // Get the request content (JSON)
-        $data = json_decode($request->getContent(), true);
-        $userIds = $data['users'];
+    //     // Get the request content (JSON)
+    //     $data = json_decode($request->getContent(), true);
+    //     $userIds = $data['users'];
 
-        $existingInvitations = $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game, 'user' => $userIds]);
+    //     $existingInvitations = $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game, 'user' => $userIds]);
 
-        if (!empty($existingInvitations)) {
-            return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
-        }
+    //     if (!empty($existingInvitations)) {
+    //         return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
+    //     }
 
-        $invitations = [];
-        foreach ($userIds as $userId) {
-            $user = $entityManager->find(User::class, $userId);
-            if ($user) {
-                $invitation = new GameUsers();
-                $invitation->setUser($user);
-                $invitation->setGame($game);
-                $invitations[] = $invitation;
-            }
-        }
+    //     $invitations = [];
+    //     foreach ($userIds as $userId) {
+    //         $user = $entityManager->find(User::class, $userId);
+    //         if ($user) {
+    //             $invitation = new GameUsers();
+    //             $invitation->setUser($user);
+    //             $invitation->setGame($game);
+    //             $invitations[] = $invitation;
+    //         }
+    //     }
 
-        // Manually check if the Entities are valid
-        $errors = [];
-        foreach ($invitations as $invitation) {
-            $violations = $validator->validate($invitation);
-            if (count($violations) > 0) {
-                foreach ($violations as $violation) {
-                    $errors[$invitation->getUser()->getId()][$violation->getPropertyPath()][] = $violation->getMessage();
-                }
-            }
-        }
+    //     // Manually check if the Entities are valid
+    //     $errors = [];
+    //     foreach ($invitations as $invitation) {
+    //         $violations = $validator->validate($invitation);
+    //         if (count($violations) > 0) {
+    //             foreach ($violations as $violation) {
+    //                 $errors[$invitation->getUser()->getId()][$violation->getPropertyPath()][] = $violation->getMessage();
+    //             }
+    //         }
+    //     }
 
-        // If there are validation errors, return a JSON response with the errors
-        if (!empty($errors)) {
-            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+    //     // If there are validation errors, return a JSON response with the errors
+    //     if (!empty($errors)) {
+    //         return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+    //     }
 
-        // Persist the invites
-        foreach ($invitations as $invitation) {
-            $entityManager->persist($invitation);
-        }
-        $entityManager->flush();
+    //     // Persist the invites
+    //     foreach ($invitations as $invitation) {
+    //         $entityManager->persist($invitation);
+    //     }
+    //     $entityManager->flush();
 
-        return $this->json($invitations, Response::HTTP_CREATED, [
-            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
-        ], ["groups" => "gameUsers"]);
-    }
+    //     return $this->json($invitations, Response::HTTP_CREATED, [
+    //         "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
+    //     ], ["groups" => "gameUsers"]);
+    // }
 
 
     /**
