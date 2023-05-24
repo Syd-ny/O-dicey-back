@@ -70,12 +70,14 @@ class GameController extends AbstractController
 
         // If the form has been completed and is valid
         if ($form->isSubmitted() && $form->isValid()) {
+            
             // Register game informations in the database
             $entityManager->persist($game);
-            
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_backoffice_game_getGames');
+            $this->addFlash("success", "Partie créée !");
+
+            return $this->redirectToRoute('app_backoffice_game_getGames', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('backoffice/game/new.html.twig', [
@@ -104,8 +106,10 @@ class GameController extends AbstractController
             // Register game informations in the database
             $entityManager->persist($game);
             $entityManager->flush();
+
+            $this->addFlash("warning", "Partie modifiée !");
     
-            return $this->redirectToRoute('app_backoffice_game_getGames');
+            return $this->redirectToRoute('app_backoffice_game_getGames', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('backoffice/game/edit.html.twig', [
@@ -124,6 +128,7 @@ class GameController extends AbstractController
         // Implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$game->getId(), $request->request->get('_token'))) {
             $gameRepository->remove($game, true);
+            $this->addFlash("danger", "Partie supprimée !");
         }
 
         return $this->redirectToRoute('app_backoffice_game_getGames', [], Response::HTTP_SEE_OTHER);

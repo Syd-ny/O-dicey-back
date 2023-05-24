@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_backoffice_game_deleteGames', {'id': game.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette partie ?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ game.id) }}">
+        <button class="btn btn-sm btn-outline-danger mx-3 mt-2">Supprimer</button>
+</form>
