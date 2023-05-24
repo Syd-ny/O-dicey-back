@@ -76,7 +76,6 @@ class GameController extends AbstractController
         // Get the characters of the current game
         $usersByGame =  $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game]);
         
-        
         return $this->json($usersByGame, Response::HTTP_OK, [], [
             'groups' => 'usersByGame'
         ]);
@@ -262,7 +261,7 @@ class GameController extends AbstractController
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // Add the game in the BDD
+        // Persist the invite
         $entityManager->persist($gameUser);
         $entityManager->flush();
         
@@ -273,15 +272,13 @@ class GameController extends AbstractController
     }
 
     /**
-     * Endpoint to invite users to a game
+     * Endpoint to invite multiple users to a game
      * 
      * @Route("/api/games/{id}/usersMultiple", name="app_api_game_postGameUsersInvites", methods={"POST"})
      */
     public function postGameUsersInvitesMultiples(
         Request $request,
-        SerializerInterface $serializer,
         EntityManagerInterface $entityManager,
-        UserRepository $userRepository,
         Game $game,
         ValidatorInterface $validator
     ): JsonResponse
@@ -297,8 +294,6 @@ class GameController extends AbstractController
         if (!empty($existingInvitations)) {
             return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
         }
-
-        $users = $entityManager->getRepository(User::class)->findBy(['id' => $userIds]);
 
         $invitations = [];
         foreach ($userIds as $userId) {
@@ -327,7 +322,7 @@ class GameController extends AbstractController
             return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // Persist the invitations
+        // Persist the invites
         foreach ($invitations as $invitation) {
             $entityManager->persist($invitation);
         }
