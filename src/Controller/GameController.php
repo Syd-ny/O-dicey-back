@@ -66,13 +66,13 @@ class GameController extends AbstractController
     }
     
     /**
-     * endpoint for all users of a specific game
+     * Endpoint for all users of a specific game
      * 
      * @Route("/api/games/{id}/users", name="app_api_game_getUsersByGame", methods={"GET"})
      */
     public function getUsersByGame(Game $game, EntityManagerInterface $entityManager): JsonResponse
     {
-        // get the characters of the current game
+        // Get the characters of the current game
         $usersByGame =  $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game]);
         
         
