@@ -94,6 +94,7 @@ class UserController extends AbstractController
             $user->setPassword($passwordHash);
 
             $userRepository->add($user, true);
+            $this->addFlash("success", "Utilisateur créé !");
 
             return $this->redirectToRoute('app_backoffice_user_getUsers', [], Response::HTTP_SEE_OTHER);
         }
@@ -121,6 +122,7 @@ class UserController extends AbstractController
             $user->setUpdatedAt(new \DateTimeImmutable());
 
             $userRepository->add($user, true);
+            $this->addFlash("warning", "Utilisateur modifié !");
 
             return $this->redirectToRoute('app_backoffice_user_getUsers', [], Response::HTTP_SEE_OTHER);
         }
@@ -141,6 +143,7 @@ class UserController extends AbstractController
         // Implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $userRepository->remove($user, true);
+            $this->addFlash("danger", "Utilisateur supprimé !");
         }
 
         return $this->redirectToRoute('app_backoffice_user_getUsers', [], Response::HTTP_SEE_OTHER);

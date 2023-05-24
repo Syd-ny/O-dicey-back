@@ -43,8 +43,6 @@
     <a href="{{ path('app_backoffice_mode_getModes') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
 
     <a href="{{ path('app_backoffice_mode_editModes', {'id': mode.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
-    <form method="post" action="{{ path('app_backoffice_mode_deleteModes', {'id': mode.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce mode de jeu ?');">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ mode.id) }}">
-        <button class="btn btn-sm btn-outline-danger mx-3 mt-2">Supprimer</button>
-    </form>
+
+    {{ include('backoffice/mode/_delete_form.html.twig') }}
 {% endblock %}
