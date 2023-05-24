@@ -41,12 +41,6 @@ class UserSecurityVoter extends Voter
                     return true;
                 }
             break;
-            case self::DELETE_GAME_USER_LINK:
-                // Check if the user is the DM
-                if ($user->isDmOfGame($subject)) {
-                    return true;
-                }
-                break;
         }
 
         return false;

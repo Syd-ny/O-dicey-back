@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GameController extends AbstractController
 {
@@ -423,17 +424,19 @@ class GameController extends AbstractController
     /**
      * Endpoint to remove a user's link to a game
      * 
-     * @Route("/api/games/{gameId}/users/{userId}", name="app_api_game_removeGameUserLink", methods={"DELETE"})
+     * @Route("/api/games/{id}/users/{user_id}", name="app_api_game_removeGameUserLink", methods={"DELETE"})
+     * @ParamConverter("game", options={"mapping": {"id": "id"}})
+     * @ParamConverter("user", options={"mapping": {"user_id": "id"}})
      */
     public function removeGameUser(Game $game, User $user, EntityManagerInterface $entityManager): JsonResponse
     {
-        dd($user);
+        
         // Check if the current user is the creator of the game
-        //$this->denyAccessUnlessGranted('DELETEINVITE', $user);
+        $this->denyAccessUnlessGranted('DELETEINVITE', $game);
 
         // Check if the user is linked to the game
         $gameUser = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
-        dd($gameUser);
+       
         if (!$gameUser) {
             return $this->json("L'utilisateur n'est pas lié à cette partie", Response::HTTP_NOT_FOUND);
         }
