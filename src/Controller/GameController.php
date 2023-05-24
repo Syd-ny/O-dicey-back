@@ -278,11 +278,11 @@ class GameController extends AbstractController
             return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
         }
 
-        $users = $userRepository->findUserById($userIds);
+        $users = $entityManager->getRepository(User::class)->findBy(['id' => $userIds]);
 
         $invitations = [];
         foreach ($userIds as $userId) {
-            $user = $userRepository->find($userId);
+            $user = $entityManager->find(User::class, $userId);
             if ($user) {
                 $invitation = new GameUsers();
                 $invitation->setUser($user);
