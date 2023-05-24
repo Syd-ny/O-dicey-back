@@ -44,6 +44,7 @@ class GameUsers
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gameUsers")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"gameUsers"})
+     * @Groups({"usersByGame"})
      * @Assert\NotBlank
      */
     private $user;
