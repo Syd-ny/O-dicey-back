@@ -181,76 +181,76 @@ class GameController extends AbstractController
         );
     }
 
-    /**
-    * Endpoint to invite a user to a game
-    * 
-    * @Route("/api/games/{id}/users", name="app_api_game_postGameUsersInvites", methods={"POST"})
-    */
-    public function postGameUsersInvites(
-        Request $request,
-        SerializerInterface $serializer,
-        EntityManagerInterface $entityManager,
-        Game $game,
-        ValidatorInterface $validator
-        ): JsonResponse
-    {
-        
-        $this->denyAccessUnlessGranted('POSTINVITE', $game);
-
-        // Get the request content (JSON)
-        $data = $request->getContent();
-        $dataDecoded = json_decode($data, true);
-        $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
-
-        $existingInvitation = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
-
-        if ($existingInvitation) {
-            return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
-        }
-
-        if (!$user) {
-            return $this->json("Le joueur n'existe pas", Response::HTTP_NOT_FOUND);
-        }
-
-        // If JSON invalid, return a JSON to specify that it is invalid
-        try{
-            // Deserialize JSON into an Entity
-            $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
-            $dataDecoded = json_decode($data, true);
-            $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
-            
-            $gameUser->setUser($user);
-            $gameUser->setGame($game);
-        }
-        catch(NotEncodableValueException $e){
-            return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
-        }
-
-        // Manually checks if the Entity is valid
-        $errors = $validator->validate($gameUser);
-        // If $errors contains at least 1 item, the form is invalid
-        if(count($errors) > 0){
-            // Create an empty array and store all errors in it
-            $dataErrors = [];
-
-            // Loop over errors
-            foreach($errors as $error){
-                // Create in the array an index by fields and list all errors of the field in question in a sub-table
-                $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
-            }
-            // Entity not being treatable because of incorrect data, return a code 422
-            return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        // Add the game in the BDD
-        $entityManager->persist($gameUser);
-        $entityManager->flush();
-        
-        //  Provide the link of the created resource
-        return $this->json($gameUser, Response::HTTP_CREATED,[
-            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
-        ], ["groups" => "gameUsers"]);
-    }
+    ///**
+    //* Endpoint to invite a user to a game
+    //* 
+    //* @Route("/api/games/{id}/users", name="app_api_game_postGameUsersInvites", methods={"POST"})
+    //*/
+    //public function postGameUsersInvites(
+    //    Request $request,
+    //    SerializerInterface $serializer,
+    //    EntityManagerInterface $entityManager,
+    //    Game $game,
+    //    ValidatorInterface $validator
+    //    ): JsonResponse
+    //{
+    //    
+    //    $this->denyAccessUnlessGranted('POSTINVITE', $game);
+//
+    //    // Get the request content (JSON)
+    //    $data = $request->getContent();
+    //    $dataDecoded = json_decode($data, true);
+    //    $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
+//
+    //    $existingInvitation = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
+//
+    //    if ($existingInvitation) {
+    //        return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
+    //    }
+//
+    //    if (!$user) {
+    //        return $this->json("Le joueur n'existe pas", Response::HTTP_NOT_FOUND);
+    //    }
+//
+    //    // If JSON invalid, return a JSON to specify that it is invalid
+    //    try{
+    //        // Deserialize JSON into an Entity
+    //        $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
+    //        $dataDecoded = json_decode($data, true);
+    //        $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
+    //        
+    //        $gameUser->setUser($user);
+    //        $gameUser->setGame($game);
+    //    }
+    //    catch(NotEncodableValueException $e){
+    //        return $this->json(["error" => "JSON invalide"],Response::HTTP_BAD_REQUEST);
+    //    }
+//
+    //    // Manually checks if the Entity is valid
+    //    $errors = $validator->validate($gameUser);
+    //    // If $errors contains at least 1 item, the form is invalid
+    //    if(count($errors) > 0){
+    //        // Create an empty array and store all errors in it
+    //        $dataErrors = [];
+//
+    //        // Loop over errors
+    //        foreach($errors as $error){
+    //            // Create in the array an index by fields and list all errors of the field in question in a sub-table
+    //            $dataErrors[$error->getPropertyPath()][] = $error->getMessage();
+    //        }
+    //        // Entity not being treatable because of incorrect data, return a code 422
+    //        return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
+    //    }
+//
+//        // Add the game in the BDD
+//        $entityManager->persist($gameUser);
+//        $entityManager->flush();
+//        
+//        //  Provide the link of the created resource
+//        return $this->json($gameUser, Response::HTTP_CREATED,[
+//            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
+//        ], ["groups" => "gameUsers"]);
+//    }
 
     /**
      * Endpoint to invite users to a game
@@ -418,5 +418,30 @@ class GameController extends AbstractController
         $entityManager->flush();
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Endpoint to remove a user's link to a game
+     * 
+     * @Route("/api/games/{gameId}/users/{userId}", name="app_api_game_removeGameUserLink", methods={"DELETE"})
+     */
+    public function removeGameUser(Game $game, User $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        dd($user);
+        // Check if the current user is the creator of the game
+        //$this->denyAccessUnlessGranted('DELETEINVITE', $user);
+
+        // Check if the user is linked to the game
+        $gameUser = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
+        dd($gameUser);
+        if (!$gameUser) {
+            return $this->json("L'utilisateur n'est pas lié à cette partie", Response::HTTP_NOT_FOUND);
+        }
+
+        // Remove the link
+        $entityManager->remove($gameUser);
+        $entityManager->flush();
+
+        return $this->json("L'utilisateur a été supprimé de la partie avec succès", Response::HTTP_OK);
     }
 }

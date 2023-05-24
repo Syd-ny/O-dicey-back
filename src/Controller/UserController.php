@@ -277,32 +277,5 @@ class UserController extends AbstractController
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * Endpoint to remove a user's link to a game
-     * 
-     * @Route("/api/games/{gameId}/users/{userId}", name="app_api_game_removeGameUserLink", methods={"DELETE"})
-     */
-    public function removeGameUser(Game $game, User $user, EntityManagerInterface $entityManager): JsonResponse
-    {
-        // Check if the current user is the creator of the game
-        $currentUser = $this->getUser();
-        if (!$currentUser || !$currentUser->isDmOfGame($game)) {
-            return $this->json("Vous n'avez pas la permission de supprimer cette relation", Response::HTTP_FORBIDDEN);
-        }
-
-        // Check if the user is linked to the game
-        $gameUser = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
-
-        if (!$gameUser) {
-            return $this->json("L'utilisateur n'est pas lié à cette partie", Response::HTTP_NOT_FOUND);
-        }
-
-        // Remove the link
-        $entityManager->remove($gameUser);
-        $entityManager->flush();
-
-        return $this->json("L'utilisateur a été supprimé de la partie avec succès", Response::HTTP_OK);
-    }
-
     
 }
