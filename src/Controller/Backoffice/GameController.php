@@ -71,7 +71,7 @@ class GameController extends AbstractController
         // If the form has been completed and is valid
         if ($form->isSubmitted() && $form->isValid()) {
             
-            // Register game informations in the database
+            // Register game information in the database
             $entityManager->persist($game);
             $entityManager->flush();
     
@@ -103,7 +103,7 @@ class GameController extends AbstractController
             // Update of updatedAt to the current date and time
             $game->setupdatedAt(new DateTimeImmutable());
 
-            // Register game informations in the database
+            // Register game information in the database
             $entityManager->persist($game);
             $entityManager->flush();
 

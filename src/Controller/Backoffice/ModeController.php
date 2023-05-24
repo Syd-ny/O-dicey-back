@@ -75,7 +75,7 @@ class ModeController extends AbstractController
             $jsonstats = ($form->get('jsonstats')->getData());
             $mode->setJsonstats(json_decode($jsonstats, true));
 
-            // Register mode informations in the database
+            // Register mode information in the database
             $entityManager->persist($mode);
             $entityManager->flush();
 
@@ -108,7 +108,7 @@ class ModeController extends AbstractController
             $jsonstats = $form->get('jsonstats')->getData();
             $mode->setJsonstats(json_decode($jsonstats, true));
           
-            // Register mode informations in the database
+            // Register mode information in the database
             $entityManager->persist($mode);
             $entityManager->flush();
 
