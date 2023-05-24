@@ -62,10 +62,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"users"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games"})
      * @Assert\NotBlank
      */
     private $password;
