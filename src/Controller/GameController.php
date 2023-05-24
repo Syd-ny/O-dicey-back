@@ -64,6 +64,22 @@ class GameController extends AbstractController
             'groups' => 'charactersByGame'
         ]);
     }
+    
+    /**
+     * endpoint for all users of a specific game
+     * 
+     * @Route("/api/games/{id}/users", name="app_api_game_getUsersByGame", methods={"GET"})
+     */
+    public function getUsersByGame(Game $game, EntityManagerInterface $entityManager): JsonResponse
+    {
+        // get the characters of the current game
+        $usersByGame =  $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game]);
+        
+        
+        return $this->json($usersByGame, Response::HTTP_OK, [], [
+            'groups' => 'usersByGame'
+        ]);
+    }
 
     /**
     * endpoints for all galeries of a specific game
