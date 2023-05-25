@@ -29,15 +29,15 @@ class CharacterSecurityVoter extends Voter
         // Check conditions and return true to grant permission
         switch ($attribute) {
             case self::EDIT:
-                // If the game subject has been created by the current user connected,
-                // or if the game subject is DMed by the current user, they can edit it
+                // If the character subject has been created by the current user connected,
+                // or if the character subject belongs to a game DMed by the current user, they can edit it
                 if($user == $subject->getUser() || $user == $subject->getGame()->getDm()) {
                     return true;
                 }
                 break;
             case self::DELETE:
-                // If the game subject has been created by the current user connected,
-                // or if the game subject is DMed by the current user, they can delete it
+                // If the character subject has been created by the current user connected,
+                // or if the character subject belongs to a game DMed by the current user, they can delete it
                 if($user == $subject->getUser() || $user == $subject->getGame()->getDm()) {
                     return true;
                 }
