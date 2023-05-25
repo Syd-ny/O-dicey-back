@@ -96,7 +96,8 @@ class GameController extends AbstractController
         }
 
         if (count($galleriesByGame) === 0) {
-            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
+            // If no pictures yet, return an empty array
+            return $this->json([], Response::HTTP_NOT_FOUND);
         }
 
         return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
