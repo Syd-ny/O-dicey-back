@@ -29,7 +29,7 @@ class GameSecurityVoter extends Voter
             return false;
         }
 
-        // If the game is inactive, do not allow editing, deleting (even from the DM) or inviting new players 
+        // If the game is inactive, do not allow editing, deleting (even from the DM) or inviting/deleting new players 
         if ($this->isInactive($subject)) {
             return false;
         }
@@ -39,10 +39,6 @@ class GameSecurityVoter extends Voter
             case self::EDIT:
                 // If the game subject has been created by the current user connected, they can edit it
                 if($user == $subject->getDm()) {
-                    // If the game is over, do not allow editing (even from the DM)
-                    if ($this->isOver($subject)) {
-                        return false;
-                    }
                     return true;
                 }
                 break;
@@ -65,6 +61,10 @@ class GameSecurityVoter extends Voter
             case self::DELETEINVITE:
                 // If the game subject has been created by the current user connected, they can suppress players
                 if ($user == $subject->getDm()) {
+                    // If the game is over, do not allow deleting players
+                    if ($this->isOver($subject)) {
+                        return false;
+                    }
                     return true;
                 }
                 break;

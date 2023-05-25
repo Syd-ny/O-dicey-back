@@ -43,8 +43,8 @@
                         {% for character in game.characters %}
                           {{ character.name }}
                           appartient à : {{ character.user.login }}
-                          <a href="{{ path('app_backoffice_character_editCharacters', {'id': character.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a>
-                          <br>
+                          {# <a href="{{ path('app_backoffice_character_editCharacters', {'id': character.id}) }}"><i class="bi bi-pencil btn btn-sm btn-warning rounded"></i></a> #}
+                          {{ include('backoffice/character/_delete_form.html.twig') }}
                         {% endfor %}
                       {% else %}
                         Aucun personnage associé à cette partie.
