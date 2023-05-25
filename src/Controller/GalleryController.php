@@ -44,7 +44,9 @@ class GalleryController extends AbstractController
     public function getGalleriesById(Gallery $gallery): JsonResponse
     {
 
-        if ($gallery === null){return $this->json("Cette image n'existe pas", Response::HTTP_NOT_FOUND);}
+        if ($gallery === null) {
+            return $this->json("Cette image n'existe pas", Response::HTTP_NOT_FOUND);
+        }
 
         return $this->json($gallery,200,[], ["groups"=> ["gallery_read"]]);
     }
