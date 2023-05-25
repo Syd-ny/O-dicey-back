@@ -16,16 +16,17 @@ class Gallery
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"modes"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"games", "charactersByGame", "usersByGame", "gameUsers", "newGame"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=128)
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @ORM\Column(type="string", length=256)
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"games"})
      * @Assert\NotBlank
      * @Assert\Url
@@ -34,8 +35,7 @@ class Gallery
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"games"})
      * @Assert\PositiveOrZero
      */
@@ -44,7 +44,7 @@ class Gallery
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="galleries")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"gallery_list"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Assert\NotBlank
      */
     private $game;

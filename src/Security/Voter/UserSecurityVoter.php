@@ -10,11 +10,12 @@ class UserSecurityVoter extends Voter
 {
     public const EDIT = 'EDIT';
     public const DELETE = 'DELETE';
+    public const DELETE_GAME_USER_LINK = 'DELETE_GAME_USER_LINK';
 
     protected function supports(string $attribute, $subject): bool
     {
         
-        return in_array($attribute, [self::EDIT, self::DELETE])
+        return in_array($attribute, [self::EDIT, self::DELETE, self::DELETE_GAME_USER_LINK])
             && $subject instanceof \App\Entity\User;
     }
 

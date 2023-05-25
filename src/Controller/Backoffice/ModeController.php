@@ -75,11 +75,13 @@ class ModeController extends AbstractController
             $jsonstats = ($form->get('jsonstats')->getData());
             $mode->setJsonstats(json_decode($jsonstats, true));
 
-            // Register mode informations in the database
+            // Register mode information in the database
             $entityManager->persist($mode);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_backoffice_mode_getModes');
+            $this->addFlash("success", "Le mode a bien été créé.");
+
+            return $this->redirectToRoute('app_backoffice_mode_getModes', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('backoffice/mode/new.html.twig', [
@@ -106,11 +108,13 @@ class ModeController extends AbstractController
             $jsonstats = $form->get('jsonstats')->getData();
             $mode->setJsonstats(json_decode($jsonstats, true));
           
-            // Register mode informations in the database
+            // Register mode information in the database
             $entityManager->persist($mode);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_backoffice_mode_getModes');
+            $this->addFlash("warning", "Le mode a bien été modifié.");
+
+            return $this->redirectToRoute('app_backoffice_mode_getModes', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('backoffice/mode/edit.html.twig', [
@@ -129,6 +133,7 @@ class ModeController extends AbstractController
         // Implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$mode->getId(), $request->request->get('_token'))) {
             $modeRepository->remove($mode, true);
+            $this->addFlash("danger", "Le mode a bien été supprimé.");
         }
 
         return $this->redirectToRoute('app_backoffice_mode_getModes', [], Response::HTTP_SEE_OTHER);

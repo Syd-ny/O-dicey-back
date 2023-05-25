@@ -12,34 +12,36 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CharacterController extends AbstractController
 {
-    /**
-     * Endpoint for editing a character
-     * 
-     * @Route("/backoffice/characters/{id}/edit", name="app_backoffice_character_editCharacters", requirements={"id"="\d+"})
-     */
-    public function editCharacters(Request $request, Character $character, CharacterRepository $characterRepository): Response
-    {
-        // Instance of the CharacterType class using as starting data the instance of the Character $character
-        $form = $this->createForm(CharacterType::class, $character, ["custom_option" => "edit"]);
 
-        // Processing the form data
-        $form->handleRequest($request);
+    // ! Method not optimized - rework v2
+    // /**
+    //  * Endpoint for editing a character
+    //  * 
+    //  * @Route("/backoffice/characters/{id}/edit", name="app_backoffice_character_editCharacters", requirements={"id"="\d+"})
+    //  */
+    // public function editCharacters(Request $request, Character $character, CharacterRepository $characterRepository): Response
+    // {
+    //     // Instance of the CharacterType class using as starting data the instance of the Character $character
+    //     $form = $this->createForm(CharacterType::class, $character, ["custom_option" => "edit"]);
 
-        // If the form has been completed and is valid
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Update of updatedAt to the current date and time
-            $character->setUpdatedAt(new \DateTimeImmutable());
+    //     // Processing the form data
+    //     $form->handleRequest($request);
+
+    //     // If the form has been completed and is valid
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         // Update of updatedAt to the current date and time
+    //         $character->setUpdatedAt(new \DateTimeImmutable());
             
-            $characterRepository->add($character, true);
+    //         $characterRepository->add($character, true);
 
-            return $this->redirectToRoute('app_backoffice_user_getUsersById', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_backoffice_user_getUsersById', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
+    //     }
         
-        return $this->renderForm('backoffice/character/edit.html.twig', [
-            'character' => $character,
-            'form' => $form,
-        ]);
-    }
+    //     return $this->renderForm('backoffice/character/edit.html.twig', [
+    //         'character' => $character,
+    //         'form' => $form,
+    //     ]);
+    // }
 
     /**
      * Endpoint for deleting a character
@@ -51,7 +53,10 @@ class CharacterController extends AbstractController
         // Implementation of the CSRF token validation (symfony bundle)
         if ($this->isCsrfTokenValid('delete'.$character->getId(), $request->request->get('_token'))) {
             $characterRepository->remove($character, true);
+
+            $this->addFlash("danger", "Personnage bien supprimé !");
         }
+
 
         return $this->redirectToRoute('app_backoffice_user_getUsersById', ['id' => $character->getUser()->getId()], Response::HTTP_SEE_OTHER);
     }

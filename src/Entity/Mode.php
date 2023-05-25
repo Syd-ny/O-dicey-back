@@ -18,18 +18,17 @@ class Mode
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"modes"})
-     * @Groups({"game_no_character"})
-     * @Groups({"games", "newGame"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"games", "charactersByGame", "usersByGame", "gameUsers", "newGame"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128)
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"modes"})
      * @Groups({"game_no_character"})
      * @Groups({"games", "newGame"})
@@ -39,8 +38,7 @@ class Mode
 
     /**
      * @ORM\Column(type="json", name="json_stats")
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"modes"})
      * @Groups({"games"})
      * ! notNull instead of not blank to be able to create a new mode
