@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GameController extends AbstractController
 {
@@ -272,69 +273,6 @@ class GameController extends AbstractController
     }
 
     /**
-     * Endpoint to invite multiple users to a game
-     * 
-     * @Route("/api/games/{id}/usersMultiple", name="app_api_game_postGameUsersInvites", methods={"POST"})
-     */
-    public function postGameUsersInvitesMultiples(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        Game $game,
-        ValidatorInterface $validator
-    ): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('POSTINVITE', $game);
-
-        // Get the request content (JSON)
-        $data = json_decode($request->getContent(), true);
-        $userIds = $data['users'];
-
-        $existingInvitations = $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game, 'user' => $userIds]);
-
-        if (!empty($existingInvitations)) {
-            return $this->json("Ces invitations ont déjà été faites", Response::HTTP_BAD_REQUEST);
-        }
-
-        $invitations = [];
-        foreach ($userIds as $userId) {
-            $user = $entityManager->find(User::class, $userId);
-            if ($user) {
-                $invitation = new GameUsers();
-                $invitation->setUser($user);
-                $invitation->setGame($game);
-                $invitations[] = $invitation;
-            }
-        }
-
-        // Manually check if the Entities are valid
-        $errors = [];
-        foreach ($invitations as $invitation) {
-            $violations = $validator->validate($invitation);
-            if (count($violations) > 0) {
-                foreach ($violations as $violation) {
-                    $errors[$invitation->getUser()->getId()][$violation->getPropertyPath()][] = $violation->getMessage();
-                }
-            }
-        }
-
-        // If there are validation errors, return a JSON response with the errors
-        if (!empty($errors)) {
-            return $this->json($errors, Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        // Persist the invites
-        foreach ($invitations as $invitation) {
-            $entityManager->persist($invitation);
-        }
-        $entityManager->flush();
-
-        return $this->json($invitations, Response::HTTP_CREATED, [
-            "Location" => $this->generateUrl("app_api_game_getGamesById", ["id" => $game->getId()])
-        ], ["groups" => "gameUsers"]);
-    }
-
-
-    /**
     * Endpoint for editing a game
     * 
     * @Route("/api/games/{id}", name="app_api_game_editGames", methods={"PUT", "PATCH"})
@@ -433,5 +371,32 @@ class GameController extends AbstractController
         $entityManager->flush();
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Endpoint to remove a user from a game
+     * 
+     * @Route("/api/games/{id}/users/{user_id}", name="app_api_game_deleteGameUser", methods={"DELETE"})
+     * @ParamConverter("game", options={"mapping": {"id": "id"}})
+     * @ParamConverter("user", options={"mapping": {"user_id": "id"}})
+     */
+    public function deleteGameUser(Game $game, User $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        
+        // Check if the current user is the creator of the game
+        $this->denyAccessUnlessGranted('DELETEINVITE', $game);
+
+        // Check if the user is linked to the game
+        $gameUser = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
+       
+        if (!$gameUser) {
+            return $this->json("L'utilisateur n'est pas lié à cette partie", Response::HTTP_NOT_FOUND);
+        }
+
+        // Remove the link
+        $entityManager->remove($gameUser);
+        $entityManager->flush();
+
+        return $this->json("L'utilisateur a été supprimé de la partie avec succès", Response::HTTP_OK);
     }
 }
