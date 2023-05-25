@@ -18,111 +18,69 @@ class Character
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users", "charactersByUser"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"modes"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"games", "charactersByGame", "usersByGame", "gameUsers", "newGame"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"users", "charactersByUser"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
+     * @Groups({"games", "charactersByGame"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
-     * @Groups({"charactersByUser"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
+     * @Groups({"games", "charactersByGame"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      * @Assert\Url
      */
     private $picture;
 
     /**
      * @ORM\Column(type="json", nullable=true)
-     * @Groups({"users", "charactersByUser"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
+     * @Groups({"games", "charactersByGame"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      */
     private $stats = [];
 
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users"})
+     * @Groups({"games", "charactersByGame"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      */
     private $inventory;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users"})
+     * @Groups({"games", "charactersByGame"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      */
     private $notes;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Groups({"users","charactersByUser"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
+     * @Groups({"games", "charactersByGame"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"users","charactersByUser"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"games"})
-     * @Groups({"users"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
+     * @Groups({"games", "charactersByGame"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      * @Assert\NotBlank
      */
     private $createdAt;
@@ -130,10 +88,7 @@ class Character
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="characters", cascade={"persist"}))
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      * @Assert\NotBlank
      */
     private $user;
@@ -142,10 +97,7 @@ class Character
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="characters", cascade={"persist"}))
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"users","charactersByUser"}) 
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
      * @Assert\NotBlank
      */
     private $game;
