@@ -1513,22 +1513,22 @@
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
-            "version": "v1.0.15",
+            "version": "v1.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/proxy-manager-lts.git",
-                "reference": "3ca65b8edb8d96b46fedc9bb4911396516347129"
+                "reference": "ecadbdc9052e4ad08c60c8a02268712e50427f7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/3ca65b8edb8d96b46fedc9bb4911396516347129",
-                "reference": "3ca65b8edb8d96b46fedc9bb4911396516347129",
+                "url": "https://api.github.com/repos/FriendsOfPHP/proxy-manager-lts/zipball/ecadbdc9052e4ad08c60c8a02268712e50427f7c",
+                "reference": "ecadbdc9052e4ad08c60c8a02268712e50427f7c",
                 "shasum": ""
             },
             "require": {
                 "laminas/laminas-code": "~3.4.1|^4.0",
                 "php": ">=7.1",
-                "symfony/filesystem": "^4.4.17|^5.0|^6.0"
+                "symfony/filesystem": "^4.4.17|^5.0|^6.0|^7.0"
             },
             "conflict": {
                 "laminas/laminas-stdlib": "<3.2.1",
@@ -1539,7 +1539,7 @@
             },
             "require-dev": {
                 "ext-phar": "*",
-                "symfony/phpunit-bridge": "^5.4|^6.0"
+                "symfony/phpunit-bridge": "^5.4|^6.0|^7.0"
             },
             "type": "library",
             "extra": {
@@ -1579,7 +1579,7 @@
             ],
             "support": {
                 "issues": "https://github.com/FriendsOfPHP/proxy-manager-lts/issues",
-                "source": "https://github.com/FriendsOfPHP/proxy-manager-lts/tree/v1.0.15"
+                "source": "https://github.com/FriendsOfPHP/proxy-manager-lts/tree/v1.0.16"
             },
             "funding": [
                 {
@@ -1591,7 +1591,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-05-16T13:18:04+00:00"
+            "time": "2023-05-24T07:17:17+00:00"
         },
         {
             "name": "knplabs/knp-components",
@@ -4781,16 +4781,16 @@
         },
         {
             "name": "symfony/mercure-bundle",
-            "version": "v0.3.6",
+            "version": "v0.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mercure-bundle.git",
-                "reference": "262c922912d94d01230b2c647208d06fc46d4cff"
+                "reference": "d2d67f89536dd274b6cdf10659660af8a2d80be0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mercure-bundle/zipball/262c922912d94d01230b2c647208d06fc46d4cff",
-                "reference": "262c922912d94d01230b2c647208d06fc46d4cff",
+                "url": "https://api.github.com/repos/symfony/mercure-bundle/zipball/d2d67f89536dd274b6cdf10659660af8a2d80be0",
+                "reference": "d2d67f89536dd274b6cdf10659660af8a2d80be0",
                 "shasum": ""
             },
             "require": {
@@ -4846,7 +4846,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/mercure-bundle/issues",
-                "source": "https://github.com/symfony/mercure-bundle/tree/v0.3.6"
+                "source": "https://github.com/symfony/mercure-bundle/tree/v0.3.7"
             },
             "funding": [
                 {
@@ -4858,7 +4858,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-03-06T22:48:03+00:00"
+            "time": "2023-05-23T16:31:37+00:00"
         },
         {
             "name": "symfony/mime",
@@ -10244,5 +10244,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.3.0"
 }
