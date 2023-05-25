@@ -8,7 +8,6 @@ use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Gallery;
 use App\Entity\GameUsers;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +30,7 @@ class GameController extends AbstractController
     public function getGames(EntityManagerInterface $entityManager): JsonResponse
     {
 
-        // get entities table of games
+        // Get an array of all Games
         $games = $entityManager->getRepository(Game::class)->findAll();
           
         return $this->json($games,Response::HTTP_OK,[], ["groups" => "games"]);
@@ -223,6 +222,11 @@ class GameController extends AbstractController
 
         if (!$user) {
             return $this->json("Le joueur n'existe pas", Response::HTTP_NOT_FOUND);
+        }
+
+        // Check if the user selected/invited is the DM
+        if ($user == $game->getDm()) {
+            return $this->json("Vous êtes déjà le maître du jeu de cette partie !", Response::HTTP_BAD_REQUEST);
         }
         
         // Check if the invitation already exists
