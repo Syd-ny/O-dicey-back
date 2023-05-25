@@ -45,8 +45,7 @@ class GalleryController extends AbstractController
     {
 
         if ($gallery === null) {
-            // If no pictures yet, return an empty string
-            return $this->json("", Response::HTTP_NOT_FOUND);
+            return $this->json("Cette image n'existe pas", Response::HTTP_NOT_FOUND);
         }
 
         return $this->json($gallery,200,[], ["groups"=> ["gallery_read"]]);
