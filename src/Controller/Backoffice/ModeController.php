@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 /**
@@ -23,7 +24,7 @@ class ModeController extends AbstractController
      * 
      * @Route("", name="app_backoffice_mode_getModes")
      */
-    public function getModes(Request $request, ModeRepository $modeRepository): Response
+    public function getModes(Request $request, ModeRepository $modeRepository, PaginatorInterface $paginator): Response
     {
         // Variables to determine the display order of the modes
         $search = $request->query->get('search', '');
@@ -33,8 +34,15 @@ class ModeController extends AbstractController
         // Use the method findBySearchMode of the Mode repository to search the games according to the variables
         $modes = $modeRepository->findBySearchMode($search, $sort, $order);
 
+        $pagination = $paginator->paginate(
+            $modes, // refers to repository
+            $request->query->getInt('page', 1), // Current page number
+            15 // Number of items per page
+        );
+
         return $this->render('backoffice/mode/index.html.twig', [
-            'modes' => $modes,
+            'pagination' => $pagination, // Pass the pagination object to the template
+            'modes' => $pagination->getItems(), // Pass the items of the current page to the template
             'sort' => $sort,
             'order' => $order,
         ]);
