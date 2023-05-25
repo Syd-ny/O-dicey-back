@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/backoffice/games")
@@ -23,7 +24,7 @@ class GameController extends AbstractController
      * 
      * @Route("", name="app_backoffice_game_getGames")
      */
-    public function getGames(Request $request, GameRepository $gameRepository): Response
+    public function getGames(Request $request, GameRepository $gameRepository, PaginatorInterface $paginator): Response
     {
         // Variables to determine the display order of the games
         $search = $request->query->get('search', '');
@@ -33,8 +34,15 @@ class GameController extends AbstractController
         // Use the method findBySearchGame of the game repository to search the games according to the variables
         $games = $gameRepository->findBySearchGame($search, $sort, $order);
 
+        $pagination = $paginator->paginate(
+            $games, 
+            $request->query->getInt('page', 1), // Current page number
+            15 // Number of items per page
+        );
+
         return $this->render('backoffice/game/index.html.twig', [
-            'games' => $games,
+            'pagination' => $pagination,
+            'games' => $pagination->getItems(),
             'sort' => $sort,
             'order' => $order,
         ]);
