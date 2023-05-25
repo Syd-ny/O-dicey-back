@@ -29,7 +29,8 @@ class GalleryController extends AbstractController
         $galleries = $entityManager->getRepository(Gallery::class)->findAll();
         
         if (count($galleries) === 0) {
-            return $this->json('Aucune image trouvée', Response::HTTP_NOT_FOUND);
+            // If no pictures yet, return an empty array
+            return $this->json([], Response::HTTP_NOT_FOUND);
         }
         
         return $this->json($galleries, Response::HTTP_OK, [], ['groups' => ['gallery_list']]);
