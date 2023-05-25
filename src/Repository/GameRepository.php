@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Game;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @extends ServiceEntityRepository<Game>
@@ -67,6 +68,28 @@ class GameRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('g')
             ->leftJoin('g.characters', 'c')
             ->where('c.id IS NULL')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findGamesWithoutCharactersForDm(User $user): array
+    {
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.characters', 'c')
+            ->where('c.id IS NULL')
+            ->andWhere('g.dm = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findGamesWithoutCharactersForUser(User $user): array
+    {
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.characters', 'c')
+            ->where('c.id IS NULL')
+            ->andWhere(':user MEMBER OF g.gameUsers')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
     }

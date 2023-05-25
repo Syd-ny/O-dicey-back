@@ -94,6 +94,31 @@ class UserController extends AbstractController
     }
 
     /**
+     * Endpoint for all games of a specific user without character
+     * 
+     * @Route("/api/users/{id}/games", name="app_api_user_getGamesByUserWithoutCharacter", requirements={"gameId"="\d+"}, methods={"GET"})
+     */
+    public function getGamesByUserWithoutCharacter(User $user): JsonResponse
+    {
+        
+        // Create a variable $gamesByUser which contains two empty arrays, player and DM
+        $gamesByUser = ['player' => []];
+
+        // Get the games of the current user as player
+        $gamesUsers = $user->getGameUsers()->toArray();
+
+        // For each game in which the current user is a player, an item in the player array is created
+        foreach ($gamesUsers as $gameByUser) {
+            $gamesByUser['player'][] = $gameByUser->getGame();
+        }
+
+        return $this->json($gamesByUser, Response::HTTP_OK, [], [
+            'groups' => 'gamesByUser'
+        ]);
+    }
+
+
+    /**
      * Endpoint for getting all invites of a specific user
      * 
      * @Route("/api/users/{id}/invites", name="app_api_user_getInvitesByUser", methods={"GET"})
