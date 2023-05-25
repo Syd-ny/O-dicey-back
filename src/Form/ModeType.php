@@ -16,14 +16,14 @@ class ModeType extends AbstractType
         $mode = $builder->getData();
         $builder
             ->add('name',TextType::class,[
-                "label" => "Nom de la partie",
+                "label" => "Nom du mode de jeu",
                 "attr" => [
-                    "placeholder" => "Nom de la partie"
+                    "placeholder" => "Nom du mode"
                 ]
             ])
 
             ->add('jsonstats', TextareaType::class, [
-                'label' => 'Statistiques(JSON)',
+                'label' => 'Statistiques (en JSON)',
                 'mapped' => false,
             ]);
     }

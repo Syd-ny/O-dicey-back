@@ -2,22 +2,24 @@
 
 namespace App\Controller;
 
-use App\Entity\Gallery;
 use App\Entity\Game;
-use App\Entity\GameUsers;
 use App\Entity\Mode;
 use App\Entity\User;
 use DateTimeImmutable;
+use App\Entity\Gallery;
+use App\Entity\GameUsers;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class GameController extends AbstractController
 {
@@ -62,6 +64,21 @@ class GameController extends AbstractController
         
         return $this->json($charactersByGame, Response::HTTP_OK, [], [
             'groups' => 'charactersByGame'
+        ]);
+    }
+    
+    /**
+     * Endpoint for all users of a specific game
+     * 
+     * @Route("/api/games/{id}/users", name="app_api_game_getUsersByGame", methods={"GET"})
+     */
+    public function getUsersByGame(Game $game, EntityManagerInterface $entityManager): JsonResponse
+    {
+        // Get the characters of the current game
+        $usersByGame =  $entityManager->getRepository(GameUsers::class)->findBy(['game' => $game]);
+        
+        return $this->json($usersByGame, Response::HTTP_OK, [], [
+            'groups' => 'usersByGame'
         ]);
     }
 
@@ -199,21 +216,27 @@ class GameController extends AbstractController
         // Get the request content (JSON)
         $data = $request->getContent();
         $dataDecoded = json_decode($data, true);
-        $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
 
-        $gameUsers = $entityManager->getRepository(GameUsers::class)->findAll();
+        $userId = $dataDecoded['user'];
+        
+        $user = $entityManager->getRepository(User::class)->find($userId);
 
-        foreach ($gameUsers as $gameUser) {
-            if($gameUser->getGame() === $game && $gameUser->getUser() === $user) {
-                return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
-            }
+        if (!$user) {
+            return $this->json("Le joueur n'existe pas", Response::HTTP_NOT_FOUND);
+        }
+        
+        // Check if the invitation already exists
+        $existingInvitation = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
+        
+        if ($existingInvitation) {
+             return $this->json("Cette invitation a déjà été faite", Response::HTTP_BAD_REQUEST);
         }
 
         // If JSON invalid, return a JSON to specify that it is invalid
         try{
-            // Deserialize JSON into an Entity
-            $gameUser = $serializer->deserialize($data,GameUsers::class, "json");
-            $dataDecoded = json_decode($data, true);
+            // Deserialize JSON into an entity
+            $gameUser = $serializer->deserialize($data, GameUsers::class, "json");
+
             $user = $entityManager->getRepository(User::class)->find($dataDecoded['user']);
             
             $gameUser->setUser($user);
@@ -239,7 +262,7 @@ class GameController extends AbstractController
             return $this->json($dataErrors,Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // Add the game in the BDD
+        // Persist the invite
         $entityManager->persist($gameUser);
         $entityManager->flush();
         
@@ -348,5 +371,32 @@ class GameController extends AbstractController
         $entityManager->flush();
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Endpoint to remove a user from a game
+     * 
+     * @Route("/api/games/{id}/users/{user_id}", name="app_api_game_deleteGameUser", methods={"DELETE"})
+     * @ParamConverter("game", options={"mapping": {"id": "id"}})
+     * @ParamConverter("user", options={"mapping": {"user_id": "id"}})
+     */
+    public function deleteGameUser(Game $game, User $user, EntityManagerInterface $entityManager): JsonResponse
+    {
+        
+        // Check if the current user is the creator of the game
+        $this->denyAccessUnlessGranted('DELETEINVITE', $game);
+
+        // Check if the user is linked to the game
+        $gameUser = $entityManager->getRepository(GameUsers::class)->findOneBy(['game' => $game, 'user' => $user]);
+       
+        if (!$gameUser) {
+            return $this->json("L'utilisateur n'est pas lié à cette partie", Response::HTTP_NOT_FOUND);
+        }
+
+        // Remove the link
+        $entityManager->remove($gameUser);
+        $entityManager->flush();
+
+        return $this->json("L'utilisateur a été supprimé de la partie avec succès", Response::HTTP_OK);
     }
 }

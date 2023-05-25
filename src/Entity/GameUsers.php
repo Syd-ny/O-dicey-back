@@ -16,8 +16,11 @@ class GameUsers
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"gameUsers"})
-     * @Groups({"invitesByUser"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"modes"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"games", "charactersByGame", "usersByGame", "gameUsers", "newGame"})
      */
     private $id;
 
@@ -33,8 +36,7 @@ class GameUsers
     /**
      * @ORM\ManyToOne(targetEntity=Game::class, inversedBy="gameUsers")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"invitesByUser"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"gamesByUser", "invitesByUser"})
      * @Groups({"gameUsers"})
      * @Assert\NotBlank
      */
@@ -43,7 +45,7 @@ class GameUsers
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gameUsers")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"gameUsers"})
+     * @Groups({"gameUsers", "usersByGame"})
      * @Assert\NotBlank
      */
     private $user;

@@ -57,7 +57,7 @@ security:
         - { path: ^/backoffice, roles: ROLE_ADMIN }
 
         # Security/Voter/GameSecurityVoter for specific permissions
-        - { path: ^/api/games/\d+, roles: ROLE_DM, methods: [PUT, DELETE] }
+        - { path: ^/api/games/\d+, roles: ROLE_DM, methods: [POST, PUT, DELETE] }
         - { path: ^/api/galleries, roles: ROLE_DM }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 

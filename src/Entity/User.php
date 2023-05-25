@@ -21,26 +21,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"users", "charactersByUser", "invitesByUser"})
-     * @Groups({"gamesByUser"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games", "newGame"})
-     * @Groups({"gameUsers"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"modes"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"games", "charactersByGame", "usersByGame", "gameUsers", "newGame"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=128, unique=true)
-     * @Groups({"users", "charactersByUser"})
-     * @Groups({"gamesByUser"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games", "newGame"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"games", "newGame", "usersByGame"})
      * @Assert\NotBlank
      * @Assert\Email
      */
@@ -48,21 +41,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=64, unique=true)
-     * @Groups({"users", "charactersByUser", "invitesByUser"})
-     * @Groups({"gamesByUser"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games", "newGame"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"games", "newGame", "usersByGame"})
      * @Assert\NotBlank
      */
     private $login;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"users"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games"})
      * @Assert\NotBlank
      */
     private $password;
@@ -70,27 +57,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=128, nullable=true)
      * @Groups({"users"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"games", "usersByGame"})
      * @Assert\Url
      */
     private $picture;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Groups({"gamesByUser"})
-     * @Groups({"users", "charactersByUser"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
      * @Groups({"games"})
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"users", "charactersByUser"})
-     * @Groups({"gamesByUser"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"users", "charactersByUser", "gamesByUser"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"games"})
      * @Assert\NotBlank
      */
@@ -99,16 +82,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Game::class, mappedBy="dm", orphanRemoval=true)
      * @Groups({"users"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"gallery_list", "gallery_read"})
      */
     private $gamesDM;
 
     /**
      * @ORM\OneToMany(targetEntity=Character::class, mappedBy="user", orphanRemoval=true)
      * @Groups({"users", "charactersByUser"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"games"})
      */
     private $characters;
@@ -116,8 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=GameUsers::class, mappedBy="user", orphanRemoval=true)
      * @Groups({"users", "invitesByUser"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
+     * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"games"})
      */
     private $gameUsers;
@@ -373,4 +353,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return null;
     }
+
 }

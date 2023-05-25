@@ -20,40 +20,28 @@ class Game
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"games", "newGame"})
-     * @Groups({"character_list"})
-     * @Groups({"character_read"})
-     * @Groups({"character_add"})
-     * @Groups({"character_edit"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"gamesByUser"})
-     * @Groups({"gameUsers"})
-     * @Groups({"invitesByUser"})
+     * @Groups({"character_list", "character_read", "character_add", "character_edit"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"modes"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"games", "charactersByGame", "usersByGame", "gameUsers", "newGame"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=64)
-     * @Groups({"users", "charactersByUser", "invitesByUser"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games", "newGame"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "charactersByUser", "gamesByUser", "invitesByUser"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"games", "newGame", "charactersByGame"})
      * @Assert\NotBlank
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"users"})
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "gamesByUser"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"games", "charactersByGame"})
      * @Assert\NotBlank
      * @Assert\PositiveOrZero
      */
@@ -61,22 +49,18 @@ class Game
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "gamesByUser"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"games", "charactersByGame"})
      * 
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"gallery_list"})
-     * @Groups({"gallery_read"})
-     * @Groups({"games", "newGame"})
-     * @Groups({"charactersByGame"})
-     * @Groups({"gamesByUser"})
+     * @Groups({"users", "gamesByUser"})
+     * @Groups({"gallery_list", "gallery_read"})
+     * @Groups({"games", "charactersByGame", "newGame"})
      * @Assert\NotBlank
      */
     private $createdAt;
