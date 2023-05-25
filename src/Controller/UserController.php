@@ -6,8 +6,6 @@ use App\Entity\Game;
 use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Character;
-use App\Repository\GameRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -98,23 +96,28 @@ class UserController extends AbstractController
     /**
      * Endpoint for retrieving games without characters for a specific user
      *
-     * @Route("/api/users/{userId}/games/noCharacter", name="app_api_user_getGamesWithoutCharacters", methods={"GET"})
+     * @Route("/api/users/{id}/games/withoutCharacters", name="app_api_user_getGamesWithoutCharacters", methods={"GET"})
      */
-    public function getGamesWithoutCharactersForUser(UserRepository $userRepository, int $userId, GameRepository $gameRepository): JsonResponse
+    public function getGamesByUserWithoutCharacters(User $user): JsonResponse
     {
-        $user = $userRepository->find($userId);
+        // Create an empty array $gamesWithoutCharacters 
+        $gamesWithoutCharacters = [];
 
-        if (!$user) {
-            return $this->json('Utilisateur non trouvé', Response::HTTP_NOT_FOUND);
+        // Get the games of the current user as player
+        $gamesUsers = $user->getGameUsers()->toArray();
+
+        // For each game in which the current user is a player
+        foreach ($gamesUsers as $gameUser) {
+            // If the user character for the game doesn't exist
+            if(!$user->getCharacter($gameUser->getGame())) {
+                // Save the game in the $gamesWithoutCaracters array
+                $gamesWithoutCharacters[] = $gameUser->getGame();
+            }
         }
 
-        $gamesWithoutCharacters = $gameRepository->findGamesWithoutCharactersForUser($user);
-
-        if (empty($gamesWithoutCharacters)) {
-            return $this->json('toutes les parties possèdent un personnage', Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($gamesWithoutCharacters, Response::HTTP_OK, [], ["groups" => ["games"]]);
+        return $this->json($gamesWithoutCharacters, Response::HTTP_OK, [], [
+            'groups' => 'gamesByUser'
+        ]);
     }
 
 
