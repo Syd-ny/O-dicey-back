@@ -69,6 +69,7 @@ class Game
      * @ORM\ManyToOne(targetEntity=Mode::class, inversedBy="games")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games", "newGame"})
+     * @Groups({"game_no_character"})
      * @Groups({"gamesByUser"})
      * @Assert\NotBlank
      */
@@ -78,6 +79,7 @@ class Game
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="gamesDM")
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"games", "newGame"})
+     * @Groups({"game_no_character"})
      * @Groups({"gamesByUser"})
      * @Assert\NotBlank
      */
