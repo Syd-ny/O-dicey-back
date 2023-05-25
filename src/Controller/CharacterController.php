@@ -172,6 +172,9 @@ class CharacterController extends AbstractController
             $character->setGame($game);
         }
 
+        // Update the updatedAt field with the current date and time in the current game
+        $character->getGame()->setUpdatedAt(new DateTimeImmutable());
+
         // Update the updatedAt field with the current date and time
         $character->setUpdatedAt(new DateTimeImmutable());
 
