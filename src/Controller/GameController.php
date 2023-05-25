@@ -8,6 +8,7 @@ use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Gallery;
 use App\Entity\GameUsers;
+use App\Repository\GameRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,8 +19,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+
 
 class GameController extends AbstractController
 {
@@ -31,7 +33,7 @@ class GameController extends AbstractController
     public function getGames(EntityManagerInterface $entityManager): JsonResponse
     {
 
-        // get entities table of games
+        // Get an array of all Games
         $games = $entityManager->getRepository(Game::class)->findAll();
           
         return $this->json($games,Response::HTTP_OK,[], ["groups" => "games"]);
@@ -97,11 +99,13 @@ class GameController extends AbstractController
         }
 
         if (count($galleriesByGame) === 0) {
-            return $this->json('Aucune image trouvée pour ce jeu', Response::HTTP_NOT_FOUND);
+            // If no pictures yet, return an empty array
+            return $this->json([], Response::HTTP_NOT_FOUND);
         }
 
         return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
     }
+
 
     /**
     * Endpoint for creating a game
@@ -223,6 +227,11 @@ class GameController extends AbstractController
 
         if (!$user) {
             return $this->json("Le joueur n'existe pas", Response::HTTP_NOT_FOUND);
+        }
+
+        // Check if the user selected/invited is the DM
+        if ($user == $game->getDm()) {
+            return $this->json("Vous êtes déjà le maître du jeu de cette partie !", Response::HTTP_BAD_REQUEST);
         }
         
         // Check if the invitation already exists

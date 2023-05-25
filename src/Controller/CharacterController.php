@@ -93,6 +93,13 @@ class CharacterController extends AbstractController
             return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
+        // Check if the character already exists
+        $existingCharacter = $entityManager->getRepository(Character::class)->findOneBy(['game' => $game, 'user' => $user]);
+        
+        if ($existingCharacter) {
+             return $this->json("Vous avez déjà créé un personnage pour cette partie", Response::HTTP_BAD_REQUEST);
+        }
+
         $character->setUser($user);
         $character->setGame($game);
 
@@ -164,6 +171,9 @@ class CharacterController extends AbstractController
             // Link the $game to the $character
             $character->setGame($game);
         }
+
+        // Update the updatedAt field with the current date and time in the current game
+        $character->getGame()->setUpdatedAt(new DateTimeImmutable());
 
         // Update the updatedAt field with the current date and time
         $character->setUpdatedAt(new DateTimeImmutable());

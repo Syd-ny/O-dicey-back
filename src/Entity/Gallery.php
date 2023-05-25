@@ -25,7 +25,7 @@ class Gallery
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=128)
+     * @ORM\Column(type="string", length=256)
      * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"games"})
      * @Assert\NotBlank

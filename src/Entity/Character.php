@@ -36,7 +36,7 @@ class Character
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=128, nullable=true)
+     * @ORM\Column(type="string", length=256, nullable=true)
      * @Groups({"users", "charactersByUser", "gamesByUser"})
      * @Groups({"games", "charactersByGame"})
      * @Groups({"character_list", "character_read", "character_add", "character_edit"})
@@ -105,6 +105,7 @@ class Character
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
+        $this->picture = "https://imgur.com/a/KmERWcM";
     }
 
     public function getId(): ?int

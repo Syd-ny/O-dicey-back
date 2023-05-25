@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Character;
 use App\Entity\Game;
 use App\Entity\User;
 use DateTimeImmutable;
+use App\Entity\Character;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class UserController extends AbstractController
 {
@@ -92,6 +92,34 @@ class UserController extends AbstractController
             'groups' => 'gamesByUser'
         ]);
     }
+
+    /**
+     * Endpoint for retrieving games without characters for a specific user
+     *
+     * @Route("/api/users/{id}/games/withoutCharacters", name="app_api_user_getGamesWithoutCharacters", methods={"GET"})
+     */
+    public function getGamesByUserWithoutCharacters(User $user): JsonResponse
+    {
+        // Create an empty array $gamesWithoutCharacters 
+        $gamesWithoutCharacters = [];
+
+        // Get the games of the current user as player
+        $gamesUsers = $user->getGameUsers()->toArray();
+
+        // For each game in which the current user is a player
+        foreach ($gamesUsers as $gameUser) {
+            // If the user character for the game doesn't exist
+            if(!$user->getCharacter($gameUser->getGame())) {
+                // Save the game in the $gamesWithoutCaracters array
+                $gamesWithoutCharacters[] = $gameUser->getGame();
+            }
+        }
+
+        return $this->json($gamesWithoutCharacters, Response::HTTP_OK, [], [
+            'groups' => 'gamesByUser'
+        ]);
+    }
+
 
     /**
      * Endpoint for getting all invites of a specific user

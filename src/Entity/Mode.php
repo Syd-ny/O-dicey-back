@@ -30,6 +30,7 @@ class Mode
      * @ORM\Column(type="string", length=128)
      * @Groups({"gallery_list", "gallery_read"})
      * @Groups({"modes"})
+     * @Groups({"game_no_character"})
      * @Groups({"games", "newGame"})
      * @Assert\NotBlank
      */
