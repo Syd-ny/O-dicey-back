@@ -93,6 +93,13 @@ class CharacterController extends AbstractController
             return $this->json("Ce jeu n'existe pas", Response::HTTP_BAD_REQUEST);
         }
 
+        // Check if the character already exists
+        $existingCharacter = $entityManager->getRepository(Character::class)->findOneBy(['game' => $game, 'user' => $user]);
+        
+        if ($existingCharacter) {
+             return $this->json("Vous avez déjà créé un personnage pour cette partie", Response::HTTP_BAD_REQUEST);
+        }
+
         $character->setUser($user);
         $character->setGame($game);
 
