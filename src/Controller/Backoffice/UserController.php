@@ -35,7 +35,7 @@ class UserController extends AbstractController
         $users = $userRepository->findBySearchUser($search, $sort, $order);
 
         $pagination = $paginator->paginate(
-            $users, 
+            $users, // refers to repository
             $request->query->getInt('page', 1), // Current page number
             15 // Number of items per page
         );

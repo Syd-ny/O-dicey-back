@@ -35,13 +35,14 @@ class ModeController extends AbstractController
         $modes = $modeRepository->findBySearchMode($search, $sort, $order);
 
         $pagination = $paginator->paginate(
-            $modes, 
+            $modes, // refers to repository
             $request->query->getInt('page', 1), // Current page number
             15 // Number of items per page
         );
 
         return $this->render('backoffice/mode/index.html.twig', [
-            'modes' => $modes,
+            'pagination' => $pagination, // Pass the pagination object to the template
+            'modes' => $pagination->getItems(), // Pass the items of the current page to the template
             'sort' => $sort,
             'order' => $order,
         ]);

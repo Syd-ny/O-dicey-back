@@ -35,7 +35,7 @@ class GameController extends AbstractController
         $games = $gameRepository->findBySearchGame($search, $sort, $order);
 
         $pagination = $paginator->paginate(
-            $games, 
+            $games, // refers to repository
             $request->query->getInt('page', 1), // Current page number
             15 // Number of items per page
         );
