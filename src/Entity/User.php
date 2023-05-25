@@ -29,6 +29,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"character_edit"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"game_no_character"})
      * @Groups({"games", "newGame"})
      * @Groups({"gameUsers"})
      */
@@ -40,6 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gamesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"game_no_character"})
      * @Groups({"games", "newGame"})
      * @Assert\NotBlank
      * @Assert\Email
@@ -52,6 +54,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"gamesByUser"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"game_no_character"})
      * @Groups({"games", "newGame"})
      * @Assert\NotBlank
      */
@@ -72,6 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"users"})
      * @Groups({"gallery_list"})
      * @Groups({"gallery_read"})
+     * @Groups({"game_no_character"})
      * @Groups({"games"})
      * @Assert\Url
      */

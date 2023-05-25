@@ -61,4 +61,13 @@ class GameRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function findGamesWithoutCharacters()
+    {
+        return $this->createQueryBuilder('g')
+            ->leftJoin('g.characters', 'c')
+            ->where('c.id IS NULL')
+            ->getQuery()
+            ->getResult();
+    }
 }
