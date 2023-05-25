@@ -105,43 +105,6 @@ class GameController extends AbstractController
         return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
     }
 
-    /**
-    * Endpoint for retrieving games not related to any character
-    * 
-    * @Route("/api/games/noCharacter", name="app_api_game_getGamesWithoutCharacters",  methods={"GET"})
-    */
-    public function getGamesWithoutCharacter(GameRepository $gameRepository): JsonResponse
-    {
-        $gamesWithoutCharacters = $gameRepository->findGamesWithoutCharacters();
-
-        if (empty($gamesWithoutCharacters)) {
-            return $this->json('Toutes les parties sont déja associée à un personnage', Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($gamesWithoutCharacters, Response::HTTP_OK, [], ["groups"=> ["games"]]);
-    }
-
-    /**
-     * Endpoint for retrieving games without characters for a specific user
-     *
-     * @Route("/api/users/{userId}/games/noCharacter", name="app_api_user_getGamesWithoutCharacters", methods={"GET"})
-     */
-    public function getGamesWithoutCharactersForUser(UserRepository $userRepository, int $userId, GameRepository $gameRepository): JsonResponse
-    {
-        $user = $userRepository->find($userId);
-
-        if (!$user) {
-            return $this->json('Utilisateur non trouvé', Response::HTTP_NOT_FOUND);
-        }
-
-        $gamesWithoutCharacters = $gameRepository->findGamesWithoutCharactersForUser($user);
-
-        if (empty($gamesWithoutCharacters)) {
-            return $this->json('toutes les parties possèdent un personnage', Response::HTTP_NOT_FOUND);
-        }
-
-        return $this->json($gamesWithoutCharacters, Response::HTTP_OK, [], ["groups" => ["games"]]);
-    }
 
     /**
     * Endpoint for creating a game

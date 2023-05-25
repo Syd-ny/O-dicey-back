@@ -2,21 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Character;
 use App\Entity\Game;
 use App\Entity\User;
 use DateTimeImmutable;
+use App\Entity\Character;
+use App\Repository\GameRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 
 class UserController extends AbstractController
 {
@@ -94,27 +96,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * Endpoint for all games of a specific user without character
-     * 
-     * @Route("/api/users/{id}/games", name="app_api_user_getGamesByUserWithoutCharacter", requirements={"gameId"="\d+"}, methods={"GET"})
+     * Endpoint for retrieving games without characters for a specific user
+     *
+     * @Route("/api/users/{userId}/games/noCharacter", name="app_api_user_getGamesWithoutCharacters", methods={"GET"})
      */
-    public function getGamesByUserWithoutCharacter(User $user): JsonResponse
+    public function getGamesWithoutCharactersForUser(UserRepository $userRepository, int $userId, GameRepository $gameRepository): JsonResponse
     {
-        
-        // Create a variable $gamesByUser which contains two empty arrays, player and DM
-        $gamesByUser = ['player' => []];
+        $user = $userRepository->find($userId);
 
-        // Get the games of the current user as player
-        $gamesUsers = $user->getGameUsers()->toArray();
-
-        // For each game in which the current user is a player, an item in the player array is created
-        foreach ($gamesUsers as $gameByUser) {
-            $gamesByUser['player'][] = $gameByUser->getGame();
+        if (!$user) {
+            return $this->json('Utilisateur non trouvé', Response::HTTP_NOT_FOUND);
         }
 
-        return $this->json($gamesByUser, Response::HTTP_OK, [], [
-            'groups' => 'gamesByUser'
-        ]);
+        $gamesWithoutCharacters = $gameRepository->findGamesWithoutCharactersForUser($user);
+
+        if (empty($gamesWithoutCharacters)) {
+            return $this->json('toutes les parties possèdent un personnage', Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($gamesWithoutCharacters, Response::HTTP_OK, [], ["groups" => ["games"]]);
     }
 
 
