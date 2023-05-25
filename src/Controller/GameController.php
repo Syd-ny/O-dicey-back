@@ -8,6 +8,8 @@ use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Gallery;
 use App\Entity\GameUsers;
+use App\Repository\GameRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +19,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+
 
 class GameController extends AbstractController
 {
@@ -102,6 +105,7 @@ class GameController extends AbstractController
 
         return $this->json($galleriesByGame, 200, [], ["groups"=> ["gallery_read"]]);
     }
+
 
     /**
     * Endpoint for creating a game
