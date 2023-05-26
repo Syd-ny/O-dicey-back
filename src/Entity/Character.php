@@ -105,7 +105,6 @@ class Character
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
-        $this->picture = "https://imgur.com/a/KmERWcM";
     }
 
     public function getId(): ?int
