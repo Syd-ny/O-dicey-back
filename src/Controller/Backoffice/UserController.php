@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 /**
@@ -23,7 +24,7 @@ class UserController extends AbstractController
      * 
      * @Route("", name="app_backoffice_user_getUsers")
      */
-    public function getUsers(Request $request, UserRepository $userRepository): Response
+    public function getUsers(Request $request, UserRepository $userRepository, PaginatorInterface $paginator): Response
     {
         // Variables to determine the display order of the users
         $search = $request->query->get('search', '');
@@ -33,8 +34,15 @@ class UserController extends AbstractController
         // Use the method findBySearchUser of the user repository to search the users according to the variables
         $users = $userRepository->findBySearchUser($search, $sort, $order);
 
+        $pagination = $paginator->paginate(
+            $users, // refers to repository
+            $request->query->getInt('page', 1), // Current page number
+            15 // Number of items per page
+        );
+
         return $this->render('backoffice/user/index.html.twig', [
-            'users' => $users,
+            'pagination' => $pagination,
+            'users' => $pagination->getItems(),
             'sort' => $sort,
             'order' => $order,
         ]);

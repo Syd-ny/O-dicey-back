@@ -45,5 +45,5 @@ ___
 
 | `php bin/console odicey:deactivate-games`
 
-Allows you to change the status of games that have not been updated for 1 year or longer, to Inactive. When a game is inactive, they are no longer editable or deletable by the DMs. They can be deleted from the backoffice by the admins of the app.
+Allows you to change the status of games that have not been updated for 1 year or longer, to Inactive. When a game is inactive, they are no longer deletable by the DMs and they cannot welcome new players or delete them. They can be deleted from the backoffice by the admins of the app.
 If you're in the production environment, add `--env=prod` to the command line.

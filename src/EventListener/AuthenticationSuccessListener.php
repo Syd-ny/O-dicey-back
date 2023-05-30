@@ -36,7 +36,8 @@ class AuthenticationSuccessListener
         $data['data'] = array(
             'id' => $userEntity-> getId(),
             'email' => $userEntity->getUserIdentifier(),
-            'login' => $userEntity->getLogin()
+            'login' => $userEntity->getLogin(),
+            'roles' => $userEntity->getRoles()
         );
 
         // Save the user's info
