@@ -58,6 +58,4 @@
     <a href="{{ path('app_backoffice_game_getGames') }}" class="btn btn-sm btn-outline-info mx-3">Retour à la liste</a>
 
     <a href="{{ path('app_backoffice_game_editGames', {'id': game.id}) }}" class="btn btn-sm btn-outline-warning mx-3">Modifier</a>
-
-    {{ include('backoffice/game/_delete_form.html.twig') }}
 {% endblock %}

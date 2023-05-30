@@ -6,5 +6,6 @@
     <h1 class="mt-3 mx-3">Modifier le mode de jeu {{mode.name}}</h1>
 
     {{ include('backoffice/mode/_form.html.twig', {'button_label':'Modifier','mode':mode}) }}
+    {{ include('backoffice/mode/_delete_form.html.twig') }}
 
 {% endblock %}
